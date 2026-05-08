@@ -4,245 +4,559 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Storax — Complete File Intelligence</title>
+    <title>Storax - Complete File Intelligence</title>
     <link rel="icon" href="favicon.png" type="image/png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
 
-     <style>
+    <style>
         :root {
-            --bg: #0b0c10;
-            --card: #111217;
-            --primary: #8686fe;
-            --accent: #00D1FF;
-            --text: #e6e6e6;
-            --muted: #9aa0a6;
-            --border: rgba(255, 255, 255, 0.08);
+            --bg: #080a12;
+            --surface: rgba(16, 19, 34, 0.76);
+            --surface-strong: #111525;
+            --card: rgba(255, 255, 255, 0.055);
+            --card-hover: rgba(255, 255, 255, 0.09);
+            --primary: #7777ff;
+            --primary-strong: #6b6bff;
+            --accent: #12c7e8;
+            --green: #35d08f;
+            --text: #f6f7fb;
+            --muted: #a8afc2;
+            --border: rgba(255, 255, 255, 0.11);
+            --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+            --radius: 8px;
         }
 
         body.light-theme {
-            --bg: #f8f9fa;
-            --card: #ffffff;
-            --text: #212529;
-            --muted: #6c757d;
-            --border: rgba(0, 0, 0, 0.1);
-            background: var(--bg);
-        }
-
-        body.light-theme .hero h1 {
-            -webkit-text-fill-color: var(--text);
-            background: none;
-        }
-
-        body.light-theme header {
-            background: rgba(248, 249, 250, 0.8);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        body.light-theme .card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        body.light-theme .card:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transform: translateY(-5px) scale(1.02);
-        }
-
-        body.light-theme .highlight {
-            background: linear-gradient(135deg, rgba(134, 134, 254, 0.05), rgba(0, 209, 255, 0.05));
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --bg: #f6f8fc;
+            --surface: rgba(255, 255, 255, 0.78);
+            --surface-strong: #ffffff;
+            --card: rgba(255, 255, 255, 0.88);
+            --card-hover: #ffffff;
+            --text: #161926;
+            --muted: #626b80;
+            --border: rgba(25, 34, 64, 0.12);
+            --shadow: 0 24px 70px rgba(42, 54, 95, 0.14);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background: radial-gradient(circle at 20% 20%, rgba(108, 92, 231, 0.2), transparent),
-                radial-gradient(circle at 80% 0%, rgba(0, 209, 255, 0.15), transparent),
+            min-height: 100vh;
+            overflow-x: hidden;
+            background:
+                radial-gradient(circle at 14% 8%, rgba(119, 119, 255, 0.32), transparent 30%),
+                radial-gradient(circle at 86% 12%, rgba(18, 199, 232, 0.24), transparent 28%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 42%),
                 var(--bg);
             color: var(--text);
+            font-family: 'Inter', sans-serif;
             line-height: 1.6;
         }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 60px;
+        body.light-theme {
+            background:
+                radial-gradient(circle at 14% 8%, rgba(119, 119, 255, 0.18), transparent 30%),
+                radial-gradient(circle at 86% 12%, rgba(18, 199, 232, 0.16), transparent 28%),
+                linear-gradient(180deg, #ffffff, transparent 44%),
+                var(--bg);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .page-shell {
+            position: relative;
+        }
+
+        .site-header {
             position: sticky;
             top: 0;
-            backdrop-filter: blur(10px);
-            background: rgba(11, 12, 16, 0.6);
+            z-index: 10;
             border-bottom: 1px solid var(--border);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: rgba(8, 10, 18, 0.78);
+            backdrop-filter: blur(18px);
+        }
+
+        body.light-theme .site-header {
+            background: rgba(246, 248, 252, 0.82);
+        }
+
+        .nav-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: min(1180px, calc(100% - 40px));
+            min-height: 76px;
+            margin: 0 auto;
+            gap: 24px;
         }
 
         .logo {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-weight: 800;
         }
 
         .logo img {
-            height: 32px;
-            width: auto;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            box-shadow: 0 12px 30px rgba(119, 119, 255, 0.26);
         }
 
         .logo-text {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: #8686fe;
+            color: var(--text);
+            font-size: 21px;
+            letter-spacing: 0;
         }
 
-        nav a {
-            margin-left: 30px;
-            text-decoration: none;
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             color: var(--muted);
-            transition: 0.3s;
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        nav a:hover {
-            color: white;
+        nav a,
+        .theme-btn {
+            min-height: 40px;
+            border-radius: var(--radius);
+            padding: 10px 13px;
+            transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+        }
+
+        nav a:hover,
+        .theme-btn:hover {
+            color: var(--text);
+            background: var(--card);
         }
 
         .theme-btn {
-            background: none;
-            border: none;
+            border: 1px solid var(--border);
+            background: transparent;
             color: var(--muted);
-            font-size: 20px;
             cursor: pointer;
-            transition: 0.3s;
-            margin-left: 20px;
-        }
-
-        .theme-btn:hover {
-            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
         .hero {
-            text-align: center;
-            padding: 120px 20px 80px;
-            max-width: 900px;
-            margin: auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+            align-items: center;
+            gap: 56px;
+            width: min(1180px, calc(100% - 40px));
+            min-height: calc(100vh - 76px);
+            margin: 0 auto;
+            padding: 72px 0 64px;
         }
 
-        .hero h1 {
-            font-size: 52px;
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin-bottom: 22px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 12px;
+            background: var(--card);
+            color: var(--muted);
+            font-size: 13px;
             font-weight: 700;
-            line-height: 1.2;
-            background: linear-gradient(90deg, #fff, var(--primary));
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 18px rgba(53, 208, 143, 0.7);
+        }
+
+        h1 {
+            max-width: 720px;
+            font-size: clamp(44px, 7vw, 82px);
+            font-weight: 800;
+            line-height: 0.98;
+            letter-spacing: 0;
+        }
+
+        .gradient-text {
+            display: block;
+            background: linear-gradient(100deg, #ffffff 8%, #b9bbff 48%, #67e8f9 92%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .hero p {
-            margin-top: 20px;
+        body.light-theme .gradient-text {
+            background: linear-gradient(100deg, #101426 8%, #595cff 52%, #008aad 96%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-copy {
+            max-width: 650px;
+            margin-top: 24px;
             color: var(--muted);
             font-size: 18px;
         }
 
         .cta {
-            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 34px;
         }
 
-        .cta button {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 8px;
-            margin: 10px;
-            font-size: 15px;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+            border-radius: var(--radius);
+            padding: 14px 20px;
+            border: 1px solid transparent;
             cursor: pointer;
-            transition: 0.3s;
+            font-size: 15px;
+            font-weight: 800;
+            transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
         }
 
-        .primary {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-        }
-
-        .secondary {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: white;
-        }
-
-        .cta button:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(134, 134, 254, 0.3);
         }
 
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-strong), var(--accent));
+            color: #ffffff;
+            box-shadow: 0 18px 42px rgba(18, 199, 232, 0.22);
+        }
+
+        .btn-secondary {
+            background: var(--card);
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .trust-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .trust-row span {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 11px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .hero-visual {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 560px;
+        }
+
+        .phone {
+            position: relative;
+            width: min(360px, 100%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 34px;
+            padding: 14px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04));
+            box-shadow: var(--shadow);
+        }
+
+        body.light-theme .phone {
+            border-color: rgba(25, 34, 64, 0.12);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(233, 237, 255, 0.78));
+        }
+
+        .phone-screen {
+            min-height: 620px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background:
+                linear-gradient(180deg, rgba(119, 119, 255, 0.18), transparent 28%),
+                var(--surface-strong);
+        }
+
+        .app-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 18px 14px;
+        }
+
+        .app-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+        }
+
+        .app-brand img {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+        }
+
+        .app-pill {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 7px 10px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .storage-panel {
+            margin: 12px 18px 18px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.055);
+        }
+
+        .storage-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .storage-value {
+            margin-top: 8px;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .progress {
+            height: 9px;
+            overflow: hidden;
+            margin-top: 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .progress span {
+            display: block;
+            width: 67%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--green));
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 0 18px;
+        }
+
+        .mini-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            background: var(--card);
+        }
+
+        .mini-card strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .mini-card span {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .file-list {
+            display: grid;
+            gap: 10px;
+            padding: 18px;
+        }
+
+        .file-row {
+            display: grid;
+            grid-template-columns: 38px 1fr auto;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .file-icon,
+        .feature-icon {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, rgba(119, 119, 255, 0.24), rgba(18, 199, 232, 0.18));
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        body.light-theme .file-icon,
+        body.light-theme .feature-icon {
+            color: #26305a;
+        }
+
+        .file-row strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .file-row span,
+        .file-size {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .floating-stat {
+            position: absolute;
+            right: 0;
+            bottom: 90px;
+            width: 188px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .floating-stat span {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .floating-stat strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 25px;
         }
 
         .section {
-            padding: 80px 60px;
-            max-width: 1200px;
-            margin: auto;
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 80px 0;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 28px;
+            margin-bottom: 34px;
+        }
+
+        .section-kicker {
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         .section h2 {
-            font-size: 32px;
-            margin-bottom: 20px;
+            font-size: clamp(31px, 4vw, 48px);
+            line-height: 1.08;
+            letter-spacing: 0;
+        }
+
+        .section-heading p,
+        .center-copy {
+            max-width: 560px;
+            color: var(--muted);
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .tool-grid {
+            grid-template-columns: repeat(5, 1fr);
         }
 
         .card {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 14px;
+            position: relative;
+            min-height: 210px;
+            overflow: hidden;
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: 0.3s;
+            border-radius: var(--radius);
+            padding: 22px;
+            background: var(--card);
+            box-shadow: 0 18px 55px rgba(0, 0, 0, 0.12);
+            transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--green));
+            opacity: 0;
+            transition: opacity 180ms ease;
         }
 
         .card:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+            border-color: rgba(119, 119, 255, 0.42);
+            background: var(--card-hover);
         }
 
-        .card {
-            background: var(--card);
-            padding: 25px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(134, 134, 254, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .card:hover::before {
-            left: 100%;
+        .card:hover::after {
+            opacity: 1;
         }
 
         .card h3 {
+            margin-top: 18px;
             margin-bottom: 10px;
+            font-size: 18px;
+            line-height: 1.25;
         }
 
         .card p {
@@ -250,225 +564,557 @@
             font-size: 14px;
         }
 
-        .highlight {
-            background: linear-gradient(135deg, rgba(134, 134, 254, 0.1), rgba(0, 209, 255, 0.1));
-            padding: 60px;
-            border-radius: 20px;
-            margin-top: 60px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .tool-grid .card {
+            min-height: 182px;
+        }
+
+        .security-band {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .security-band .grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .security-panel,
+        .download-panel {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 34px;
+            background:
+                linear-gradient(135deg, rgba(119, 119, 255, 0.13), rgba(18, 199, 232, 0.08)),
+                var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .security-panel h2,
+        .download-panel h2 {
+            margin-bottom: 14px;
+        }
+
+        .security-panel p,
+        .download-panel p {
+            color: var(--muted);
+        }
+
+        .check-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 28px;
+            list-style: none;
+        }
+
+        .check-list li {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .check-list li::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 18px rgba(53, 208, 143, 0.45);
+            flex: 0 0 auto;
+        }
+
+        .download-panel {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 28px;
+            margin-top: 18px;
+            padding: 42px;
+        }
+
+        .download-note {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .download-note span {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 7px 10px;
+            background: rgba(255, 255, 255, 0.04);
         }
 
         footer {
-            text-align: center;
-            padding: 40px;
-            color: var(--muted);
             border-top: 1px solid var(--border);
-            margin-top: 60px;
-            background: var(--card);
+            background: rgba(0, 0, 0, 0.14);
+            color: var(--muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 28px 0;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1020px) {
+            .hero,
+            .security-band,
+            .download-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                min-height: auto;
+                padding-top: 56px;
+            }
+
+            .hero-visual {
+                min-height: auto;
+            }
+
+            .floating-stat {
+                right: 8%;
+            }
+
+            .grid,
+            .tool-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-heading {
+                align-items: start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .nav-wrap {
+                width: min(100% - 28px, 1180px);
+                min-height: auto;
+                padding: 14px 0;
+                flex-wrap: wrap;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            nav a {
+                white-space: nowrap;
+            }
+
+            .hero,
+            .section {
+                width: min(100% - 28px, 1180px);
+            }
+
+            .hero {
+                gap: 34px;
+                padding: 42px 0 40px;
+            }
+
+            h1 {
+                font-size: clamp(42px, 14vw, 64px);
+            }
+
+            .hero-copy {
+                font-size: 16px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .phone {
+                width: min(330px, 100%);
+            }
+
+            .phone-screen {
+                min-height: 560px;
+            }
+
+            .floating-stat {
+                position: relative;
+                right: auto;
+                bottom: auto;
+                width: min(330px, 100%);
+                margin-top: -38px;
+            }
+
+            .grid,
+            .tool-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                min-height: auto;
+            }
+
+            .section {
+                padding: 56px 0;
+            }
+
+            .security-panel,
+            .download-panel {
+                padding: 24px;
+            }
+
+            .footer-inner {
+                width: min(100% - 28px, 1180px);
+                align-items: start;
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <div class="logo">
-            <img src="storax.png" alt="Storax Icon">
-            <span class="logo-text">Storax</span>
-        </div>
-        <nav>
-            <a href="#features">Features</a>
-            <a href="#security">Security</a>
-            <a href="#tools">Tools</a>
-            <a href="privacy-policy.html">Privacy</a>
-            <a href="#download">Download</a>
-        </nav>
-        <button id="theme-toggle" class="theme-btn">🌙</button>
-    </header>
+    <div class="page-shell">
+        <header class="site-header">
+            <div class="nav-wrap">
+                <a href="#" class="logo" aria-label="Storax home">
+                    <img src="storax.png" alt="Storax logo">
+                    <span class="logo-text">Storax</span>
+                </a>
 
-    <section class="hero">
-        <h1>Your Files. Secured. Organized. Mastered.</h1>
-        <p>
-            Storax is the ultimate Android file manager — encrypted vault, batch operations, media management,
-            and advanced tools in one powerful, secure, and intuitive package. Control your digital world like never before.
-        </p>
+                <nav aria-label="Primary navigation">
+                    <a href="#features">Features</a>
+                    <a href="#tools">Tools</a>
+                    <a href="#security">Security</a>
+                    <a href="privacy-policy.html">Privacy</a>
+                    <a href="#download">Download</a>
+                </nav>
 
-        <div class="cta">
-            <button class="primary">Download Storax</button>
-            <button class="secondary">Explore Features</button>
-        </div>
-    </section>
-
-    <section id="features" class="section">
-        <h2>Why Choose Storax?</h2>
-
-        <div class="grid">
-            <div class="card">
-                <h3>🔐 Secure Encrypted Vault</h3>
-                <p>Password-protected encrypted storage for sensitive files with auto-lock functionality and secure file operations.</p>
+                <button id="theme-toggle" class="theme-btn" type="button" aria-label="Toggle color theme">Dark</button>
             </div>
+        </header>
 
-            <div class="card">
-                <h3>📂 Complete File Explorer</h3>
-                <p>Navigate all storage locations with intuitive interface — internal storage, USB drives, SD cards, and external devices.</p>
+        <main>
+            <section class="hero">
+                <div>
+                    <div class="eyebrow">Private Android file manager</div>
+                    <h1>
+                        Your files.
+                        <span class="gradient-text">Beautifully mastered.</span>
+                    </h1>
+                    <p class="hero-copy">
+                        Storax brings secure vaults, batch operations, smart media browsing, storage insights,
+                        and advanced file tools into one fast, polished Android experience.
+                    </p>
+
+                    <div class="cta">
+                        <a class="btn btn-primary" href="#download">Download Storax</a>
+                        <a class="btn btn-secondary" href="#features">Explore Features</a>
+                    </div>
+
+                    <div class="trust-row" aria-label="Product highlights">
+                        <span>No ads</span>
+                        <span>Offline first</span>
+                        <span>Encrypted vault</span>
+                    </div>
+                </div>
+
+                <div class="hero-visual" aria-label="Storax app preview">
+                    <div class="phone">
+                        <div class="phone-screen">
+                            <div class="app-top">
+                                <div class="app-brand">
+                                    <img src="storax.png" alt="">
+                                    <span>Storax</span>
+                                </div>
+                                <span class="app-pill">Secure</span>
+                            </div>
+
+                            <div class="storage-panel">
+                                <div class="storage-meta">
+                                    <span>Internal storage</span>
+                                    <span>67% used</span>
+                                </div>
+                                <div class="storage-value">86.4 GB</div>
+                                <div class="progress"><span></span></div>
+                            </div>
+
+                            <div class="category-grid">
+                                <div class="mini-card">
+                                    <strong>Images</strong>
+                                    <span>12.8 GB</span>
+                                </div>
+                                <div class="mini-card">
+                                    <strong>Videos</strong>
+                                    <span>34.1 GB</span>
+                                </div>
+                                <div class="mini-card">
+                                    <strong>Docs</strong>
+                                    <span>4.7 GB</span>
+                                </div>
+                                <div class="mini-card">
+                                    <strong>Apps</strong>
+                                    <span>9.2 GB</span>
+                                </div>
+                            </div>
+
+                            <div class="file-list">
+                                <div class="file-row">
+                                    <span class="file-icon">VL</span>
+                                    <div>
+                                        <strong>Vault backup</strong>
+                                        <span>Encrypted folder</span>
+                                    </div>
+                                    <span class="file-size">2.4 GB</span>
+                                </div>
+                                <div class="file-row">
+                                    <span class="file-icon">MD</span>
+                                    <div>
+                                        <strong>Media exports</strong>
+                                        <span>Gallery collection</span>
+                                    </div>
+                                    <span class="file-size">8.1 GB</span>
+                                </div>
+                                <div class="file-row">
+                                    <span class="file-icon">AR</span>
+                                    <div>
+                                        <strong>Project archive</strong>
+                                        <span>ZIP package</span>
+                                    </div>
+                                    <span class="file-size">912 MB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="floating-stat">
+                        <span>Recent cleanup</span>
+                        <strong>14.2 GB</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="section">
+                <div class="section-heading">
+                    <div>
+                        <div class="section-kicker">Core experience</div>
+                        <h2>Everything you expect from a serious file manager.</h2>
+                    </div>
+                    <p>Browse, protect, organize, search, and recover files with workflows designed for daily Android use.</p>
+                </div>
+
+                <div class="grid">
+                    <article class="card">
+                        <span class="feature-icon">SV</span>
+                        <h3>Secure Encrypted Vault</h3>
+                        <p>Password-protected storage for sensitive files with auto-lock behavior and private file operations.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">FX</span>
+                        <h3>Complete File Explorer</h3>
+                        <p>Navigate internal storage, USB drives, SD cards, and external devices through one clear interface.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">SO</span>
+                        <h3>Smart Organization</h3>
+                        <p>Automatic categories for images, videos, audio, documents, archives, code, apps, and more.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">AS</span>
+                        <h3>Advanced Search</h3>
+                        <p>Real-time search with filters, sorting controls, and hidden file discovery for faster retrieval.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">BO</span>
+                        <h3>Batch Operations</h3>
+                        <p>Select multiple files and copy, move, delete, or share them in bulk with progress feedback.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">UH</span>
+                        <h3>Undo and History</h3>
+                        <p>Review operation history and recover from accidental actions with undo and redo support.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section id="tools" class="section">
+                <div class="section-heading">
+                    <div>
+                        <div class="section-kicker">Advanced tools</div>
+                        <h2>Power features without the clutter.</h2>
+                    </div>
+                    <p>Storax keeps specialist tools close at hand while preserving a clean, understandable interface.</p>
+                </div>
+
+                <div class="grid tool-grid">
+                    <article class="card">
+                        <span class="feature-icon">MG</span>
+                        <h3>Media Gallery</h3>
+                        <p>Thumbnail generation, video previews, slideshows, and a smooth built-in viewer.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">AP</span>
+                        <h3>Audio Player</h3>
+                        <p>Playback controls, playlists, and library organization for music and recordings.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">DA</span>
+                        <h3>Docs and Archives</h3>
+                        <p>PDF, Office, eBook, text, and archive handling with extraction tools.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">WS</span>
+                        <h3>Status Saver</h3>
+                        <p>Detect and save WhatsApp status updates for quick access and backup.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">AM</span>
+                        <h3>App Management</h3>
+                        <p>Browse installed apps, review details, launch apps, and manage system entries.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">SA</span>
+                        <h3>Storage Analytics</h3>
+                        <p>Understand usage by type with visual breakdowns and space-saving insights.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">TR</span>
+                        <h3>Trash Recovery</h3>
+                        <p>Use a recoverable trash bin with restore options and cleanup controls.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">NS</span>
+                        <h3>Nearby Share</h3>
+                        <p>Send files wirelessly between Android devices with familiar sharing flows.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">QR</span>
+                        <h3>QR Scanner</h3>
+                        <p>Scan QR codes and barcodes from images with instant recognition actions.</p>
+                    </article>
+
+                    <article class="card">
+                        <span class="feature-icon">TM</span>
+                        <h3>Terminal</h3>
+                        <p>Access command-line tools for advanced operations and developer workflows.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section id="security" class="section">
+                <div class="security-band">
+                    <div class="security-panel">
+                        <div class="section-kicker">Security</div>
+                        <h2>Private by design, useful by default.</h2>
+                        <p>
+                            Storax is built around local-first file control, encrypted storage, hidden file protection,
+                            and fast indexing that does not get in your way.
+                        </p>
+
+                        <ul class="check-list">
+                            <li>Offline-first workflows</li>
+                            <li>PIN-protected hidden files</li>
+                            <li>External storage support</li>
+                            <li>Performance optimized scans</li>
+                        </ul>
+                    </div>
+
+                    <div class="grid">
+                        <article class="card">
+                            <span class="feature-icon">PF</span>
+                            <h3>Privacy First</h3>
+                            <p>Core features work offline so files remain under your control.</p>
+                        </article>
+
+                        <article class="card">
+                            <span class="feature-icon">HP</span>
+                            <h3>Hidden Protection</h3>
+                            <p>Keep private files behind protected access and secure hiding flows.</p>
+                        </article>
+
+                        <article class="card">
+                            <span class="feature-icon">XD</span>
+                            <h3>Cross-Device</h3>
+                            <p>Use USB drives, SD cards, external storage, and connected devices.</p>
+                        </article>
+
+                        <article class="card">
+                            <span class="feature-icon">PO</span>
+                            <h3>Fast Indexing</h3>
+                            <p>Scan large storage volumes quickly and return results without drag.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="download" class="section">
+                <div class="download-panel">
+                    <div>
+                        <div class="section-kicker">Download</div>
+                        <h2>Ready to master your files?</h2>
+                        <p class="center-copy">
+                            Download Storax for Android and bring secure vaults, powerful tools, and calmer file
+                            management to your device.
+                        </p>
+                        <div class="download-note">
+                            <span>Free download</span>
+                            <span>No ads</span>
+                            <span>No subscriptions</span>
+                            <span>Open source</span>
+                        </div>
+                    </div>
+
+                    <a class="btn btn-primary" href="#" aria-label="Download Storax for Android">Download for Android</a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-inner">
+                <span>© 2026 Storax. Built with precision.</span>
+                <a href="privacy-policy.html">Privacy Policy</a>
             </div>
-
-            <div class="card">
-                <h3>🎯 Smart Organization</h3>
-                <p>Automatic categorization by file type with beautiful layouts for images, videos, audio, documents, archives, code, and apps.</p>
-            </div>
-
-            <div class="card">
-                <h3>🔍 Advanced Search</h3>
-                <p>Lightning-fast search with real-time results, advanced filters, sorting options, and hidden file discovery.</p>
-            </div>
-
-            <div class="card">
-                <h3>📦 Batch Operations</h3>
-                <p>Select and manage multiple files at once — copy, move, delete, or share in bulk with progress tracking.</p>
-            </div>
-
-            <div class="card">
-                <h3>🔄 Undo & History</h3>
-                <p>Complete operation history with undo/redo capabilities for all file operations with full recovery options.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="tools" class="section">
-        <h2>Advanced Features & Tools</h2>
-
-        <div class="grid">
-            <div class="card">
-                <h3>🖼️ Media Gallery & Viewer</h3>
-                <p>Built-in gallery with thumbnail generation, video previews, slideshows, and seamless viewing experience.</p>
-            </div>
-
-            <div class="card">
-                <h3>🎵 Audio Player & Manager</h3>
-                <p>In-app audio playback with playlist creation, controls, and comprehensive music library organization.</p>
-            </div>
-
-            <div class="card">
-                <h3>📄 Document & Archive Suite</h3>
-                <p>Full support for PDFs, Word, Excel, PowerPoint, eBooks, text files, and archive formats with extraction tools.</p>
-            </div>
-
-            <div class="card">
-                <h3>📱 WhatsApp Status Saver</h3>
-                <p>Automatic detection and saving of WhatsApp status updates for easy access and backup.</p>
-            </div>
-
-            <div class="card">
-                <h3>📱 App Management</h3>
-                <p>Browse installed applications with details, launch capabilities, and system app management tools.</p>
-            </div>
-
-            <div class="card">
-                <h3>📊 Storage Analytics</h3>
-                <p>Visual storage usage breakdown by file type with optimization tips and space management insights.</p>
-            </div>
-
-            <div class="card">
-                <h3>🗑️ Trash & Recovery</h3>
-                <p>Safe deletion with recoverable trash bin, restoration options, and automatic cleanup tools.</p>
-            </div>
-
-            <div class="card">
-                <h3>📡 Nearby Share</h3>
-                <p>Wireless file sharing between Android devices using Google's Nearby Share technology.</p>
-            </div>
-
-            <div class="card">
-                <h3>📷 QR Code Scanner</h3>
-                <p>Scan QR codes and barcodes from images with automatic content recognition and instant actions.</p>
-            </div>
-
-            <div class="card">
-                <h3>💻 Built-in Terminal</h3>
-                <p>Command-line interface for advanced file operations, system administration, and developer tools.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="security" class="section">
-        <h2>Security & Connectivity</h2>
-
-        <div class="grid">
-            <div class="card">
-                <h3>🔒 Privacy First</h3>
-                <p>All features work completely offline with no internet dependency. Your files stay private and secure.</p>
-            </div>
-
-            <div class="card">
-                <h3>🛡️ Hidden File Protection</h3>
-                <p>Advanced hidden file system with PIN protection and secure file hiding capabilities.</p>
-            </div>
-
-            <div class="card">
-                <h3>🔗 Cross-Device Support</h3>
-                <p>Seamlessly works with USB drives, SD cards, external storage, and cloud-connected devices.</p>
-            </div>
-
-            <div class="card">
-                <h3>⚡ Performance Optimized</h3>
-                <p>Fast file indexing and scanning for instant results even with large storage volumes.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section highlight">
-        <h2>The Complete File Management Solution</h2>
-        <p>
-            Storax combines powerful file operations, advanced security, and intelligent organization
-            into one comprehensive Android file manager. From basic browsing to professional file management.
-        </p>
-
-        <div class="cta">
-            <button class="primary">Download Storax</button>
-            <button class="secondary">View Screenshots</button>
-        </div>
-    </section>
-
-    <section id="download" class="section">
-        <h2>Ready to Master Your Files?</h2>
-        <p style="text-align: center; max-width: 600px; margin: 0 auto 40px;">
-            Join thousands of users who have transformed their file management experience with Storax.
-            Download now and take control of your digital world.
-        </p>
-
-        <div style="text-align: center;">
-            <div class="cta">
-                <button class="primary" style="padding: 16px 32px; font-size: 18px;">Download for Android</button>
-            </div>
-            <p style="margin-top: 20px; color: var(--muted); font-size: 14px;">
-                Free download • No ads • No subscriptions • Open source
-            </p>
-        </div>
-    </section>
-
-    <footer>
-        © 2026 Storax. Built with precision.
-    </footer>
+        </footer>
+    </div>
 
     <script>
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
-        // Get saved theme or default to dark
         const savedTheme = localStorage.getItem('theme') || 'dark';
         body.classList.toggle('light-theme', savedTheme === 'light');
-        themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+        themeToggle.textContent = savedTheme === 'light' ? 'Light' : 'Dark';
 
-        // Toggle theme on button click
         themeToggle.addEventListener('click', () => {
             const isLight = body.classList.toggle('light-theme');
             const newTheme = isLight ? 'light' : 'dark';
             localStorage.setItem('theme', newTheme);
-            themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+            themeToggle.textContent = isLight ? 'Light' : 'Dark';
         });
     </script>
-
 </body>
 
 </html>

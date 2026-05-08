@@ -4,267 +4,652 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privacy Policy — Storax</title>
+    <title>Privacy Policy - Storax</title>
     <link rel="icon" href="favicon.png" type="image/png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg: #0b0c10;
-            --card: #111217;
-            --primary: #8686fe;
-            --accent: #00D1FF;
-            --text: #e6e6e6;
-            --muted: #9aa0a6;
-            --border: rgba(255, 255, 255, 0.08);
+            --bg: #080a12;
+            --surface: rgba(16, 19, 34, 0.76);
+            --surface-strong: #111525;
+            --card: rgba(255, 255, 255, 0.055);
+            --card-hover: rgba(255, 255, 255, 0.09);
+            --primary: #7777ff;
+            --primary-strong: #6b6bff;
+            --accent: #12c7e8;
+            --green: #35d08f;
+            --text: #f6f7fb;
+            --muted: #a8afc2;
+            --border: rgba(255, 255, 255, 0.11);
+            --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+            --radius: 8px;
         }
 
         body.light-theme {
-            --bg: #f8f9fa;
-            --card: #ffffff;
-            --text: #212529;
-            --muted: #6c757d;
-            --border: rgba(0, 0, 0, 0.1);
-            background: var(--bg);
-        }
-
-        body.light-theme .hero h1,
-        body.light-theme .content h1 {
-            -webkit-text-fill-color: var(--text);
-            background: none;
-        }
-
-        body.light-theme header {
-            background: rgba(248, 249, 250, 0.8);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        body.light-theme .card {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        body.light-theme .card:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        body.light-theme .highlight {
-            background: linear-gradient(135deg, rgba(134, 134, 254, 0.05), rgba(0, 209, 255, 0.05));
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --bg: #f6f8fc;
+            --surface: rgba(255, 255, 255, 0.78);
+            --surface-strong: #ffffff;
+            --card: rgba(255, 255, 255, 0.88);
+            --card-hover: #ffffff;
+            --text: #161926;
+            --muted: #626b80;
+            --border: rgba(25, 34, 64, 0.12);
+            --shadow: 0 24px 70px rgba(42, 54, 95, 0.14);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background: radial-gradient(circle at 20% 20%, rgba(108, 92, 231, 0.2), transparent),
-                radial-gradient(circle at 80% 0%, rgba(0, 209, 255, 0.15), transparent),
+            min-height: 100vh;
+            overflow-x: hidden;
+            background:
+                radial-gradient(circle at 14% 8%, rgba(119, 119, 255, 0.32), transparent 30%),
+                radial-gradient(circle at 86% 12%, rgba(18, 199, 232, 0.24), transparent 28%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 42%),
                 var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
         }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 60px;
+        body.light-theme {
+            background:
+                radial-gradient(circle at 14% 8%, rgba(119, 119, 255, 0.18), transparent 30%),
+                radial-gradient(circle at 86% 12%, rgba(18, 199, 232, 0.16), transparent 28%),
+                linear-gradient(180deg, #ffffff, transparent 44%),
+                var(--bg);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .site-header {
             position: sticky;
             top: 0;
-            backdrop-filter: blur(10px);
-            background: rgba(11, 12, 16, 0.6);
+            z-index: 10;
             border-bottom: 1px solid var(--border);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: rgba(8, 10, 18, 0.78);
+            backdrop-filter: blur(18px);
+        }
+
+        body.light-theme .site-header {
+            background: rgba(246, 248, 252, 0.82);
+        }
+
+        .nav-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: min(1180px, calc(100% - 40px));
+            min-height: 76px;
+            margin: 0 auto;
+            gap: 24px;
         }
 
         .logo {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-weight: 800;
         }
 
         .logo img {
-            height: 32px;
-            width: auto;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            box-shadow: 0 12px 30px rgba(119, 119, 255, 0.26);
         }
 
         .logo-text {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: #8686fe;
+            color: var(--text);
+            font-size: 21px;
         }
 
-        nav a {
-            margin-left: 30px;
-            text-decoration: none;
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             color: var(--muted);
-            transition: 0.3s;
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        nav a:hover {
-            color: white;
+        nav a,
+        .theme-btn {
+            min-height: 40px;
+            border-radius: var(--radius);
+            padding: 10px 13px;
+            transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+        }
+
+        nav a:hover,
+        nav a.active,
+        .theme-btn:hover {
+            color: var(--text);
+            background: var(--card);
         }
 
         .theme-btn {
-            background: none;
-            border: none;
+            border: 1px solid var(--border);
+            background: transparent;
             color: var(--muted);
-            font-size: 20px;
             cursor: pointer;
-            transition: 0.3s;
-            margin-left: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
-        .theme-btn:hover {
-            color: white;
+        .policy-hero {
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 76px 0 42px;
         }
 
-        .content {
-            max-width: 800px;
-            margin: 80px auto;
-            padding: 0 20px;
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin-bottom: 22px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 12px;
+            background: var(--card);
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
         }
 
-        .content h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #fff, var(--primary));
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 18px rgba(53, 208, 143, 0.7);
+        }
+
+        h1 {
+            max-width: 780px;
+            font-size: clamp(42px, 7vw, 76px);
+            font-weight: 800;
+            line-height: 0.98;
+            letter-spacing: 0;
+        }
+
+        .gradient-text {
+            display: block;
+            background: linear-gradient(100deg, #ffffff 8%, #b9bbff 48%, #67e8f9 92%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .content h2 {
-            font-size: 24px;
-            margin-top: 40px;
-            margin-bottom: 15px;
+        body.light-theme .gradient-text {
+            background: linear-gradient(100deg, #101426 8%, #595cff 52%, #008aad 96%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-copy {
+            max-width: 720px;
+            margin-top: 24px;
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .meta-row span,
+        .meta-row a {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 11px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .policy-layout {
+            display: grid;
+            grid-template-columns: 300px minmax(0, 1fr);
+            align-items: start;
+            gap: 28px;
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 30px 0 86px;
+        }
+
+        .summary-card,
+        .policy-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .summary-card {
+            position: sticky;
+            top: 100px;
+            padding: 22px;
+        }
+
+        .summary-card h2 {
+            margin-bottom: 14px;
+            font-size: 18px;
+            line-height: 1.3;
+        }
+
+        .summary-list {
+            display: grid;
+            gap: 12px;
+            list-style: none;
+        }
+
+        .summary-list li {
+            display: flex;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .summary-list li::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            flex: 0 0 auto;
+            margin-top: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 18px rgba(53, 208, 143, 0.45);
+        }
+
+        .policy-card {
+            overflow: hidden;
+        }
+
+        .policy-section {
+            padding: 34px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .policy-section:last-child {
+            border-bottom: 0;
+        }
+
+        .section-kicker {
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .policy-section h2 {
+            margin-bottom: 14px;
             color: var(--text);
+            font-size: clamp(24px, 3vw, 32px);
+            line-height: 1.15;
         }
 
-        .content p {
-            margin-bottom: 15px;
+        .policy-section p {
+            max-width: 760px;
+            margin-bottom: 16px;
             color: var(--muted);
         }
 
-        .content ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
+        .policy-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .policy-section ul {
+            display: grid;
+            gap: 10px;
+            max-width: 760px;
+            margin: 18px 0 0;
+            list-style: none;
             color: var(--muted);
         }
 
-        .content li {
-            margin-bottom: 5px;
+        .policy-section li {
+            position: relative;
+            padding-left: 22px;
+        }
+
+        .policy-section li::before {
+            content: "";
+            position: absolute;
+            top: 12px;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        .policy-section strong {
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        .contact-card {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 22px;
+            align-items: center;
+            margin-top: 20px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .contact-card a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--primary-strong), var(--accent));
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 18px 42px rgba(18, 199, 232, 0.22);
         }
 
         footer {
-            text-align: center;
-            padding: 40px;
-            color: var(--muted);
             border-top: 1px solid var(--border);
-            margin-top: 60px;
-            background: var(--card);
+            background: rgba(0, 0, 0, 0.14);
+            color: var(--muted);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 28px 0;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .policy-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                position: relative;
+                top: auto;
+            }
+
+            .summary-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .nav-wrap {
+                width: min(100% - 28px, 1180px);
+                min-height: auto;
+                padding: 14px 0;
+                flex-wrap: wrap;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            nav a {
+                white-space: nowrap;
+            }
+
+            .policy-hero,
+            .policy-layout {
+                width: min(100% - 28px, 1180px);
+            }
+
+            .policy-hero {
+                padding: 48px 0 24px;
+            }
+
+            h1 {
+                font-size: clamp(42px, 14vw, 62px);
+            }
+
+            .hero-copy {
+                font-size: 16px;
+            }
+
+            .summary-list {
+                grid-template-columns: 1fr;
+            }
+
+            .policy-section {
+                padding: 24px;
+            }
+
+            .contact-card a {
+                width: 100%;
+            }
+
+            .footer-inner {
+                width: min(100% - 28px, 1180px);
+                align-items: start;
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 
 <body>
+    <header class="site-header">
+        <div class="nav-wrap">
+            <a href="index.html" class="logo" aria-label="Storax home">
+                <img src="storax.png" alt="Storax logo">
+                <span class="logo-text">Storax</span>
+            </a>
 
-    <header>
-        <a href="index.html" class="logo">
-            <img src="storax.png" alt="Storax Icon">
-            <span class="logo-text">Storax</span>
-        </a>
-        <nav>
-            <a href="index.html#features">Features</a>
-            <a href="index.html#security">Security</a>
-            <a href="index.html#ai">AI</a>
-            <a href="privacy-policy.html">Privacy Policy</a>
-            <a href="index.html#download">Download</a>
-        </nav>
-        <button id="theme-toggle" class="theme-btn">🌙</button>
+            <nav aria-label="Primary navigation">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#tools">Tools</a>
+                <a href="index.html#security">Security</a>
+                <a href="privacy-policy.html" class="active">Privacy</a>
+                <a href="index.html#download">Download</a>
+            </nav>
+
+            <button id="theme-toggle" class="theme-btn" type="button" aria-label="Toggle color theme">Dark</button>
+        </div>
     </header>
 
-    <section class="content">
-        <h1>Privacy Policy</h1>
-        <p><em>Last updated: May 8, 2026</em></p>
+    <main>
+        <section class="policy-hero">
+            <div class="eyebrow">Privacy and data protection</div>
+            <h1>
+                Privacy Policy
+                <span class="gradient-text">for Storax.</span>
+            </h1>
+            <p class="hero-copy">
+                We designed Storax around local-first file control, secure storage, and clear choices about how your
+                information is handled.
+            </p>
+            <div class="meta-row">
+                <span>Last updated: May 8, 2026</span>
+                <span>Applies to Storax for Android</span>
+                <a href="index.html">Back to home</a>
+            </div>
+        </section>
 
-        <h2>Introduction</h2>
-        <p>At Storax, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our file intelligence system.</p>
+        <section class="policy-layout" aria-label="Privacy policy content">
+            <aside class="summary-card" aria-label="Privacy highlights">
+                <h2>Privacy highlights</h2>
+                <ul class="summary-list">
+                    <li>Your files are encrypted and stored locally by default.</li>
+                    <li>We do not sell or trade your personal information.</li>
+                    <li>You can request access, deletion, and portability.</li>
+                    <li>Policy changes are posted here with an updated date.</li>
+                </ul>
+            </aside>
 
-        <h2>Information We Collect</h2>
-        <p>We collect information that you provide directly to us, such as when you create an account or contact us for support. We also collect certain information automatically when you use our services.</p>
-        <ul>
-            <li><strong>Personal Information:</strong> Name, email address, and any other information you provide.</li>
-            <li><strong>Usage Data:</strong> Information about how you interact with our application, including file metadata for intelligence features.</li>
-            <li><strong>Device Information:</strong> Information about your device and internet connection.</li>
-        </ul>
+            <article class="policy-card">
+                <section class="policy-section">
+                    <div class="section-kicker">01 / Introduction</div>
+                    <h2>Our commitment</h2>
+                    <p>
+                        At Storax, we are committed to protecting your privacy. This Privacy Policy explains how we
+                        collect, use, disclose, and safeguard your information when you use our file intelligence system.
+                    </p>
+                </section>
 
-        <h2>How We Use Your Information</h2>
-        <p>We use the information we collect to:</p>
-        <ul>
-            <li>Provide, maintain, and improve our services</li>
-            <li>Process transactions and manage your account</li>
-            <li>Analyze usage patterns to enhance our AI features</li>
-            <li>Communicate with you about our services</li>
-            <li>Ensure security and prevent fraud</li>
-        </ul>
+                <section class="policy-section">
+                    <div class="section-kicker">02 / Information</div>
+                    <h2>Information we collect</h2>
+                    <p>
+                        We collect information that you provide directly to us, such as when you create an account or
+                        contact us for support. We also collect certain information automatically when you use our services.
+                    </p>
+                    <ul>
+                        <li><strong>Personal Information:</strong> Name, email address, and any other information you provide.</li>
+                        <li><strong>Usage Data:</strong> Information about how you interact with our application, including file metadata for intelligence features.</li>
+                        <li><strong>Device Information:</strong> Information about your device and internet connection.</li>
+                    </ul>
+                </section>
 
-        <h2>Data Security</h2>
-        <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. Your files are encrypted and stored locally by default, with optional secure syncing.</p>
+                <section class="policy-section">
+                    <div class="section-kicker">03 / Usage</div>
+                    <h2>How we use your information</h2>
+                    <p>We use the information we collect to:</p>
+                    <ul>
+                        <li>Provide, maintain, and improve our services.</li>
+                        <li>Process transactions and manage your account.</li>
+                        <li>Analyze usage patterns to enhance our app features.</li>
+                        <li>Communicate with you about our services.</li>
+                        <li>Ensure security and prevent fraud.</li>
+                    </ul>
+                </section>
 
-        <h2>Data Sharing and Disclosure</h2>
-        <p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy. We may share information in the following circumstances:</p>
-        <ul>
-            <li>With your explicit consent</li>
-            <li>To comply with legal obligations</li>
-            <li>To protect our rights and safety</li>
-            <li>In connection with a business transfer</li>
-        </ul>
+                <section class="policy-section">
+                    <div class="section-kicker">04 / Security</div>
+                    <h2>Data security</h2>
+                    <p>
+                        We implement appropriate technical and organizational measures to protect your personal
+                        information against unauthorized access, alteration, disclosure, or destruction. Your files are
+                        encrypted and stored locally by default, with optional secure syncing.
+                    </p>
+                </section>
 
-        <h2>Your Rights</h2>
-        <p>You have the right to:</p>
-        <ul>
-            <li>Access and update your personal information</li>
-            <li>Request deletion of your data</li>
-            <li>Opt out of certain data processing</li>
-            <li>Request data portability</li>
-        </ul>
+                <section class="policy-section">
+                    <div class="section-kicker">05 / Disclosure</div>
+                    <h2>Data sharing and disclosure</h2>
+                    <p>
+                        We do not sell, trade, or otherwise transfer your personal information to third parties without
+                        your consent, except as described in this policy. We may share information in the following
+                        circumstances:
+                    </p>
+                    <ul>
+                        <li>With your explicit consent.</li>
+                        <li>To comply with legal obligations.</li>
+                        <li>To protect our rights and safety.</li>
+                        <li>In connection with a business transfer.</li>
+                    </ul>
+                </section>
 
-        <h2>Changes to This Policy</h2>
-        <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.</p>
+                <section class="policy-section">
+                    <div class="section-kicker">06 / Rights</div>
+                    <h2>Your rights</h2>
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Access and update your personal information.</li>
+                        <li>Request deletion of your data.</li>
+                        <li>Opt out of certain data processing.</li>
+                        <li>Request data portability.</li>
+                    </ul>
+                </section>
 
-        <h2>Contact Us</h2>
-        <p>If you have any questions about this Privacy Policy, please contact us at privacy@storax.com.</p>
-    </section>
+                <section class="policy-section">
+                    <div class="section-kicker">07 / Updates</div>
+                    <h2>Changes to this policy</h2>
+                    <p>
+                        We may update this Privacy Policy from time to time. We will notify you of any changes by
+                        posting the new policy on this page and updating the Last updated date.
+                    </p>
+                </section>
+
+                <section class="policy-section">
+                    <div class="section-kicker">08 / Contact</div>
+                    <h2>Contact us</h2>
+                    <p>
+                        If you have any questions about this Privacy Policy, contact us at privacy@storax.com.
+                    </p>
+                    <div class="contact-card">
+                        <div>
+                            <strong>Need privacy support?</strong>
+                            <p>Send questions, deletion requests, or data access requests to the privacy inbox.</p>
+                        </div>
+                        <a href="mailto:privacy@storax.com">Email Privacy Team</a>
+                    </div>
+                </section>
+            </article>
+        </section>
+    </main>
 
     <footer>
-        © 2026 Storax. Built with precision.
+        <div class="footer-inner">
+            <span>© 2026 Storax. Built with precision.</span>
+            <a href="index.html">Home</a>
+        </div>
     </footer>
 
     <script>
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
-        // Get saved theme or default to dark
         const savedTheme = localStorage.getItem('theme') || 'dark';
         body.classList.toggle('light-theme', savedTheme === 'light');
-        themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+        themeToggle.textContent = savedTheme === 'light' ? 'Light' : 'Dark';
 
-        // Toggle theme on button click
         themeToggle.addEventListener('click', () => {
             const isLight = body.classList.toggle('light-theme');
             const newTheme = isLight ? 'light' : 'dark';
             localStorage.setItem('theme', newTheme);
-            themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+            themeToggle.textContent = isLight ? 'Light' : 'Dark';
         });
     </script>
-
 </body>
 
-</html></content>
-<parameter name="filePath">privacy-policy.html
+</html>
