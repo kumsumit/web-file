@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kumpali.storax",
+      "sha256_cert_fingerprints": [
+        "1A:C6:75:82:45:4C:6D:1A:C3:B8:C9:EC:7D:9C:0F:6D:1E:D8:23:B4:1A:BF:81:25:A8:46:06:AF:E4:F9:B7:D5"
+      ]
+    }
+  }
+]
