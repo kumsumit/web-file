@@ -634,6 +634,13 @@
             padding: 42px;
         }
 
+        .download-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
         .download-note {
             display: flex;
             flex-wrap: wrap;
@@ -1083,11 +1090,13 @@
                             <span>Free download</span>
                             <span>No ads</span>
                             <span>No subscriptions</span>
-                            <span>Open source</span>
                         </div>
                     </div>
 
-                    <a class="btn btn-primary" href="#" aria-label="Download Storax for Android">Download for Android</a>
+                    <div class="download-actions">
+                        <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.kumpali.torax" aria-label="Download Storax for Android">Download for Android</a>
+                        <a class="btn btn-secondary" href="Storax-Setup.exe" download="Storax-Setup.exe" aria-label="Download Storax for Windows">Download for Windows</a>
+                    </div>
                 </div>
             </section>
         </main>
