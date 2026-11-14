@@ -1,0 +1,2 @@
+# Keep locally built AppImage installers out of Git.
+*.AppImage
