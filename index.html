@@ -10,6 +10,7 @@
     <meta property="og:description" content="Private vaults, duplicate cleanup, smart search and nearby sharing in one file manager. Free, no ads.">
     <meta property="og:image" content="storax.png">
     <meta name="theme-color" content="#0e0f13">
+    <script>document.documentElement.classList.add('js');</script>
     <link rel="icon" href="favicon.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -801,6 +802,2095 @@
             color: var(--ink-soft);
         }
 
+        /* =========================================================
+           Motion layer
+           Everything hidden for animation is scoped to .js, so the
+           page reads normally without JavaScript.
+           ========================================================= */
+        :root {
+            --ease-out: cubic-bezier(.2, .7, .2, 1);
+            --ease-spring: cubic-bezier(.3, 1.5, .5, 1);
+        }
+
+        /* Reading progress + header state */
+        .scroll-progress {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 40;
+            height: 2px;
+            transform-origin: 0 50%;
+            transform: scaleX(var(--progress, 0));
+            background: linear-gradient(90deg, var(--accent), var(--ok));
+            pointer-events: none;
+        }
+
+        .site-header {
+            transition: box-shadow 240ms ease, background-color 240ms ease;
+        }
+
+        .site-header.scrolled {
+            box-shadow: 0 12px 30px -24px rgba(0, 0, 0, 0.55);
+        }
+
+        /* Hero ambience */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: -18%;
+            right: -8%;
+            z-index: -1;
+            width: min(760px, 95vw);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle, color-mix(in srgb, var(--accent) 26%, transparent), transparent 62%);
+            animation: drift 18s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .hero-glow.two {
+            top: auto;
+            right: auto;
+            bottom: -35%;
+            left: -18%;
+            width: min(600px, 85vw);
+            background: radial-gradient(circle, color-mix(in srgb, var(--ok) 16%, transparent), transparent 60%);
+            animation-duration: 24s;
+            animation-direction: alternate-reverse;
+        }
+
+        .hero-lines {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                linear-gradient(var(--line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line) 1px, transparent 1px);
+            background-size: 56px 56px;
+            -webkit-mask-image: radial-gradient(ellipse 65% 60% at 72% 42%, #000 15%, transparent 72%);
+            mask-image: radial-gradient(ellipse 65% 60% at 72% 42%, #000 15%, transparent 72%);
+            opacity: 0.55;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(-7%, 9%, 0) scale(1.14); }
+        }
+
+        .hero .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+        }
+
+        .hero .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--ok);
+            animation: pulse 2.4s ease-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); }
+            70%, 100% { box-shadow: 0 0 0 10px transparent; }
+        }
+
+        /* Hero entrance */
+        .js .enter {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: enter 900ms var(--ease-out) forwards;
+            animation-delay: calc(var(--d, 0) * 1ms);
+        }
+
+        @keyframes enter {
+            to { opacity: 1; transform: none; }
+        }
+
+        h1 em {
+            position: relative;
+            white-space: nowrap;
+        }
+
+        h1 em::after {
+            content: "";
+            position: absolute;
+            left: 0.04em;
+            right: 0.08em;
+            bottom: 0.02em;
+            height: 0.07em;
+            border-radius: 99px;
+            background: currentColor;
+            opacity: 0.35;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: draw 1000ms 1000ms cubic-bezier(.6, 0, .2, 1) forwards;
+        }
+
+        @keyframes draw {
+            to { transform: scaleX(1); }
+        }
+
+        /* Primary button: shine + arrow */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+            transform: translateX(-120%);
+            transition: transform 700ms ease;
+            pointer-events: none;
+        }
+
+        .btn-primary:hover::after {
+            transform: translateX(120%);
+        }
+
+        .btn .arrow {
+            display: inline-block;
+            transition: transform 260ms var(--ease-out);
+        }
+
+        .btn:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* Device: float, tilt, scan, staged content */
+        .device-wrap {
+            perspective: 1200px;
+        }
+
+        .device {
+            transform: rotate(2deg) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+            transition: transform 500ms var(--ease-out);
+            animation: float 7s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        @keyframes float {
+            0%, 100% { translate: 0 0; }
+            50% { translate: 0 -10px; }
+        }
+
+        .screen::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -30%;
+            height: 30%;
+            background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--accent) 12%, transparent), transparent);
+            animation: scan 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0%, 20% { transform: translateY(0); }
+            65%, 100% { transform: translateY(440%); }
+        }
+
+        .js .bar i {
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 1000ms var(--ease-out);
+        }
+
+        .js .bar i:nth-child(2) { transition-delay: 120ms; }
+        .js .bar i:nth-child(3) { transition-delay: 240ms; }
+        .js .bar i:nth-child(4) { transition-delay: 360ms; }
+
+        .device-wrap.is-in .bar i {
+            transform: scaleX(1);
+        }
+
+        .js .device-wrap .legend > div,
+        .js .device-wrap .recent-row {
+            opacity: 0;
+            transform: translateX(14px);
+            transition: opacity 600ms ease, transform 700ms var(--ease-out);
+        }
+
+        .device-wrap.is-in .legend > div,
+        .device-wrap.is-in .recent-row {
+            opacity: 1;
+            transform: none;
+        }
+
+        .device-wrap .legend > div:nth-child(1) { transition-delay: 500ms; }
+        .device-wrap .legend > div:nth-child(2) { transition-delay: 580ms; }
+        .device-wrap .legend > div:nth-child(3) { transition-delay: 660ms; }
+        .device-wrap .legend > div:nth-child(4) { transition-delay: 740ms; }
+        .device-wrap .recent-row:nth-child(1) { transition-delay: 900ms; }
+        .device-wrap .recent-row:nth-child(2) { transition-delay: 1020ms; }
+        .device-wrap .recent-row:nth-child(3) { transition-delay: 1140ms; }
+
+        .js .note-card {
+            opacity: 0;
+            translate: 0 14px;
+            scale: 0.96;
+        }
+
+        .device-wrap.is-in .note-card {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+            transition: opacity 600ms 1.3s ease, translate 800ms 1.3s var(--ease-out), scale 800ms 1.3s var(--ease-out);
+            animation: float 6s 2.4s ease-in-out infinite;
+        }
+
+        /* ---------- Hero stage: desktop window + phone ---------- */
+        .hero-grid {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+        }
+
+        .device-wrap {
+            width: 100%;
+            max-width: 600px;
+            justify-self: center;
+            padding-bottom: 190px;
+        }
+
+        .desk {
+            position: relative;
+            width: 82%;
+            overflow: hidden;
+            border: 1px solid var(--line-strong);
+            border-radius: 14px;
+            background: var(--paper-raised);
+            box-shadow: var(--shadow);
+            transform: rotateX(calc(var(--rx, 0deg) * 0.5)) rotateY(calc(var(--ry, 0deg) * 0.5));
+            transition: transform 500ms var(--ease-out);
+            animation: float 8s -3s ease-in-out infinite;
+        }
+
+        .desk-bar {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            height: 34px;
+            padding: 0 12px;
+            border-bottom: 1px solid var(--line);
+            background: var(--paper);
+        }
+
+        .desk-bar i {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e5655b;
+        }
+
+        .desk-bar i:nth-child(2) { background: #e0a526; }
+        .desk-bar i:nth-child(3) { background: #2fbf71; }
+
+        .desk-bar span {
+            flex: 1;
+            margin-right: 44px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .desk-body {
+            display: grid;
+            grid-template-columns: 118px minmax(0, 1fr);
+            height: 300px;
+        }
+
+        .desk-side {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 10px 8px;
+            border-right: 1px solid var(--line);
+            font-size: 12px;
+        }
+
+        .desk-side b {
+            padding: 6px 8px 4px;
+            color: var(--muted);
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .desk-side button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px;
+            border-radius: 6px;
+            color: var(--ink-soft);
+            white-space: nowrap;
+        }
+
+        .desk-side button::before {
+            content: "";
+            flex: 0 0 auto;
+            width: 9px;
+            height: 9px;
+            border-radius: 3px;
+            background: var(--c, var(--line-strong));
+        }
+
+        .desk-side button.on {
+            background: var(--accent-soft);
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .desk-main {
+            position: relative;
+            min-width: 0;
+            padding: 12px 14px;
+        }
+
+        .desk-path {
+            margin-bottom: 12px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .desk-path b {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .desk-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px 10px;
+        }
+
+        .tile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-width: 0;
+            color: var(--ink-soft);
+            font-size: 11px;
+        }
+
+        .tile > span:last-child {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .thumb {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 8px;
+            background: linear-gradient(150deg, #8b91ff, #5b63f0);
+        }
+
+        .thumb::before {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 58%;
+            background: rgba(255, 255, 255, 0.3);
+            clip-path: polygon(0 100%, 28% 32%, 50% 68%, 72% 18%, 100% 100%);
+        }
+
+        .thumb.green { background: linear-gradient(150deg, #4fd1a0, #1f9d6b); }
+        .thumb.warm { background: linear-gradient(150deg, #f3c06b, #d9645a); }
+
+        .thumb.video::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-left: 12px solid #fff;
+            transform: translate(-35%, -50%);
+        }
+
+        .thumb.folder {
+            background: none;
+        }
+
+        .thumb.folder::before {
+            inset: 24% 8% 14%;
+            height: auto;
+            border-radius: 6px;
+            background: color-mix(in srgb, var(--accent) 75%, var(--paper));
+            clip-path: none;
+        }
+
+        .thumb.folder::after {
+            content: "";
+            position: absolute;
+            top: 15%;
+            left: 8%;
+            width: 40%;
+            height: 14%;
+            border-radius: 4px 4px 0 0;
+            background: color-mix(in srgb, var(--accent) 55%, var(--paper));
+        }
+
+        .thumb.doc {
+            border: 1px solid var(--line-strong);
+            background: var(--paper);
+        }
+
+        .thumb.doc::before {
+            inset: 20% 20% 34%;
+            height: auto;
+            background: repeating-linear-gradient(var(--line-strong) 0 2px, transparent 2px 7px);
+            clip-path: none;
+        }
+
+        .thumb.doc::after {
+            content: attr(data-ext);
+            position: absolute;
+            bottom: 9%;
+            left: 20%;
+            color: #d9645a;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .tile.sel .thumb {
+            box-shadow: 0 0 0 2px var(--paper-raised), 0 0 0 4px var(--accent);
+        }
+
+        .tile.sel span {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .desk-toast {
+            position: absolute;
+            right: 14px;
+            bottom: 12px;
+            left: 14px;
+            padding: 10px 12px;
+            border: 1px solid var(--line-strong);
+            border-radius: 10px;
+            background: var(--paper);
+            box-shadow: var(--shadow);
+            font-size: 12px;
+        }
+
+        .desk-toast div {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 7px;
+            color: var(--ink-soft);
+        }
+
+        .desk-toast .track {
+            height: 4px;
+            overflow: hidden;
+            border-radius: 2px;
+            background: var(--line);
+        }
+
+        .desk-toast .track span {
+            display: block;
+            height: 100%;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        /* Phone overlaps the window's lower right corner */
+        .device-wrap .device {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            scale: 0.66;
+            transform-origin: 100% 100%;
+        }
+
+        .device-wrap .note-card {
+            left: -24px;
+            bottom: 40px;
+        }
+
+        /* Staged entrance for the window contents */
+        .js .desk .tile {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 500ms ease, transform 600ms var(--ease-out);
+        }
+
+        .device-wrap.is-in .desk .tile {
+            opacity: 1;
+            transform: none;
+        }
+
+        .desk .tile:nth-child(1) { transition-delay: 250ms; }
+        .desk .tile:nth-child(2) { transition-delay: 310ms; }
+        .desk .tile:nth-child(3) { transition-delay: 370ms; }
+        .desk .tile:nth-child(4) { transition-delay: 430ms; }
+        .desk .tile:nth-child(5) { transition-delay: 490ms; }
+        .desk .tile:nth-child(6) { transition-delay: 550ms; }
+        .desk .tile:nth-child(7) { transition-delay: 610ms; }
+        .desk .tile:nth-child(8) { transition-delay: 670ms; }
+
+        @media (max-width: 680px) {
+            .device-wrap {
+                padding-bottom: 130px;
+            }
+
+            .desk {
+                width: 86%;
+            }
+
+            .desk-body {
+                grid-template-columns: minmax(0, 1fr);
+                height: 230px;
+            }
+
+            .desk-side {
+                display: none;
+            }
+
+            .desk-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .device-wrap .device {
+                scale: 0.5;
+            }
+
+            .device-wrap .note-card {
+                left: 0;
+                bottom: 12px;
+            }
+        }
+
+        /* ---------- Interactive desktop demo ---------- */
+        .desk:hover,
+        .desk:focus-within {
+            animation-play-state: paused;
+        }
+
+        .desk-side button,
+        .desk-back,
+        .desk-btn,
+        .tile,
+        .toast-btn {
+            border: 0;
+            background: none;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .desk-side button {
+            width: 100%;
+            color: var(--ink-soft);
+            text-align: left;
+            transition: background-color 160ms ease, color 160ms ease;
+        }
+
+        .desk-side button:hover {
+            background: var(--accent-soft);
+            color: var(--ink);
+        }
+
+        .desk-side button.flash::before {
+            animation: sideflash 900ms ease;
+        }
+
+        @keyframes sideflash {
+            0%, 100% { transform: scale(1); }
+            30% { transform: scale(1.9); box-shadow: 0 0 0 4px var(--accent-soft); }
+        }
+
+        .desk-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 28px;
+            margin-bottom: 12px;
+        }
+
+        .desk-top .desk-path {
+            flex: 1;
+            min-width: 0;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .desk-back {
+            display: grid;
+            place-items: center;
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--line-strong);
+            border-radius: 6px;
+            color: var(--ink);
+            font-size: 15px;
+            line-height: 1;
+        }
+
+        .desk-back:hover {
+            background: var(--accent-soft);
+        }
+
+        .desk-back[hidden],
+        .desk-actions[hidden],
+        .toast-btn[hidden] {
+            display: none;
+        }
+
+        .desk-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .desk-btn {
+            padding: 4px 9px;
+            border: 1px solid var(--line-strong);
+            border-radius: 999px;
+            color: var(--ink);
+            font-size: 11.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+        }
+
+        .desk-btn:hover {
+            border-color: var(--ink);
+        }
+
+        .desk-btn:active {
+            transform: scale(0.96);
+        }
+
+        .desk-btn.primary {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: var(--accent-ink);
+        }
+
+        .desk-grid {
+            max-height: 214px;
+            margin-right: 0;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            padding: 4px;
+            margin-left: -4px;
+        }
+
+        .tile {
+            padding: 0;
+            border-radius: 8px;
+            color: var(--ink-soft);
+            font-size: 11px;
+        }
+
+        .tile.sel .tile-name {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .tile .thumb {
+            display: block;
+            transition: transform 220ms var(--ease-out), box-shadow 220ms ease;
+        }
+
+        .tile:hover .thumb {
+            transform: translateY(-3px);
+        }
+
+        .tile.new {
+            animation: tilein 320ms var(--ease-out);
+        }
+
+        @keyframes tilein {
+            from { opacity: 0; transform: scale(0.9); }
+        }
+
+        .thumb.zip {
+            background: linear-gradient(150deg, #b8bcc8, #8a8f9e);
+        }
+
+        .thumb.zip::before {
+            inset: 0 auto 0 44%;
+            width: 12%;
+            height: auto;
+            background: repeating-linear-gradient(#fff 0 3px, transparent 3px 6px);
+            clip-path: none;
+            opacity: 0.75;
+        }
+
+        .thumb.audio {
+            background: linear-gradient(150deg, #f08fb6, #c2457e);
+        }
+
+        .thumb.audio::before {
+            display: none;
+        }
+
+        .thumb.audio::after {
+            content: "♪";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 22px;
+        }
+
+        .desk-empty {
+            grid-column: 1 / -1;
+            padding: 40px 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Vault lock panel */
+        .desk-lock {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+            font-size: 12px;
+        }
+
+        .desk-lock svg {
+            width: 54px;
+            height: 54px;
+            overflow: visible;
+        }
+
+        .desk-lock .shackle {
+            stroke: var(--ink);
+            transform-box: fill-box;
+            transform-origin: center bottom;
+            transition: transform 400ms var(--ease-out);
+        }
+
+        .desk-lock .body {
+            fill: var(--ink);
+            transition: fill 300ms ease;
+        }
+
+        .desk-lock.open .shackle {
+            transform: translateY(-12px);
+        }
+
+        .desk-lock.open .body {
+            fill: var(--accent);
+        }
+
+        .desk-pin {
+            display: flex;
+            gap: 8px;
+        }
+
+        .desk-pin i {
+            width: 9px;
+            height: 9px;
+            border: 1.5px solid var(--line-strong);
+            border-radius: 50%;
+            transition: background-color 150ms ease, border-color 150ms ease, transform 200ms var(--ease-out);
+        }
+
+        .desk-pin i.on {
+            border-color: var(--accent);
+            background: var(--accent);
+            transform: scale(1.15);
+        }
+
+        /* Toast and hint */
+        .desk-toast {
+            right: 14px;
+            opacity: 0;
+            transform: translateY(8px);
+            pointer-events: none;
+            transition: opacity 250ms ease, transform 300ms var(--ease-out);
+        }
+
+        .desk-toast.show {
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+        }
+
+        .desk-toast .track {
+            display: none;
+        }
+
+        .desk-toast.has-progress .track {
+            display: block;
+        }
+
+        .desk-toast div {
+            align-items: center;
+        }
+
+        .desk-toast.has-progress div:first-child,
+        .desk-toast .toast-btn {
+            margin-bottom: 0;
+        }
+
+        .desk-toast.has-progress div:first-child {
+            margin-bottom: 7px;
+        }
+
+        .desk-toast:not(.has-progress) div:first-child {
+            margin-bottom: 0;
+        }
+
+        .toast-btn {
+            padding: 0;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .desk-hint {
+            position: absolute;
+            right: 14px;
+            bottom: 14px;
+            left: 14px;
+            color: var(--muted);
+            font-size: 11.5px;
+            transition: opacity 300ms ease;
+        }
+
+        .desk.used .desk-hint,
+        .desk-toast.show ~ .desk-hint {
+            opacity: 0;
+        }
+
+        @media (max-width: 680px) {
+            .desk-actions .desk-btn:not(.primary) {
+                display: none;
+            }
+        }
+
+        /* ---------- Phone: look and interactive tabs ---------- */
+        /* Whichever device the pointer is on comes to the front. */
+        .desk { z-index: 1; }
+        .device-wrap .device { z-index: 2; }
+        .device-wrap.desk-focus .desk { z-index: 3; }
+
+        .device {
+            padding: 10px;
+            border-radius: 48px;
+            background: linear-gradient(145deg, #3a3e4a, #121318 45%, #2a2d36);
+            box-shadow:
+                inset 0 0 0 1.5px rgba(255, 255, 255, 0.14),
+                0 0 0 1px rgba(0, 0, 0, 0.45),
+                0 50px 90px -40px rgba(0, 0, 0, 0.6),
+                0 20px 34px -22px rgba(0, 0, 0, 0.45);
+        }
+
+        .side-btn {
+            position: absolute;
+            width: 4px;
+            border-radius: 2px;
+            background: #2a2d36;
+        }
+
+        .side-btn.power { top: 168px; right: -4px; height: 76px; }
+        .side-btn.vol { top: 132px; left: -4px; height: 48px; box-shadow: 0 64px 0 #2a2d36; }
+
+        .screen {
+            display: flex;
+            flex-direction: column;
+            height: 612px;
+            min-height: 0;
+            padding: 0;
+            border-radius: 39px;
+        }
+
+        /* Glass reflection */
+        .screen::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 6;
+            background: linear-gradient(118deg, rgba(255, 255, 255, 0.16), transparent 30%);
+            pointer-events: none;
+        }
+
+        .screen::after {
+            z-index: 5;
+            opacity: 0.6;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 46px;
+            padding: 0 26px 0 30px;
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .island {
+            width: 92px;
+            height: 26px;
+            border-radius: 14px;
+            background: #0d0e12;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-icons svg { height: 11px; width: auto; }
+
+        .app-head {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 6px 20px 14px;
+        }
+
+        .app-head img {
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            box-shadow: 0 6px 14px -6px rgba(91, 99, 240, 0.6);
+        }
+
+        .app-head small {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .app-head strong {
+            font-size: 19px;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .app-head .avatar {
+            width: 34px;
+            height: 34px;
+            margin-left: auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f3c06b, #d9645a);
+            box-shadow: 0 0 0 2px var(--paper-raised), 0 0 0 3.5px color-mix(in srgb, #d9645a 40%, transparent);
+        }
+
+        /* Panes */
+        .pane {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 0;
+            overflow: hidden;
+            padding: 0 16px 10px;
+        }
+
+        .screen[data-tab="home"] .pane-home,
+        .screen[data-tab="vault"] .pane-vault,
+        .screen[data-tab="share"] .pane-share {
+            display: flex;
+            animation: panein 380ms var(--ease-out);
+        }
+
+        @keyframes panein {
+            from { opacity: 0; transform: translateY(8px); }
+        }
+
+        /* Home: storage ring */
+        .ring-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: var(--paper);
+        }
+
+        .ring-wrap {
+            position: relative;
+            flex: 0 0 auto;
+            width: 108px;
+            height: 108px;
+        }
+
+        .ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .ring circle {
+            fill: none;
+            stroke-width: 12;
+            stroke-linecap: round;
+        }
+
+        .ring .track { stroke: var(--line); }
+
+        .ring .seg {
+            stroke-dasharray: calc(var(--len) * 1px) 400px;
+        }
+
+        .js .ring .seg {
+            stroke-dasharray: 0 400px;
+            transition: stroke-dasharray 1300ms var(--ease-out);
+        }
+
+        .js .device-wrap.is-in .ring .seg {
+            stroke-dasharray: calc(var(--len) * 1px) 400px;
+        }
+
+        .js .ring .seg:nth-of-type(3) { transition-delay: 150ms; }
+        .js .ring .seg:nth-of-type(4) { transition-delay: 300ms; }
+        .js .ring .seg:nth-of-type(5) { transition-delay: 420ms; }
+        .js .ring .seg:nth-of-type(6) { transition-delay: 520ms; }
+
+        .ring-label {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .ring-label strong { font-size: 25px; letter-spacing: -0.02em; }
+        .ring-label small { color: var(--muted); font-size: 12px; }
+
+        .ring-info { min-width: 0; flex: 1; }
+        .ring-info > strong { display: block; font-size: 21px; letter-spacing: -0.02em; line-height: 1.2; }
+        .ring-info > small { color: var(--muted); font-size: 12px; }
+
+        .ring-info .legend {
+            grid-template-columns: 1fr;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .ring-info .legend span:first-child {
+            display: flex;
+            align-items: center;
+            margin-left: 0;
+            color: var(--ink-soft);
+            font-size: 12px;
+        }
+
+        .ring-info .legend b { margin-right: 6px; }
+
+        /* Home: categories */
+        .cats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .cat {
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: var(--paper);
+            transition: transform 200ms var(--ease-out);
+        }
+
+        .cat:hover { transform: translateY(-2px); }
+
+        .cat i {
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            background: color-mix(in srgb, var(--c) 16%, transparent);
+            color: var(--c);
+        }
+
+        .cat i svg { width: 18px; height: 18px; }
+        .cat strong { display: block; font-size: 14px; line-height: 1.25; }
+        .cat small { color: var(--muted); font-size: 12px; }
+
+        .js .device-wrap .cat {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 500ms ease, transform 600ms var(--ease-out);
+        }
+
+        .js .device-wrap.is-in .cat { opacity: 1; transform: none; }
+        .device-wrap .cat:nth-child(1) { transition-delay: 600ms; }
+        .device-wrap .cat:nth-child(2) { transition-delay: 680ms; }
+        .device-wrap .cat:nth-child(3) { transition-delay: 760ms; }
+        .device-wrap .cat:nth-child(4) { transition-delay: 840ms; }
+
+        /* Home: suggestion card */
+        .suggest {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            overflow: hidden;
+            padding: 13px 14px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #5b63f0, #8b5cf6 55%, #c2457e);
+            color: #fff;
+            box-shadow: 0 14px 30px -16px rgba(91, 99, 240, 0.8);
+        }
+
+        .suggest::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.28) 50%, transparent 65%);
+            transform: translateX(-120%);
+            animation: shimmer 4.5s 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 60% { transform: translateX(-120%); }
+            100% { transform: translateX(120%); }
+        }
+
+        .suggest .ic {
+            display: grid;
+            flex: 0 0 auto;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .suggest .ic svg { width: 20px; height: 20px; }
+        .suggest strong { display: block; font-size: 15px; line-height: 1.25; }
+        .suggest small { font-size: 12px; opacity: 0.88; }
+
+        .suggest-btn {
+            margin-left: auto;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: #fff;
+            color: #5b63f0;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Vault tab */
+        .pv-head {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding-top: 6px;
+            text-align: center;
+        }
+
+        .pv-lock {
+            width: 58px;
+            height: 58px;
+            margin-bottom: 4px;
+            overflow: visible;
+        }
+
+        .pv-lock .shackle {
+            stroke: var(--ink);
+            transform-box: fill-box;
+            transform-origin: center bottom;
+            transition: transform 400ms var(--ease-out);
+        }
+
+        .pv-lock .body {
+            fill: var(--ink);
+            transition: fill 300ms ease;
+        }
+
+        .pane-vault.open .pv-lock .shackle { transform: translateY(-12px); }
+        .pane-vault.open .pv-lock .body { fill: var(--accent); }
+        .pv-head strong { font-size: 19px; }
+        .pv-head small { color: var(--muted); font-size: 12.5px; }
+
+        .pv-dots {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin: 6px 0 4px;
+        }
+
+        .pv-dots i {
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid var(--line-strong);
+            border-radius: 50%;
+            transition: background-color 150ms ease, border-color 150ms ease, transform 200ms var(--ease-out);
+        }
+
+        .pv-dots i.on {
+            border-color: var(--accent);
+            background: var(--accent);
+            transform: scale(1.15);
+        }
+
+        .pv-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 58px);
+            justify-content: center;
+            gap: 8px 22px;
+        }
+
+        .pv-pad button {
+            width: 58px;
+            height: 58px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--paper);
+            box-shadow: inset 0 0 0 1px var(--line);
+            color: var(--ink);
+            font: inherit;
+            font-size: 22px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 120ms ease, transform 120ms ease;
+        }
+
+        .pv-pad button:active { transform: scale(0.92); background: var(--accent-soft); }
+        .pv-pad .pv-del { background: none; box-shadow: none; font-size: 20px; }
+
+        .pv-files { display: none; flex-direction: column; gap: 8px; }
+        .pane-vault.open .pv-pad { display: none; }
+        .pane-vault.open .pv-files { display: flex; animation: panein 380ms var(--ease-out); }
+
+        .pv-file {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--paper);
+        }
+
+        .pv-file .t {
+            display: grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            background: color-mix(in srgb, var(--c) 16%, transparent);
+            color: var(--c);
+        }
+
+        .pv-file .t svg { width: 18px; height: 18px; }
+        .pv-file strong { display: block; font-size: 14px; line-height: 1.25; }
+        .pv-file small { color: var(--muted); font-size: 12px; }
+
+        .pv-relock {
+            align-self: center;
+            margin-top: 4px;
+            padding: 8px 16px;
+            border: 1px solid var(--line-strong);
+            border-radius: 999px;
+            background: none;
+            color: var(--ink);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .pane-vault.shake .pv-dots { animation: shake 360ms ease; }
+
+        @keyframes shake {
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* Share tab: radar */
+        .pane-share { align-items: center; }
+
+        .radar {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin-top: 6px;
+        }
+
+        .radar .wave {
+            position: absolute;
+            inset: 0;
+            border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: wave 3s ease-out infinite;
+        }
+
+        .radar .wave:nth-child(2) { animation-delay: 1s; }
+        .radar .wave:nth-child(3) { animation-delay: 2s; }
+
+        @keyframes wave {
+            from { opacity: 0.9; transform: scale(0.25); }
+            to { opacity: 0; transform: scale(1); }
+        }
+
+        .radar .me {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: grid;
+            place-items: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--paper);
+            box-shadow: 0 0 0 6px var(--accent-soft), var(--shadow);
+            transform: translate(-50%, -50%);
+        }
+
+        .radar .me img { width: 38px; height: 38px; border-radius: 10px; }
+
+        .peer {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: var(--ink-soft);
+            font: inherit;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.6);
+            pointer-events: none;
+        }
+
+        .pane-share.found .peer {
+            pointer-events: auto;
+        }
+
+        .peer i {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--c);
+            color: #fff;
+            font-size: 17px;
+            font-style: normal;
+            font-weight: 700;
+            box-shadow: 0 8px 18px -8px var(--c);
+            transition: transform 200ms var(--ease-out);
+        }
+
+        .peer:hover i { transform: scale(1.08); }
+        .peer.p1 { top: 14px; left: 40px; }
+        .peer.p2 { top: 64px; right: 4px; }
+        .peer.p3 { bottom: 10px; left: 86px; }
+
+        .pane-share.found .peer { animation: peerin 500ms var(--ease-spring) forwards; }
+        .pane-share.found .peer.p2 { animation-delay: 500ms; }
+        .pane-share.found .peer.p3 { animation-delay: 1000ms; }
+
+        @keyframes peerin {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .peer.chosen i { box-shadow: 0 0 0 4px var(--paper-raised), 0 0 0 6px var(--c); }
+
+        .sh-msg {
+            max-width: 240px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .sh-progress {
+            width: 200px;
+            height: 6px;
+            overflow: hidden;
+            border-radius: 3px;
+            background: var(--line);
+            opacity: 0;
+            transition: opacity 200ms ease;
+        }
+
+        .sh-progress span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent), var(--ok));
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        .pane-share.sending .sh-progress { opacity: 1; }
+
+        .sh-done {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--ok);
+            color: #fff;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 250ms ease, transform 400ms var(--ease-spring);
+        }
+
+        .sh-done svg { width: 20px; height: 20px; }
+        .pane-share.done .sh-done { opacity: 1; transform: none; }
+        .pane-share.done .sh-progress { opacity: 0; }
+
+        /* Tab bar */
+        .tabbar {
+            display: flex;
+            justify-content: space-around;
+            margin-top: auto;
+            padding: 8px 10px 4px;
+            border-top: 1px solid var(--line);
+            background: var(--paper-raised);
+        }
+
+        .tabbar button {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 6px 18px;
+            border: 0;
+            background: none;
+            color: var(--muted);
+            font: inherit;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            isolation: isolate;
+            transition: color 200ms ease;
+        }
+
+        .tabbar button svg { width: 22px; height: 22px; }
+
+        .tabbar button::before {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 8px;
+            right: 8px;
+            z-index: -1;
+            height: 30px;
+            border-radius: 12px;
+            background: var(--accent-soft);
+            opacity: 0;
+            transform: scale(0.6);
+            transition: opacity 200ms ease, transform 300ms var(--ease-spring);
+        }
+
+        .tabbar button.on { color: var(--accent); }
+        .tabbar button.on::before { opacity: 1; transform: none; }
+
+        .home-indicator {
+            display: block;
+            width: 116px;
+            height: 5px;
+            margin: 6px auto 8px;
+            border-radius: 3px;
+            background: var(--ink);
+            opacity: 0.55;
+        }
+
+        /* ---------- Download: recommended for this device ---------- */
+        .rec-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: var(--accent-ink);
+            font-size: 11.5px;
+            font-weight: 700;
+            white-space: nowrap;
+            animation: badgepop 500ms var(--ease-spring, ease) both;
+        }
+
+        .rec-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.8;
+        }
+
+        @keyframes badgepop {
+            from { opacity: 0; transform: scale(0.8); }
+        }
+
+        .platform summary .rec-badge {
+            margin-left: 4px;
+        }
+
+        .platform.recommended {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent), 0 24px 50px -30px color-mix(in srgb, var(--accent) 80%, transparent);
+        }
+
+        .platforms > a.recommended {
+            box-shadow: 0 0 0 2px var(--accent), 0 24px 50px -30px color-mix(in srgb, var(--accent) 80%, transparent);
+        }
+
+        .platforms > a .rec-badge {
+            margin-left: 10px;
+        }
+
+        .file-links a.recommended {
+            border-color: var(--accent);
+            background: color-mix(in srgb, var(--accent) 20%, transparent);
+        }
+
+        .file-links a.recommended small {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .group.recommended .group-label {
+            color: var(--paper);
+        }
+
+        .detect-note {
+            margin-top: 20px;
+            max-width: 30em;
+            padding: 12px 16px;
+            border-left: 2px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            background: color-mix(in srgb, var(--accent) 12%, transparent);
+            color: color-mix(in srgb, var(--paper) 82%, transparent);
+            font-size: 15px;
+        }
+
+        .detect-note[hidden] {
+            display: none;
+        }
+
+        .detect-note strong {
+            color: var(--paper);
+        }
+
+        /* Capability ticker */
+        .ticker {
+            overflow: hidden;
+            padding: 20px 0;
+            border-top: 1px solid var(--line);
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        }
+
+        .ticker-track {
+            display: flex;
+            width: max-content;
+            animation: ticker 48s linear infinite;
+        }
+
+        .ticker:hover .ticker-track {
+            animation-play-state: paused;
+        }
+
+        .ticker span {
+            display: inline-flex;
+            align-items: center;
+            gap: 40px;
+            padding-right: 40px;
+            color: var(--muted);
+            font-family: var(--serif);
+            font-size: clamp(22px, 3vw, 34px);
+            white-space: nowrap;
+            transition: color 200ms ease;
+        }
+
+        .ticker span:hover {
+            color: var(--ink);
+        }
+
+        .ticker span::after {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 2px;
+            background: var(--accent);
+            transform: rotate(45deg);
+        }
+
+        @keyframes ticker {
+            to { transform: translateX(-50%); }
+        }
+
+        /* Scroll reveal */
+        .js :is(.section-head, .feature, .tool, .principle, .card, .checks, .platforms > *, .download-grid > div:first-child, .security > div:first-child) {
+            opacity: 0;
+            transform: translateY(26px);
+            transition:
+                opacity 800ms ease,
+                transform 900ms var(--ease-out),
+                translate 300ms var(--ease-out),
+                background-color 200ms ease,
+                border-color 300ms ease,
+                box-shadow 300ms ease;
+        }
+
+        .js :is(.section-head, .feature, .tool, .principle, .card, .checks, .platforms > *, .download-grid > div:first-child, .security > div:first-child).is-in {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Feature rows: accent sweep */
+        .feature {
+            position: relative;
+        }
+
+        .feature::before {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 600ms var(--ease-out);
+        }
+
+        .feature:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature h3,
+        .feature-num {
+            transition: transform 300ms var(--ease-out), color 300ms ease;
+        }
+
+        .feature:hover h3 {
+            transform: translateX(6px);
+        }
+
+        .feature:hover .feature-num {
+            color: var(--accent);
+        }
+
+        /* Cursor spotlight */
+        .tool,
+        .card {
+            background-image: radial-gradient(380px circle at var(--mx, -999px) var(--my, -999px), var(--accent-soft), transparent 45%);
+        }
+
+        /* Security checks pop in */
+        .js .checks li::before {
+            transform: scale(0);
+            transition: transform 500ms var(--ease-spring);
+        }
+
+        .checks.is-in li::before {
+            transform: scale(1);
+        }
+
+        .checks li:nth-child(2)::before { transition-delay: 120ms; }
+        .checks li:nth-child(3)::before { transition-delay: 240ms; }
+        .checks li:nth-child(4)::before { transition-delay: 360ms; }
+
+        /* ---------- In action: animated feature cards ---------- */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            position: relative;
+            overflow: hidden;
+            padding: 14px 14px 26px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background-color: var(--paper-raised);
+        }
+
+        .card:hover {
+            translate: 0 -4px;
+            border-color: var(--line-strong);
+            box-shadow: var(--shadow);
+        }
+
+        .card h3 {
+            margin: 0 10px 6px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .card p {
+            margin: 0 10px;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .viz {
+            position: relative;
+            display: grid;
+            place-items: center;
+            height: 200px;
+            margin-bottom: 22px;
+            overflow: hidden;
+            border-radius: 12px;
+            background:
+                radial-gradient(circle at 1px 1px, var(--line-strong) 1px, transparent 1.5px) 0 0 / 16px 16px,
+                var(--paper);
+        }
+
+        .viz-tag {
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: var(--accent-ink);
+            font-size: 12px;
+            font-weight: 600;
+            transform: translateX(-50%);
+        }
+
+        /* Vault */
+        .lock {
+            width: 92px;
+            height: 92px;
+            margin-top: -6px;
+            overflow: visible;
+        }
+
+        .lock .shackle {
+            stroke: var(--ink);
+            transform-box: fill-box;
+            transform-origin: center bottom;
+            animation: shackle 5s cubic-bezier(.6, 0, .2, 1) infinite;
+        }
+
+        .lock .body {
+            fill: var(--ink);
+            animation: lockbody 5s ease infinite;
+        }
+
+        .lock .keyhole {
+            fill: var(--paper);
+        }
+
+        @keyframes shackle {
+            0%, 10% { transform: translateY(-12px); }
+            38%, 86% { transform: translateY(0); }
+            100% { transform: translateY(-12px); }
+        }
+
+        @keyframes lockbody {
+            0%, 34% { fill: var(--ink); }
+            42%, 86% { fill: var(--accent); }
+            100% { fill: var(--ink); }
+        }
+
+        .pin {
+            position: absolute;
+            bottom: 22px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .pin i {
+            width: 10px;
+            height: 10px;
+            border: 1.5px solid var(--line-strong);
+            border-radius: 50%;
+            animation: pin 5s ease infinite;
+        }
+
+        .pin i:nth-child(2) { animation-delay: 0.22s; }
+        .pin i:nth-child(3) { animation-delay: 0.44s; }
+        .pin i:nth-child(4) { animation-delay: 0.66s; }
+
+        @keyframes pin {
+            0%, 8% { background: transparent; border-color: var(--line-strong); }
+            12%, 84% { background: var(--accent); border-color: var(--accent); }
+            92%, 100% { background: transparent; border-color: var(--line-strong); }
+        }
+
+        .viz-vault .viz-tag {
+            animation: tagin 5s ease infinite;
+        }
+
+        @keyframes tagin {
+            0%, 38% { opacity: 0; translate: 0 -6px; }
+            44%, 84% { opacity: 1; translate: 0 0; }
+            92%, 100% { opacity: 0; translate: 0 -6px; }
+        }
+
+        /* Duplicates */
+        .photo {
+            position: absolute;
+            width: 76px;
+            height: 96px;
+            overflow: hidden;
+            border-radius: 10px;
+            background: linear-gradient(150deg, #8b91ff, #5b63f0);
+        }
+
+        .photo::before {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 58%;
+            background: rgba(255, 255, 255, 0.3);
+            clip-path: polygon(0 100%, 28% 32%, 50% 68%, 72% 18%, 100% 100%);
+        }
+
+        .photo::after {
+            content: "";
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .photo.p1 {
+            transform: translateX(-86px) rotate(-6deg);
+            animation: match 5s ease infinite;
+        }
+
+        .photo.p2 {
+            animation: dupe 5s var(--ease-out) infinite;
+        }
+
+        .photo.p3 {
+            background: linear-gradient(150deg, #4fd1a0, #1f9d6b);
+            transform: translateX(86px) rotate(6deg);
+        }
+
+        @keyframes match {
+            0%, 24% { box-shadow: 0 0 0 0 transparent; }
+            30%, 54% { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--accent); }
+            64%, 100% { box-shadow: 0 0 0 0 transparent; }
+        }
+
+        @keyframes dupe {
+            0%, 24% { transform: translateX(0) rotate(0) scale(1); opacity: 1; box-shadow: 0 0 0 0 transparent; }
+            30%, 44% { transform: translateX(0) rotate(0) scale(1); opacity: 1; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--accent); }
+            60%, 88% { transform: translateX(-86px) rotate(-6deg) scale(0.82); opacity: 0; box-shadow: 0 0 0 0 transparent; }
+            100% { transform: translateX(0) rotate(0) scale(1); opacity: 1; }
+        }
+
+        .viz-dupes .viz-tag {
+            top: auto;
+            bottom: 18px;
+            background: var(--ok);
+            animation: badge 5s var(--ease-out) infinite;
+        }
+
+        @keyframes badge {
+            0%, 56% { opacity: 0; translate: 0 8px; scale: 0.9; }
+            62%, 86% { opacity: 1; translate: 0 0; scale: 1; }
+            94%, 100% { opacity: 0; translate: 0 0; scale: 1; }
+        }
+
+        /* Nearby share */
+        .viz-share {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dev {
+            position: relative;
+            width: 48px;
+            height: 84px;
+            border: 2px solid var(--ink);
+            border-radius: 12px;
+            background: var(--paper-raised);
+        }
+
+        .dev::after {
+            content: "";
+            position: absolute;
+            inset: auto 9px 10px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--line-strong);
+        }
+
+        .dev-b {
+            animation: receive 1.6s ease infinite;
+        }
+
+        @keyframes receive {
+            0%, 78% { box-shadow: 0 0 0 0 transparent; }
+            88% { box-shadow: 0 0 0 6px var(--accent-soft); }
+            100% { box-shadow: 0 0 0 0 transparent; }
+        }
+
+        .beam {
+            position: relative;
+            width: 120px;
+            height: 2px;
+            margin: 0 12px;
+            background: repeating-linear-gradient(90deg, var(--line-strong) 0 6px, transparent 6px 12px);
+        }
+
+        .beam i {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 9px;
+            height: 9px;
+            margin-top: -4.5px;
+            border-radius: 2px;
+            background: var(--accent);
+            opacity: 0;
+            animation: packet 1.6s cubic-bezier(.5, 0, .5, 1) infinite;
+        }
+
+        .beam i:nth-child(2) { animation-delay: 0.4s; }
+        .beam i:nth-child(3) { animation-delay: 0.8s; }
+        .beam i:nth-child(4) { animation-delay: 1.2s; }
+
+        @keyframes packet {
+            0% { transform: translateX(0) rotate(0); opacity: 0; }
+            12%, 86% { opacity: 1; }
+            100% { transform: translateX(111px) rotate(90deg); opacity: 0; }
+        }
+
+        .share-bar {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            width: 168px;
+            height: 4px;
+            overflow: hidden;
+            border-radius: 2px;
+            background: var(--line);
+            transform: translateX(-50%);
+        }
+
+        .share-bar span {
+            display: block;
+            height: 100%;
+            background: var(--accent);
+            transform-origin: left;
+            animation: fillbar 5s linear infinite;
+        }
+
+        @keyframes fillbar {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        /* Run card loops only while visible */
+        .js .card:not(.playing) .viz *,
+        .js .card:not(.playing) .viz *::before,
+        .js .card:not(.playing) .viz *::after {
+            animation-play-state: paused;
+        }
+
+        /* Download band glow + accordion */
+        .download {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .download::before {
+            content: "";
+            position: absolute;
+            top: -260px;
+            right: -220px;
+            z-index: -1;
+            width: 680px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle, color-mix(in srgb, var(--accent) 32%, transparent), transparent 62%);
+            animation: drift 20s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .platform {
+            transition: border-color 200ms ease, background-color 200ms ease, opacity 800ms ease, transform 900ms var(--ease-out);
+        }
+
+        .platform:hover {
+            border-color: color-mix(in srgb, var(--paper) 32%, transparent);
+        }
+
+        .platform[open] .platform-body {
+            animation: unfold 420ms var(--ease-out);
+        }
+
+        @keyframes unfold {
+            from { opacity: 0; transform: translateY(-8px); }
+        }
+
+        .platform-icon {
+            transition: transform 300ms var(--ease-spring);
+        }
+
+        .platform summary:hover .platform-icon,
+        .platforms > a:hover .platform-icon {
+            transform: scale(1.15) rotate(-6deg);
+        }
+
+        @media (max-width: 960px) {
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 680px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* ---------- Responsive ---------- */
         @media (max-width: 960px) {
             .hero-grid,
@@ -867,14 +2957,29 @@
             *,
             *::before,
             *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                animation-delay: 0ms !important;
                 transition-duration: 0.01ms !important;
+                transition-delay: 0ms !important;
                 scroll-behavior: auto !important;
+            }
+
+            .ticker-track {
+                animation: none !important;
+                flex-wrap: wrap;
+                width: auto;
+            }
+
+            .ticker span[aria-hidden="true"] {
+                display: none;
             }
         }
     </style>
 </head>
 
 <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
     <header class="site-header">
         <div class="wrap nav">
             <a href="#top" class="brand" aria-label="Storax home">
@@ -902,124 +3007,298 @@
     <main id="top">
         <!-- Hero -->
         <section class="hero" style="border-top:0">
+            <div class="hero-glow" aria-hidden="true"></div>
+            <div class="hero-glow two" aria-hidden="true"></div>
+            <div class="hero-lines" aria-hidden="true"></div>
             <div class="wrap hero-grid">
                 <div>
-                    <span class="eyebrow">File manager, vault and cleaner in one app</span>
-                    <h1>Your phone storage, <em>under control.</em></h1>
-                    <p class="lede">
-                        Storax lets you browse, hide, clean up and share your files from one place. Move private
-                        files into an encrypted vault, find duplicate photos, search inside documents, and send files
-                        to nearby devices. It is built for Android first, and also runs on Windows, macOS and Linux.
+                    <span class="eyebrow enter" style="--d:0">Files, vault, cleanup and sharing in one app</span>
+                    <h1 class="enter" style="--d:120">Your phone storage, <em>under control.</em></h1>
+                    <p class="lede enter" style="--d:260">
+                        Storax brings everything you do with files into one place. Lock private files away in a
+                        vault, clear out duplicate photos, find documents by the words inside them, and send files
+                        to the phone next to you. Made for Android first, with versions for Windows, Mac and Linux
+                        computers.
                     </p>
 
-                    <div class="actions">
-                        <a class="btn btn-primary" href="#download">Get Storax</a>
-                        <a class="btn btn-ghost" href="#features">See what it does</a>
+                    <div class="actions enter" style="--d:380">
+                        <a class="btn btn-primary" href="#download"><span class="cta-label">Get Storax free</span> <span class="arrow" aria-hidden="true">→</span></a>
+                        <a class="btn btn-ghost" href="#in-action">See it in action</a>
                     </div>
 
-                    <ul class="facts">
+                    <ul class="facts enter" style="--d:480">
                         <li>Free to download</li>
                         <li>No ads</li>
                         <li>No subscriptions</li>
                     </ul>
                 </div>
 
-                <div class="device-wrap" style="position:relative" aria-label="Storax on Android">
-                    <div class="device">
-                        <div class="screen">
-                            <div class="screen-head">
-                                <h3>Storage</h3>
-                                <span>Internal</span>
-                            </div>
-
-                            <div class="meter">
-                                <div class="meter-row"><span>Used</span><span>67%</span></div>
-                                <div class="meter-value">86.4 GB <span style="font-size:14px;color:var(--muted);font-weight:500">of 128</span></div>
-                                <div class="bar" role="img" aria-label="Storage split by type">
-                                    <i style="width:15%;background:#5b63f0"></i>
-                                    <i style="width:39%;background:#1f9d6b"></i>
-                                    <i style="width:5%;background:#e0a526"></i>
-                                    <i style="width:11%;background:#d9645a"></i>
+                <div class="device-wrap enter" style="position:relative;--d:300" role="group" aria-label="Interactive preview of Storax on a computer and a phone, with sample files">
+                    <div class="desk" id="desk">
+                        <div class="desk-bar" aria-hidden="true"><i></i><i></i><i></i><span>Storax</span></div>
+                        <div class="desk-body">
+                            <nav class="desk-side" aria-label="Demo places">
+                                <b>Places</b>
+                                <button type="button" data-place="home" style="--c:#5b63f0">Home</button>
+                                <button type="button" data-place="documents" style="--c:#e0a526">Documents</button>
+                                <button type="button" data-place="downloads" style="--c:#1f9d6b">Downloads</button>
+                                <button type="button" data-place="pictures" class="on" style="--c:#8b91ff">Pictures</button>
+                                <button type="button" data-place="music" style="--c:#c2457e">Music</button>
+                                <button type="button" data-place="usb" style="--c:#d9645a">USB drive</button>
+                                <b>Storax</b>
+                                <button type="button" data-place="vault" style="--c:var(--ink)">Vault</button>
+                                <button type="button" data-place="trash">Trash</button>
+                            </nav>
+                            <div class="desk-main">
+                                <div class="desk-top">
+                                    <button type="button" class="desk-back" aria-label="Back" hidden>‹</button>
+                                    <div class="desk-path">Home › <b>Pictures</b></div>
+                                    <div class="desk-actions" hidden></div>
                                 </div>
-                                <div class="legend">
-                                    <div><span><b style="background:#5b63f0"></b>Images</span><span>12.8 GB</span></div>
-                                    <div><span><b style="background:#1f9d6b"></b>Videos</span><span>34.1 GB</span></div>
-                                    <div><span><b style="background:#e0a526"></b>Docs</span><span>4.7 GB</span></div>
-                                    <div><span><b style="background:#d9645a"></b>Apps</span><span>9.2 GB</span></div>
+                                <div class="desk-grid">
+                                    <div class="tile"><div class="thumb folder"></div><span>Holidays</span></div>
+                                    <div class="tile"><div class="thumb folder"></div><span>Family</span></div>
+                                    <div class="tile sel"><div class="thumb"></div><span>Mountains.jpg</span></div>
+                                    <div class="tile"><div class="thumb green"></div><span>Garden.jpg</span></div>
+                                    <div class="tile"><div class="thumb warm video"></div><span>Birthday.mp4</span></div>
+                                    <div class="tile"><div class="thumb warm"></div><span>Sunset.jpg</span></div>
                                 </div>
-                            </div>
-
-                            <div class="recent">
-                                <div class="recent-row">
-                                    <span class="ext">ZIP</span>
-                                    <div>Project archive<small>Archive</small></div>
-                                    <span class="size">912 MB</span>
+                                <div class="desk-toast" role="status" aria-live="polite">
+                                    <div><span class="toast-text"></span><button type="button" class="toast-btn" hidden>Undo</button></div>
+                                    <div class="track"><span></span></div>
                                 </div>
-                                <div class="recent-row">
-                                    <span class="ext">VLT</span>
-                                    <div>Vault backup<small>Encrypted folder</small></div>
-                                    <span class="size">2.4 GB</span>
-                                </div>
-                                <div class="recent-row">
-                                    <span class="ext">MED</span>
-                                    <div>Media exports<small>Gallery collection</small></div>
-                                    <span class="size">8.1 GB</span>
-                                </div>
+                                <p class="desk-hint">Try it: open a folder, pick a file, or unlock the vault.</p>
                             </div>
                         </div>
                     </div>
 
+                    <div class="device">
+                        <span class="side-btn power" aria-hidden="true"></span>
+                        <span class="side-btn vol" aria-hidden="true"></span>
+                        <div class="screen" data-tab="home">
+                            <div class="status" aria-hidden="true">
+                                <span>9:41</span>
+                                <span class="island"></span>
+                                <span class="status-icons">
+                                    <svg viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                                    <svg viewBox="0 0 16 12" fill="currentColor"><path d="M8 11.5l2.2-2.6a3 3 0 0 0-4.4 0z"/><path d="M3.3 6.6a6.8 6.8 0 0 1 9.4 0l-1.4 1.6a4.8 4.8 0 0 0-6.6 0z"/><path d="M.8 3.8a10.6 10.6 0 0 1 14.4 0L13.8 5.4a8.6 8.6 0 0 0-11.6 0z"/></svg>
+                                    <svg viewBox="0 0 26 12" fill="currentColor"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="16" height="8" rx="1.8"/><rect x="23.5" y="4" width="2" height="4" rx="1"/></svg>
+                                </span>
+                            </div>
+
+                            <div class="app-head">
+                                <img src="storax.png" alt="" width="34" height="34">
+                                <div><small>Good morning</small><strong>Storax</strong></div>
+                                <span class="avatar" aria-hidden="true"></span>
+                            </div>
+
+                            <!-- Home -->
+                            <div class="pane pane-home">
+                                <div class="ring-card">
+                                    <div class="ring-wrap">
+                                        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="track" cx="60" cy="60" r="50"/><circle class="seg" cx="60" cy="60" r="50" style="--len:28.4;stroke:#5b63f0;stroke-dashoffset:0"/><circle class="seg" cx="60" cy="60" r="50" style="--len:80.5;stroke:#1f9d6b;stroke-dashoffset:-31.4"/><circle class="seg" cx="60" cy="60" r="50" style="--len:8.6;stroke:#e0a526;stroke-dashoffset:-114.9"/><circle class="seg" cx="60" cy="60" r="50" style="--len:19.6;stroke:#d9645a;stroke-dashoffset:-126.5"/><circle class="seg" cx="60" cy="60" r="50" style="--len:59.8;stroke:#a3a8b8;stroke-dashoffset:-149.1"/></svg>
+                                        <div class="ring-label"><strong><span data-count="67">67</span>%</strong><small>used</small></div>
+                                    </div>
+                                    <div class="ring-info">
+                                        <strong><span data-count="86.4" data-decimals="1">86.4</span> GB</strong>
+                                        <small>of 128 GB</small>
+                                        <div class="legend">
+                                            <div><span><b style="background:#5b63f0"></b>Photos</span><span>12.8</span></div>
+                                            <div><span><b style="background:#1f9d6b"></b>Videos</span><span>34.1</span></div>
+                                            <div><span><b style="background:#e0a526"></b>Docs</span><span>4.7</span></div>
+                                            <div><span><b style="background:#d9645a"></b>Apps</span><span>9.2</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="cats">
+                                    <div class="cat" style="--c:#5b63f0"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg></i><strong>Photos</strong><small>2,481 items</small></div>
+                                    <div class="cat" style="--c:#1f9d6b"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg></i><strong>Videos</strong><small>164 items</small></div>
+                                    <div class="cat" style="--c:#e0a526"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg></i><strong>Documents</strong><small>312 items</small></div>
+                                    <div class="cat" style="--c:#d9645a"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg></i><strong>Apps</strong><small>58 apps</small></div>
+                                </div>
+
+                                <div class="suggest">
+                                    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span>
+                                    <div><strong>Free up 2.4 GB</strong><small>38 duplicate photos found</small></div>
+                                    <span class="suggest-btn">Review</span>
+                                </div>
+                            </div>
+
+                            <!-- Vault -->
+                            <div class="pane pane-vault">
+                                <div class="pv-head">
+                                    <svg class="pv-lock" viewBox="0 0 120 120" aria-hidden="true">
+                                        <path class="shackle" d="M38 56 V40 a22 22 0 0 1 44 0 V56" fill="none" stroke-width="9" stroke-linecap="round"/>
+                                        <rect class="body" x="24" y="52" width="72" height="56" rx="14"/>
+                                    </svg>
+                                    <strong>Vault</strong>
+                                    <small class="pv-msg">Enter any 4 digits to try it</small>
+                                </div>
+                                <div class="pv-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                                <div class="pv-pad"><button type="button" data-digit="1">1</button><button type="button" data-digit="2">2</button><button type="button" data-digit="3">3</button><button type="button" data-digit="4">4</button><button type="button" data-digit="5">5</button><button type="button" data-digit="6">6</button><button type="button" data-digit="7">7</button><button type="button" data-digit="8">8</button><button type="button" data-digit="9">9</button><span></span><button type="button" data-digit="0">0</button><button type="button" class="pv-del" aria-label="Delete digit">⌫</button></div>
+                                <div class="pv-files">
+                                    <div class="pv-file"><span class="t" style="--c:#1f9d6b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg></span><div><strong>Passport.jpg</strong><small>2.1 MB</small></div></div>
+                                    <div class="pv-file"><span class="t" style="--c:#d9645a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg></span><div><strong>Bank letter.pdf</strong><small>340 KB</small></div></div>
+                                    <div class="pv-file"><span class="t" style="--c:#5b63f0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg></span><div><strong>Family video.mp4</strong><small>180 MB</small></div></div>
+                                    <button type="button" class="pv-relock">Lock vault</button>
+                                </div>
+                            </div>
+
+                            <!-- Share -->
+                            <div class="pane pane-share">
+                                <div class="radar">
+                                    <span class="wave"></span><span class="wave"></span><span class="wave"></span>
+                                    <span class="me"><img src="storax.png" alt="" width="40" height="40"></span>
+                                    <button type="button" class="peer p1" data-name="Home laptop"><i style="--c:#5b63f0">L</i><small>Home laptop</small></button>
+                                    <button type="button" class="peer p2" data-name="Priya's phone"><i style="--c:#d9645a">P</i><small>Priya's phone</small></button>
+                                    <button type="button" class="peer p3" data-name="Office PC"><i style="--c:#1f9d6b">O</i><small>Office PC</small></button>
+                                </div>
+                                <p class="sh-msg">Looking for nearby devices… Tap one to send 3 photos.</p>
+                                <div class="sh-progress"><span></span></div>
+                                <span class="sh-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+                            </div>
+
+                            <nav class="tabbar" aria-label="Phone demo tabs">
+                                <button type="button" data-tab="home" class="on" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></button>
+                                <button type="button" data-tab="vault" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Vault</span></button>
+                                <button type="button" data-tab="share" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span>Share</span></button>
+                            </nav>
+                            <span class="home-indicator" aria-hidden="true"></span>
+                        </div>
+                    </div>
+
                     <div class="note-card">
-                        <strong>14.2 GB freed</strong>
+                        <strong><span data-count="14.2" data-decimals="1">14.2</span> GB freed</strong>
                         <span>From your last cleanup</span>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Capability ticker: second copy exists only to make the loop seamless -->
+        <div class="ticker">
+            <div class="ticker-track">
+                <span>Encrypted vaults</span>
+                <span>Decoy vault</span>
+                <span>Duplicate finder</span>
+                <span>Similar photos</span>
+                <span>Smart search</span>
+                <span>Nearby share</span>
+                <span>Trash and undo</span>
+                <span>Zip and unzip</span>
+                <span>PDF tools</span>
+                <span>App Lock</span>
+                <span>QR codes</span>
+                <span aria-hidden="true">Encrypted vaults</span>
+                <span aria-hidden="true">Decoy vault</span>
+                <span aria-hidden="true">Duplicate finder</span>
+                <span aria-hidden="true">Similar photos</span>
+                <span aria-hidden="true">Smart search</span>
+                <span aria-hidden="true">Nearby share</span>
+                <span aria-hidden="true">Trash and undo</span>
+                <span aria-hidden="true">Zip and unzip</span>
+                <span aria-hidden="true">PDF tools</span>
+                <span aria-hidden="true">App Lock</span>
+                <span aria-hidden="true">QR codes</span>
+            </div>
+        </div>
+
         <!-- Features -->
         <section id="features" class="section">
             <div class="wrap">
                 <div class="section-head">
                     <div>
-                        <span class="eyebrow">Core</span>
-                        <h2>The things you will use every day.</h2>
+                        <span class="eyebrow">Core features</span>
+                        <h2>Everything you reach for, every day.</h2>
                     </div>
-                    <p>Hide what is private, find what you lost, clear out what you do not need, and send the rest to someone nearby.</p>
+                    <p>Hide what is private, find what you lost, clear out what you no longer need, and pass the rest to someone nearby, all without switching apps.</p>
                 </div>
 
                 <ol class="feature-list">
                     <li class="feature">
                         <span class="feature-num">01</span>
                         <h3>Private vaults</h3>
-                        <p>Hide files and folders into encrypted vaults, so they disappear from normal browsing until you unlock them. Create a decoy vault too. Repeated wrong PINs trigger a temporary lockout.</p>
+                        <p>Move files and folders into a locked vault and they vanish from view until you open it with your PIN. Add a decoy vault for extra cover. Too many wrong PINs and the vault locks itself for a while.</p>
                     </li>
                     <li class="feature">
                         <span class="feature-num">02</span>
-                        <h3>Deleted means recoverable</h3>
-                        <p>Deleted files go to Trash first. Restore them when you need to, and use undo and redo for supported actions.</p>
+                        <h3>Mistakes you can take back</h3>
+                        <p>Deleted files go to Trash first, so you get a second chance. Restore what you need, and undo or redo supported actions with a tap.</p>
                     </li>
                     <li class="feature">
                         <span class="feature-num">03</span>
-                        <h3>Media in one view</h3>
-                        <p>Images, videos, audio, GIFs, documents, archives, code and downloads each get their own screen, with video previews and recent files.</p>
+                        <h3>All your media, sorted</h3>
+                        <p>Photos, videos, music, GIFs, documents, zipped files and downloads each get a home of their own, with video previews and a list of recent files.</p>
                     </li>
                     <li class="feature">
                         <span class="feature-num">04</span>
-                        <h3>Search by name, content or meaning</h3>
-                        <p>Filter by type, size, date and dimensions. Search text inside PDFs and documents, OCR text in images, or describe what you are looking for in plain language with on-device AI.</p>
+                        <h3>Find anything, even by description</h3>
+                        <p>Search by name, type, size or date. Find words inside your documents and even in photos, or simply describe what you are looking for and let smart search find it, right on your phone.</p>
                     </li>
                     <li class="feature">
                         <span class="feature-num">05</span>
-                        <h3>Duplicates and similar photos</h3>
-                        <p>Find duplicate files, duplicate folders and visually similar photos, so you can see what is taking up space before you clean it up.</p>
+                        <h3>Duplicates and lookalikes</h3>
+                        <p>Spot duplicate files, duplicate folders and visually similar photos, and see exactly what is eating your space before you clear it.</p>
                     </li>
                     <li class="feature">
                         <span class="feature-num">06</span>
-                        <h3>Nearby share</h3>
-                        <p>Send files and text to nearby devices using QR codes, transfer links or automatic discovery. Wi-Fi Direct is available on Android. Your transfer history is kept on the device.</p>
+                        <h3>Share with anyone nearby</h3>
+                        <p>Send files and text to a nearby phone or computer by scanning a code or sharing a link, or let Storax find it for you. On Android, two phones can even connect straight to each other, no Wi-Fi network needed. Every transfer is kept in your history.</p>
                     </li>
                 </ol>
+            </div>
+        </section>
+
+        <!-- In action -->
+        <section id="in-action" class="section">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <span class="eyebrow">In action</span>
+                        <h2>A closer look at everyday moments.</h2>
+                    </div>
+                    <p>Hiding, cleaning up and sharing are only a few of the things Storax does. See the <a href="#features">core features</a> and <a href="#tools">built-in tools</a> for the rest. Sizes and numbers here are sample values.</p>
+                </div>
+
+                <div class="cards">
+                    <article class="card">
+                        <div class="viz viz-vault" aria-hidden="true">
+                            <span class="viz-tag">Locked</span>
+                            <svg class="lock" viewBox="0 0 120 120">
+                                <path class="shackle" d="M38 56 V40 a22 22 0 0 1 44 0 V56" fill="none" stroke-width="9" stroke-linecap="round"/>
+                                <rect class="body" x="24" y="52" width="72" height="56" rx="14"/>
+                                <circle class="keyhole" cx="60" cy="76" r="6.5"/>
+                                <rect class="keyhole" x="57" y="78" width="6" height="14" rx="3"/>
+                            </svg>
+                            <div class="pin"><i></i><i></i><i></i><i></i></div>
+                        </div>
+                        <h3>Hide it</h3>
+                        <p>Pick a file, enter your PIN, and it is sealed in the vault, out of sight until you open it again.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="viz viz-dupes" aria-hidden="true">
+                            <div class="photo p1"></div>
+                            <div class="photo p3"></div>
+                            <div class="photo p2"></div>
+                            <span class="viz-tag">2.4 GB to review</span>
+                        </div>
+                        <h3>Clean it up</h3>
+                        <p>Storax lines up duplicate files and lookalike photos side by side, so you decide what goes and what stays.</p>
+                    </article>
+
+                    <article class="card">
+                        <div class="viz viz-share" aria-hidden="true">
+                            <div class="dev"></div>
+                            <div class="beam"><i></i><i></i><i></i><i></i></div>
+                            <div class="dev dev-b"></div>
+                            <div class="share-bar"><span></span></div>
+                        </div>
+                        <h3>Send it</h3>
+                        <p>Send files to a nearby phone or computer over your Wi-Fi, or phone to phone on Android, and watch the progress until the last file lands.</p>
+                    </article>
+                </div>
             </div>
         </section>
 
@@ -1028,48 +3307,48 @@
             <div class="wrap">
                 <div class="section-head">
                     <div>
-                        <span class="eyebrow">Tools</span>
-                        <h2>Built-in tools, kept out of the way.</h2>
+                        <span class="eyebrow">Built-in tools</span>
+                        <h2>A full toolkit, one tap away.</h2>
                     </div>
-                    <p>Editors, viewers and utilities are there when you need them. The main screen stays simple.</p>
+                    <p>Editors, viewers and utilities are close at hand when you need them, and out of sight when you do not. The main screen stays simple.</p>
                 </div>
 
                 <div class="tools">
                     <article class="tool">
                         <h3>Image and video editors</h3>
-                        <p>Edit photos and videos, make GIFs from video moments, and build collages without leaving the app.</p>
+                        <p>Touch up photos, edit videos, turn a favourite clip into a GIF or arrange a collage, all without leaving Storax.</p>
                     </article>
                     <article class="tool">
                         <h3>PDF and Office documents</h3>
-                        <p>Preview and mark up PDFs, use PDF tools, open and edit Word files, and view spreadsheets.</p>
+                        <p>Read PDFs and work with them using built-in PDF tools, open and edit Word files, and view spreadsheets on the go.</p>
                     </article>
                     <article class="tool">
-                        <h3>Code and text editors</h3>
-                        <p>Edit code with formatting and save rich-text documents, all from the file manager.</p>
+                        <h3>Notes and text</h3>
+                        <p>Write notes with headings, bold text and lists, and open plain text files, right inside the file manager.</p>
                     </article>
                     <article class="tool">
-                        <h3>Archives</h3>
-                        <p>Compress files and folders to ZIP, TAR, TAR.GZ or TAR.BZ2, and extract supported archives.</p>
+                        <h3>Zip and unzip</h3>
+                        <p>Pack files and folders into one smaller file to save space or send it on, and open zipped files right where they are.</p>
                     </article>
                     <article class="tool">
                         <h3>App safety</h3>
-                        <p>See installed apps, flag known bloatware and risky apps, and review dangerous permissions. This is an awareness tool, not an antivirus.</p>
+                        <p>See which of your apps came pre-installed and may not be needed, which are known to be risky, and which can reach things like your camera, contacts or location. It helps you spot problems, but it is not an antivirus.</p>
                     </article>
                     <article class="tool">
                         <h3>App Lock</h3>
-                        <p>Optionally lock the apps you choose behind a PIN or fingerprint. You turn it on yourself in Android settings.</p>
+                        <p>Put the apps you choose behind your PIN or fingerprint. It is optional, and only runs once you switch it on in Android settings.</p>
                     </article>
                     <article class="tool">
                         <h3>WhatsApp status saver</h3>
-                        <p>Find WhatsApp status updates and keep copies of them for later.</p>
+                        <p>Keep copies of the WhatsApp statuses you like before they disappear.</p>
                     </article>
                     <article class="tool">
-                        <h3>QR codes and terminal</h3>
-                        <p>Scan QR codes and barcodes from images, or open a terminal for command-line work.</p>
+                        <h3>QR code scanner</h3>
+                        <p>Scan QR codes and barcodes from your photos and act on them straight away.</p>
                     </article>
                     <article class="tool">
                         <h3>Audio player</h3>
-                        <p>Play your music and recordings with standard playback controls, straight from the file manager.</p>
+                        <p>Play music and recordings straight from your folders, with familiar playback controls.</p>
                     </article>
                 </div>
             </div>
@@ -1079,17 +3358,16 @@
         <section id="security" class="section">
             <div class="wrap security">
                 <div>
-                    <span class="eyebrow">Security</span>
-                    <h2>Private files, encrypted.</h2>
+                    <span class="eyebrow">Security and privacy</span>
+                    <h2>Private means locked, not just hidden.</h2>
                     <p class="lede-sm">
-                        Hidden files are encrypted on your device, with keys derived from your PIN and a device
-                        secret. Repeated wrong PINs trigger a temporary lockout while the app is running. Hidden
-                        is not the same as protected, so the vault uses encryption, not just a changed name.
+                        Files in the vault are scrambled on your device, so they can only be opened with your PIN
+                        on this device. After too many wrong tries, the vault locks for a while.
                     </p>
 
                     <ul class="checks">
-                        <li>Argon2id key derivation and AES-GCM encryption</li>
-                        <li>Temporary lockout after repeated wrong PINs</li>
+                        <li>Strong, modern encryption for everything in the vault</li>
+                        <li>Locks for a while after too many wrong PINs</li>
                         <li>Decoy vault for an extra layer of privacy</li>
                         <li>Optional App Lock for the apps you choose</li>
                     </ul>
@@ -1098,19 +3376,19 @@
                 <div class="principles">
                     <div class="principle">
                         <h3>Keep your PIN safe</h3>
-                        <p>Hidden items are tied to your PIN and this device. A forgotten PIN or a lost device can make them unrecoverable, so write your PIN down somewhere safe.</p>
+                        <p>Vault items are tied to your PIN and this device. Forget the PIN or lose the device and they cannot be recovered, so keep your PIN somewhere safe.</p>
                     </div>
                     <div class="principle">
                         <h3>What leaves your device</h3>
-                        <p>Your files stay on your device, and Storax has no upload service of its own. Optional AI features download models only when you turn them on. Release builds on Android and macOS send anonymous usage and crash reports to Google Firebase. <a href="privacy-policy.html">Read exactly what is sent.</a></p>
+                        <p>Storax does not upload your files anywhere. Smart features download what they need only when you turn them on. The Android and Mac apps send anonymous reports about app use and crashes to Google. <a href="privacy-policy.html">See exactly what is sent.</a></p>
                     </div>
                     <div class="principle">
                         <h3>Only what you allow</h3>
-                        <p>Storax asks for storage, notification, location and nearby-network access only where a feature needs them, such as nearby transfers.</p>
+                        <p>Storax asks to use your storage, notifications, location or nearby devices only when a feature needs it, such as finding a phone to share with.</p>
                     </div>
                     <div class="principle">
                         <h3>Honest about limits</h3>
-                        <p>Some features differ by platform. OCR, App Lock and Wi-Fi Direct are Android features. Trash and undo work differently on each system, and desktop versions focus on file management.</p>
+                        <p>Some features depend on your device. Finding text in photos, App Lock and phone-to-phone sharing are only on Android. Trash and undo work a little differently on each system, and the computer versions focus on managing files.</p>
                     </div>
                 </div>
             </div>
@@ -1123,19 +3401,20 @@
                     <span class="eyebrow">Download</span>
                     <h2>Get Storax <em>on your devices.</em></h2>
                     <p class="download-lede">
-                        Free, with no ads and no subscriptions. Android is the main version and is available on
-                        Google Play. Desktop builds are available below, and each comes with a SHA256 checksum so
-                        you can confirm the file you downloaded is intact.
+                        Free, with no ads and no subscriptions. Get the Android app on Google Play, or pick your
+                        computer below. Each download also has an optional check file you can use to make sure
+                        it arrived complete and unchanged.
                     </p>
+                    <p class="detect-note" role="status" hidden></p>
                 </div>
 
                 <div class="platforms">
-                    <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.kumpali.storax" style="justify-content:flex-start;background:var(--paper);color:var(--ink);min-height:60px;padding:14px 20px;">
+                    <a class="btn btn-primary" data-os="android" href="https://play.google.com/store/apps/details?id=com.kumpali.storax" style="justify-content:flex-start;background:var(--paper);color:var(--ink);min-height:60px;padding:14px 20px;">
                         <svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m6.3 5.2-1.6-2.8.9-.5 1.7 2.9a10.7 10.7 0 0 1 9.4 0l1.7-2.9.9.5-1.6 2.8A9.2 9.2 0 0 1 22 13H2a9.2 9.2 0 0 1 4.3-7.8ZM7 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM4 14h16v5H4z"/></svg>
                         Android <span style="margin-left:auto;font-weight:500;opacity:.6;font-size:13px">Google Play</span>
                     </a>
 
-                    <details class="platform">
+                    <details class="platform" data-os="windows">
                         <summary>
                             <svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 4.5 11 3v8H2zm10-1.7L22 1v10H12zM2 12h9v8l-9-1.5zm10 0h10v11l-10-1.8z"/></svg>
                             Windows
@@ -1143,66 +3422,66 @@
                             <span class="chev" aria-hidden="true"></span>
                         </summary>
                         <div class="platform-body">
-                            <div class="file-links" aria-label="Windows download formats">
-                                <a href="https://www.dropbox.com/scl/fi/g1l8sim061t95fycn1byt/Storax-Setup.exe?rlkey=e1q6a5e8nymf1cp26tcb7uu6d&amp;st=hci3i579&amp;dl=1" download>EXE <small>Installer</small></a>
-                                <a href="https://www.dropbox.com/scl/fi/tp7pgsgialjdsrs4m1wft/Storax-Setup.exe.sha256?rlkey=o0k3u2yzo7ryiuxullzuirvtk&amp;st=r6fzib8o&amp;dl=1" download>SHA256 <small>Checksum</small></a>
+                            <div class="file-links" aria-label="Windows downloads">
+                                <a href="https://www.dropbox.com/scl/fi/g1l8sim061t95fycn1byt/Storax-Setup.exe?rlkey=e1q6a5e8nymf1cp26tcb7uu6d&amp;st=hci3i579&amp;dl=1" data-variant="installer" download>Installer <small>Recommended</small></a>
+                                <a href="https://www.dropbox.com/scl/fi/tp7pgsgialjdsrs4m1wft/Storax-Setup.exe.sha256?rlkey=o0k3u2yzo7ryiuxullzuirvtk&amp;st=r6fzib8o&amp;dl=1" download>Check file <small>Optional</small></a>
                             </div>
                         </div>
                     </details>
 
-                    <details class="platform">
+                    <details class="platform" data-os="mac">
                         <summary>
                             <svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
                             macOS
-                            <span class="hint">Apple Silicon and Intel</span>
+                            <span class="hint">All Macs</span>
                             <span class="chev" aria-hidden="true"></span>
                         </summary>
                         <div class="platform-body">
-                            <div class="group">
-                                <div class="group-label">Apple Silicon · arm64</div>
+                            <div class="group" data-arch="arm">
+                                <div class="group-label">Macs with Apple chips (M1 and later)</div>
                                 <div class="file-links">
-                                    <a href="https://www.dropbox.com/scl/fi/fpk7onwy6c17v46m8amr3/Storax-1.0.3-build50-macos-arm64.dmg?rlkey=0kyohgo3f34ibmvkevh6ffi97&amp;st=c2q76ekc&amp;dl=1" download>DMG <small>Disk image</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/eayj1bz6m5hrsm322ljq3/Storax-1.0.3-build50-macos-arm64.zip?rlkey=5obdqg4her5s49tslx73zakx9&amp;st=kd9r849x&amp;dl=1" download>ZIP <small>Archive</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/jehergairzhrrgyrhfce3/Storax-1.0.3-build50-macos-arm64.dmg.sha256?rlkey=gz6o18aoint6f66dn00k4cjar&amp;st=8n5mh7xs&amp;dl=1" download>DMG SHA256 <small>Checksum</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/auwwt7t4y5x39ur6sx018/Storax-1.0.3-build50-macos-arm64.zip.sha256?rlkey=ssxwqb3tfemrq7dhhn5sz312q&amp;st=pkzlcyd5&amp;dl=1" download>ZIP SHA256 <small>Checksum</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/fpk7onwy6c17v46m8amr3/Storax-1.0.3-build50-macos-arm64.dmg?rlkey=0kyohgo3f34ibmvkevh6ffi97&amp;st=c2q76ekc&amp;dl=1" data-variant="installer" download>Installer <small>Recommended</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/eayj1bz6m5hrsm322ljq3/Storax-1.0.3-build50-macos-arm64.zip?rlkey=5obdqg4her5s49tslx73zakx9&amp;st=kd9r849x&amp;dl=1" download>Zipped app <small>Alternative</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/jehergairzhrrgyrhfce3/Storax-1.0.3-build50-macos-arm64.dmg.sha256?rlkey=gz6o18aoint6f66dn00k4cjar&amp;st=8n5mh7xs&amp;dl=1" download>Installer check file <small>Optional</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/auwwt7t4y5x39ur6sx018/Storax-1.0.3-build50-macos-arm64.zip.sha256?rlkey=ssxwqb3tfemrq7dhhn5sz312q&amp;st=pkzlcyd5&amp;dl=1" download>Zipped app check file <small>Optional</small></a>
                                 </div>
                             </div>
-                            <div class="group">
-                                <div class="group-label">Intel · x64</div>
+                            <div class="group" data-arch="x64">
+                                <div class="group-label">Macs with Intel chips</div>
                                 <div class="file-links">
-                                    <a href="https://www.dropbox.com/scl/fi/otxvqugxql63olnsrnurp/Storax-1.0.3-build50-macos-x64.dmg?rlkey=9oxnbqfqx4f9cdnowf4kvaqt5&amp;st=caiybok6&amp;dl=1" download>DMG <small>Disk image</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/0oebzc1xvwf1bdkr2q9vx/Storax-1.0.3-build50-macos-x64.zip?rlkey=dk6gao4m25tquao1qseilnr3b&amp;st=6hnbb99p&amp;dl=1" download>ZIP <small>Archive</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/fwlon8hollv00p069usvo/Storax-1.0.3-build50-macos-x64.dmg.sha256?rlkey=gbofsjosy167uqq64udk6c1wv&amp;st=3t25z12s&amp;dl=1" download>DMG SHA256 <small>Checksum</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/1quw0my37bc38u5h5gyat/Storax-1.0.3-build50-macos-x64.zip.sha256?rlkey=dugqc9q7pnlugmvjs4ue9vtme&amp;st=64b0r8rz&amp;dl=1" download>ZIP SHA256 <small>Checksum</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/otxvqugxql63olnsrnurp/Storax-1.0.3-build50-macos-x64.dmg?rlkey=9oxnbqfqx4f9cdnowf4kvaqt5&amp;st=caiybok6&amp;dl=1" data-variant="installer" download>Installer <small>Recommended</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/0oebzc1xvwf1bdkr2q9vx/Storax-1.0.3-build50-macos-x64.zip?rlkey=dk6gao4m25tquao1qseilnr3b&amp;st=6hnbb99p&amp;dl=1" download>Zipped app <small>Alternative</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/fwlon8hollv00p069usvo/Storax-1.0.3-build50-macos-x64.dmg.sha256?rlkey=gbofsjosy167uqq64udk6c1wv&amp;st=3t25z12s&amp;dl=1" download>Installer check file <small>Optional</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/1quw0my37bc38u5h5gyat/Storax-1.0.3-build50-macos-x64.zip.sha256?rlkey=dugqc9q7pnlugmvjs4ue9vtme&amp;st=64b0r8rz&amp;dl=1" download>Zipped app check file <small>Optional</small></a>
                                 </div>
                             </div>
                         </div>
                     </details>
 
-                    <details class="platform">
+                    <details class="platform" data-os="linux">
                         <summary>
                             <svg class="platform-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2c-3 0-4 2.4-4 5.3 0 2.1-1.1 3.7-2.1 5.6-1 1.9-1.4 4.4.3 5.8 1.5 1.3 3.4 1.5 5.8 1.5s4.3-.2 5.8-1.5c1.7-1.4 1.3-3.9.3-5.8C17.1 11 16 9.4 16 7.3 16 4.4 15 2 12 2Z"/><ellipse cx="12" cy="14.3" rx="3.5" ry="4.6" fill="#fff"/><ellipse cx="10.5" cy="6.8" rx="1" ry="1.5" fill="#fff"/><ellipse cx="13.5" cy="6.8" rx="1" ry="1.5" fill="#fff"/><circle cx="10.7" cy="7" r=".45" fill="#080a12"/><circle cx="13.3" cy="7" r=".45" fill="#080a12"/><path fill="#f5b642" d="m9 9 3-1 3 1-3 2zM4 18l4-1 2 4-7 1zm16 0-4-1-2 4 7 1z"/></svg>
                             Linux
-                            <span class="hint">x64</span>
+                            <span class="hint">64-bit PCs</span>
                             <span class="chev" aria-hidden="true"></span>
                         </summary>
                         <div class="platform-body">
                             <div class="group">
-                                <div class="group-label">Packages</div>
+                                <div class="group-label">Choose your system</div>
                                 <div class="file-links">
-                                    <a href="https://www.dropbox.com/scl/fi/bzvrnaz51ewwlklbnlxqe/storax_1.0.3-build50_amd64.deb?rlkey=1gj2ujvzwalhue4xtgu4wgr5r&amp;st=5mbjzrpf&amp;dl=1" download>DEB <small>Debian / Ubuntu</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/zh96qq6m4my8m89wl8fnk/storax-1.0.3-build50.x86_64.rpm?rlkey=1c3i27uz3poelyt6h7aj4b7hv&amp;st=tqkyfol8&amp;dl=1" download>RPM <small>Fedora / openSUSE</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/butlqsslthd235lo4fy23/Storax-1.0.3-build50-linux-x64.tar.gz?rlkey=74d0r8ro1fhxsuugn5n6ajcno&amp;st=d4ug99dk&amp;dl=1" download>tar.gz <small>Archive · x64</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/nijpoel8g4krv92ndn69j/Storax-1.0.3-build50-linux-x64.AppImage?rlkey=jtdp34orws6ejyn5asekgoy7q&amp;st=kmc5jmjg&amp;dl=1" download>AppImage <small>Any distro · x64</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/bzvrnaz51ewwlklbnlxqe/storax_1.0.3-build50_amd64.deb?rlkey=1gj2ujvzwalhue4xtgu4wgr5r&amp;st=5mbjzrpf&amp;dl=1" data-distro="debian" download>Ubuntu and Debian <small>.deb</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/zh96qq6m4my8m89wl8fnk/storax-1.0.3-build50.x86_64.rpm?rlkey=1c3i27uz3poelyt6h7aj4b7hv&amp;st=tqkyfol8&amp;dl=1" data-distro="fedora" download>Fedora and openSUSE <small>.rpm</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/butlqsslthd235lo4fy23/Storax-1.0.3-build50-linux-x64.tar.gz?rlkey=74d0r8ro1fhxsuugn5n6ajcno&amp;st=d4ug99dk&amp;dl=1" data-distro="portable" download>Portable folder <small>.tar.gz</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/nijpoel8g4krv92ndn69j/Storax-1.0.3-build50-linux-x64.AppImage?rlkey=jtdp34orws6ejyn5asekgoy7q&amp;st=kmc5jmjg&amp;dl=1" data-distro="appimage" download>Works on most Linux <small>AppImage</small></a>
                                 </div>
                             </div>
                             <div class="group">
-                                <div class="group-label">Checksums</div>
+                                <div class="group-label">Check files (optional)</div>
                                 <div class="file-links">
-                                    <a href="https://www.dropbox.com/scl/fi/8ryuuggpbazleo5knbuja/storax_1.0.3-build50_amd64.deb.sha256?rlkey=46jra73kdvkf8pon4tq1ya7ek&amp;st=ry747qhn&amp;dl=1" download>DEB SHA256 <small>Checksum</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/665wieuofnct2t0if8ail/storax-1.0.3-build50.x86_64.rpm.sha256?rlkey=tth5r1qzc4kstub4zm0ixe69r&amp;st=ocksunuv&amp;dl=1" download>RPM SHA256 <small>Checksum</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/kne6nikr2k5d9w86lwprk/Storax-1.0.3-build50-linux-x64.tar.gz.sha256?rlkey=xfyo2t4413asl72gudr4v3eg6&amp;st=bvilbka6&amp;dl=1" download>tar.gz SHA256 <small>Checksum</small></a>
-                                    <a href="https://www.dropbox.com/scl/fi/5r3mso4wdun8amvuk362h/Storax-1.0.3-build50-linux-x64.AppImage.sha256?rlkey=evca99nzf2f698k66h4e5m0g7&amp;st=0etxr0bt&amp;dl=1" download>AppImage SHA256 <small>Checksum</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/8ryuuggpbazleo5knbuja/storax_1.0.3-build50_amd64.deb.sha256?rlkey=46jra73kdvkf8pon4tq1ya7ek&amp;st=ry747qhn&amp;dl=1" download>Ubuntu and Debian <small>Check file</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/665wieuofnct2t0if8ail/storax-1.0.3-build50.x86_64.rpm.sha256?rlkey=tth5r1qzc4kstub4zm0ixe69r&amp;st=ocksunuv&amp;dl=1" download>Fedora and openSUSE <small>Check file</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/kne6nikr2k5d9w86lwprk/Storax-1.0.3-build50-linux-x64.tar.gz.sha256?rlkey=xfyo2t4413asl72gudr4v3eg6&amp;st=bvilbka6&amp;dl=1" download>Portable folder <small>Check file</small></a>
+                                    <a href="https://www.dropbox.com/scl/fi/5r3mso4wdun8amvuk362h/Storax-1.0.3-build50-linux-x64.AppImage.sha256?rlkey=evca99nzf2f698k66h4e5m0g7&amp;st=0etxr0bt&amp;dl=1" download>Most Linux <small>Check file</small></a>
                                 </div>
                             </div>
                         </div>
@@ -1246,6 +3525,739 @@
                 apply(next);
                 write(next);
             });
+        })();
+
+        /* Recommend the right download for this device.
+           Runs entirely in the browser; nothing is sent anywhere. */
+        (function () {
+            var platforms = document.querySelector('.platforms');
+            if (!platforms) return;
+
+            var ua = navigator.userAgent || '';
+            var uaData = navigator.userAgentData || null;
+            var platformHint = (uaData && uaData.platform) || navigator.platform || '';
+            var note = document.querySelector('.detect-note');
+            var ctaLabel = document.querySelector('.cta-label');
+
+            function detectOS() {
+                if (/Android/i.test(ua)) return 'android';
+                if (/CrOS/i.test(ua) || /Chrome OS/i.test(platformHint)) return 'chromeos';
+                // iPadOS reports itself as a Mac, but Macs have no touch screen.
+                if (/iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1)) return 'ios';
+                if (/Win/i.test(platformHint) || /Windows NT/i.test(ua)) return 'windows';
+                if (/Mac/i.test(platformHint) || /Macintosh|Mac OS X/i.test(ua)) return 'mac';
+                if (/Linux/i.test(platformHint) || /Linux|X11/i.test(ua)) return 'linux';
+                return null;
+            }
+
+            // Apple chip vs Intel on a Mac, from the graphics chip name. Returns null when unsure.
+            function macArchFromGraphics() {
+                try {
+                    var canvas = document.createElement('canvas');
+                    var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                    if (!gl) return null;
+                    var info = gl.getExtension('WEBGL_debug_renderer_info');
+                    var name = String(info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER) || '');
+                    if (/Apple M\d/i.test(name)) return 'arm';
+                    if (/Intel|AMD|Radeon|NVIDIA/i.test(name)) return 'x64';
+                } catch (e) { /* not available */ }
+                return null;
+            }
+
+            function linuxDistro() {
+                if (/Ubuntu|Debian|Mint|Pop!_OS|elementary|Zorin/i.test(ua)) return 'debian';
+                if (/Fedora|Red Hat|openSUSE|SUSE|CentOS|Rocky|Alma/i.test(ua)) return 'fedora';
+                return null;
+            }
+
+            function badge(text) {
+                var b = document.createElement('span');
+                b.className = 'rec-badge';
+                b.textContent = text;
+                return b;
+            }
+
+            function markLink(link, text) {
+                if (!link) return;
+                link.classList.add('recommended');
+                var small = link.querySelector('small');
+                if (small) small.textContent = text;
+                // Show the recommended file first in its list.
+                link.parentElement.insertBefore(link, link.parentElement.firstChild);
+            }
+
+            function setNote(html) {
+                if (!note) return;
+                note.innerHTML = html;
+                note.hidden = false;
+            }
+
+            var NOT_RIGHT = ' Not right? Pick another option below.';
+
+            function apply(os, arch) {
+                var key = os === 'chromeos' ? 'android' : os;
+                var target = key && platforms.querySelector('[data-os="' + key + '"]');
+
+                if (os === 'ios') {
+                    setNote('<strong>Storax is not available for iPhone or iPad yet.</strong> You can get it on Android, Windows, Mac and Linux.');
+                    return;
+                }
+                if (os === 'linux' && arch === 'arm') {
+                    // No build for this computer, so do not badge anything as "for this device".
+                    setNote('Your computer seems to have an <strong>ARM chip</strong>. The Linux version of Storax is made for 64-bit Intel and AMD PCs, so it will not run here.');
+                    return;
+                }
+                if (!target) return;
+
+                // Move this platform to the top and mark it.
+                platforms.insertBefore(target, platforms.firstChild);
+                target.classList.add('recommended');
+                if (target.tagName === 'DETAILS') {
+                    target.open = true;
+                    var hint = target.querySelector('summary .hint');
+                    target.querySelector('summary').insertBefore(badge('For this device'), hint);
+                } else {
+                    var store = target.querySelector('span');
+                    target.insertBefore(badge('For this device'), store);
+                }
+
+                var names = { android: 'Android', chromeos: 'Chromebook', windows: 'Windows', mac: 'Mac', linux: 'Linux' };
+                if (ctaLabel && names[os]) ctaLabel.textContent = 'Get Storax for ' + names[os];
+
+                if (os === 'android') {
+                    setNote('You are on Android, so <strong>Google Play</strong> is the quickest way to get Storax.');
+                } else if (os === 'chromeos') {
+                    setNote('On a Chromebook, you can install the Android version of Storax from <strong>Google Play</strong>.');
+                } else if (os === 'windows') {
+                    markLink(target.querySelector('[data-variant="installer"]'), 'Best for this PC');
+                    if (arch === 'arm') {
+                        setNote('Your PC seems to have an <strong>ARM chip</strong> (such as Snapdragon). Storax is made for Intel and AMD PCs, so it may run more slowly, or not at all.' + NOT_RIGHT);
+                    } else {
+                        setNote('We picked the <strong>Windows installer</strong> for you.' + NOT_RIGHT);
+                    }
+                } else if (os === 'mac') {
+                    if (arch === 'arm' || arch === 'x64') {
+                        var group = target.querySelector('.group[data-arch="' + arch + '"]');
+                        var body = target.querySelector('.platform-body');
+                        body.insertBefore(group, body.firstChild);
+                        group.classList.add('recommended');
+                        markLink(group.querySelector('[data-variant="installer"]'), 'Best for this Mac');
+                        setNote('This looks like a Mac with ' + (arch === 'arm' ? 'an <strong>Apple chip</strong>' : 'an <strong>Intel chip</strong>') +
+                            ', so we picked that version.' + NOT_RIGHT);
+                    } else {
+                        setNote('<strong>Not sure which Mac you have?</strong> Open the Apple menu and choose About This Mac. ' +
+                            '"Chip: Apple M…" means an Apple chip. "Processor: Intel" means an Intel chip.');
+                    }
+                } else if (os === 'linux') {
+                    var distro = linuxDistro();
+                    var pick = target.querySelector('[data-distro="' + (distro || 'appimage') + '"]');
+                    markLink(pick, 'Best for this computer');
+                    if (distro === 'debian') setNote('This looks like <strong>Ubuntu or Debian</strong>, so we picked that version.' + NOT_RIGHT);
+                    else if (distro === 'fedora') setNote('This looks like <strong>Fedora or openSUSE</strong>, so we picked that version.' + NOT_RIGHT);
+                    else setNote('We picked the version that <strong>works on most Linux systems</strong>.' + NOT_RIGHT);
+                }
+            }
+
+            var os = detectOS();
+            if (!os) return;
+
+            // Chromium browsers can tell us the processor type directly.
+            var uaArch = /aarch64|arm64|armv\d/i.test(ua) ? 'arm' : null;
+            if (uaData && uaData.getHighEntropyValues && (os === 'mac' || os === 'windows' || os === 'linux')) {
+                uaData.getHighEntropyValues(['architecture']).then(function (v) {
+                    var arch = v.architecture === 'arm' ? 'arm' : (v.architecture === 'x86' ? 'x64' : null);
+                    if (!arch && os === 'mac') arch = macArchFromGraphics();
+                    apply(os, arch || uaArch);
+                }, function () {
+                    apply(os, os === 'mac' ? macArchFromGraphics() : uaArch);
+                });
+            } else {
+                apply(os, os === 'mac' ? macArchFromGraphics() : uaArch);
+            }
+        })();
+
+        /* Interactive phone demo. Sample data only; nothing leaves the page. */
+        (function () {
+            var screen = document.querySelector('.device .screen');
+            if (!screen) return;
+
+            var tabs = Array.prototype.slice.call(screen.querySelectorAll('.tabbar button'));
+            var vault = screen.querySelector('.pane-vault');
+            var dots = Array.prototype.slice.call(vault.querySelectorAll('.pv-dots i'));
+            var vaultMsg = vault.querySelector('.pv-msg');
+            var share = screen.querySelector('.pane-share');
+            var peers = Array.prototype.slice.call(share.querySelectorAll('.peer'));
+            var shareMsg = share.querySelector('.sh-msg');
+            var shareBar = share.querySelector('.sh-progress span');
+            var pin = '';
+            var timers = [];
+
+            function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+            function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+            function resetVault() {
+                pin = '';
+                vault.classList.remove('open');
+                dots.forEach(function (d) { d.classList.remove('on'); });
+                vaultMsg.textContent = 'Enter any 4 digits to try it';
+            }
+
+            function resetShare() {
+                share.classList.remove('found', 'sending', 'done');
+                peers.forEach(function (p) { p.classList.remove('chosen'); });
+                shareBar.style.transition = 'none';
+                shareBar.style.transform = 'scaleX(0)';
+                shareMsg.textContent = 'Looking for nearby devices…';
+            }
+
+            function show(tab) {
+                clearTimers();
+                screen.dataset.tab = tab;
+                tabs.forEach(function (b) {
+                    var on = b.dataset.tab === tab;
+                    b.classList.toggle('on', on);
+                    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+                });
+                // Leaving a tab resets it, and the vault locks itself again.
+                resetVault();
+                resetShare();
+                if (tab === 'share') {
+                    later(function () {
+                        share.classList.add('found');
+                        shareMsg.textContent = '3 devices nearby. Tap one to send 3 photos.';
+                    }, 900);
+                }
+            }
+
+            tabs.forEach(function (b) {
+                b.addEventListener('click', function () { show(b.dataset.tab); });
+            });
+
+            vault.querySelector('.pv-pad').addEventListener('click', function (e) {
+                var b = e.target.closest('button');
+                if (!b || vault.classList.contains('open') || pin.length === 4) return;
+                if (b.classList.contains('pv-del')) pin = pin.slice(0, -1);
+                else pin += b.dataset.digit;
+                dots.forEach(function (d, i) { d.classList.toggle('on', i < pin.length); });
+                if (pin.length === 4) {
+                    later(function () {
+                        vault.classList.add('open');
+                        vaultMsg.textContent = 'Unlocked. 3 private files';
+                    }, 250);
+                }
+            });
+
+            vault.querySelector('.pv-relock').addEventListener('click', resetVault);
+
+            share.addEventListener('click', function (e) {
+                var p = e.target.closest('.peer');
+                if (!p || share.classList.contains('sending')) return;
+                share.classList.remove('done');
+                peers.forEach(function (x) { x.classList.toggle('chosen', x === p); });
+                share.classList.add('sending');
+                shareMsg.textContent = 'Sending 3 photos to ' + p.dataset.name + '…';
+                shareBar.style.transition = 'none';
+                shareBar.style.transform = 'scaleX(0)';
+                void shareBar.offsetWidth;
+                shareBar.style.transition = 'transform 1800ms cubic-bezier(.4, 0, .2, 1)';
+                shareBar.style.transform = 'scaleX(1)';
+                later(function () {
+                    share.classList.remove('sending');
+                    share.classList.add('done');
+                    shareMsg.textContent = 'Sent to ' + p.dataset.name + '.';
+                }, 1850);
+            });
+
+            // Whichever device the visitor is using comes to the front.
+            var wrap = document.querySelector('.device-wrap');
+            var desk = document.querySelector('.desk');
+            var phone = screen.closest('.device');
+            if (wrap && desk && phone) {
+                desk.addEventListener('pointerenter', function () { wrap.classList.add('desk-focus'); });
+                desk.addEventListener('focusin', function () { wrap.classList.add('desk-focus'); });
+                phone.addEventListener('pointerenter', function () { wrap.classList.remove('desk-focus'); });
+                phone.addEventListener('focusin', function () { wrap.classList.remove('desk-focus'); });
+            }
+        })();
+
+        /* Interactive desktop demo. Sample files only; nothing leaves the page. */
+        (function () {
+            var desk = document.getElementById('desk');
+            if (!desk) return;
+
+            var grid = desk.querySelector('.desk-grid');
+            var pathEl = desk.querySelector('.desk-path');
+            var back = desk.querySelector('.desk-back');
+            var actionsEl = desk.querySelector('.desk-actions');
+            var toast = desk.querySelector('.desk-toast');
+            var toastText = toast.querySelector('.toast-text');
+            var toastBtn = toast.querySelector('.toast-btn');
+            var bar = toast.querySelector('.track span');
+            var sideButtons = Array.prototype.slice.call(desk.querySelectorAll('.desk-side button'));
+
+            var places = {
+                home: { name: 'Home' },
+                documents: { name: 'Documents', parent: 'home' },
+                downloads: { name: 'Downloads', parent: 'home' },
+                pictures: { name: 'Pictures', parent: 'home' },
+                music: { name: 'Music', parent: 'home' },
+                holidays: { name: 'Holidays', parent: 'pictures' },
+                family: { name: 'Family', parent: 'pictures' },
+                usb: { name: 'USB drive' },
+                backup: { name: 'Backup', parent: 'usb' },
+                vault: { name: 'Vault' },
+                trash: { name: 'Trash' }
+            };
+
+            var items = [];
+            var nextId = 1;
+            function add(place, name, kind, extra) {
+                var it = { id: nextId++, place: place, name: name, kind: kind };
+                if (extra) for (var k in extra) it[k] = extra[k];
+                items.push(it);
+                return it;
+            }
+
+            add('home', 'Documents', 'folder', { opens: 'documents' });
+            add('home', 'Downloads', 'folder', { opens: 'downloads' });
+            add('home', 'Pictures', 'folder', { opens: 'pictures' });
+            add('home', 'Music', 'folder', { opens: 'music' });
+            add('home', 'Notes.txt', 'doc', { ext: 'TXT' });
+            add('documents', 'Tickets.pdf', 'doc', { ext: 'PDF' });
+            add('documents', 'Resume.docx', 'doc', { ext: 'DOC' });
+            add('documents', 'Budget.xlsx', 'doc', { ext: 'XLS' });
+            add('documents', 'Lease.pdf', 'doc', { ext: 'PDF' });
+            add('downloads', 'Photos.zip', 'zip');
+            add('downloads', 'Manual.pdf', 'doc', { ext: 'PDF' });
+            add('downloads', 'Podcast.mp3', 'audio');
+            add('pictures', 'Holidays', 'folder', { opens: 'holidays' });
+            add('pictures', 'Family', 'folder', { opens: 'family' });
+            var starter = add('pictures', 'Mountains.jpg', 'photo');
+            add('pictures', 'Garden.jpg', 'photo', { tone: 'green' });
+            add('pictures', 'Birthday.mp4', 'video', { tone: 'warm' });
+            add('pictures', 'Sunset.jpg', 'photo', { tone: 'warm' });
+            add('holidays', 'Beach.jpg', 'photo');
+            add('holidays', 'Lake.jpg', 'photo', { tone: 'green' });
+            add('holidays', 'Hike.mp4', 'video', { tone: 'green' });
+            add('family', 'Picnic.jpg', 'photo', { tone: 'warm' });
+            add('family', 'Wedding.jpg', 'photo');
+            add('music', 'Morning.mp3', 'audio');
+            add('music', 'Road trip.mp3', 'audio');
+            add('usb', 'Backup', 'folder', { opens: 'backup' });
+            add('vault', 'Passport.jpg', 'photo', { tone: 'green', from: 'documents' });
+            add('vault', 'Bank letter.pdf', 'doc', { ext: 'PDF', from: 'documents' });
+            add('trash', 'Old notes.txt', 'doc', { ext: 'TXT', from: 'home' });
+
+            var current = 'pictures';
+            var selected = starter.id;
+            var vaultLocked = true;
+            var unlocking = false;
+            var firstRender = true;
+
+            function el(tag, cls, text) {
+                var e = document.createElement(tag);
+                if (cls) e.className = cls;
+                if (text != null) e.textContent = text;
+                return e;
+            }
+            function find(id) {
+                for (var i = 0; i < items.length; i++) if (items[i].id === id) return items[i];
+                return null;
+            }
+            function chain(p) {
+                var c = [];
+                while (p) { c.unshift(p); p = places[p].parent; }
+                return c;
+            }
+            function rootOf(p) { return chain(p)[0]; }
+            function used() { desk.classList.add('used'); }
+
+            function thumbClass(it) {
+                var c = 'thumb';
+                if (it.kind !== 'photo') c += ' ' + it.kind;
+                if (it.tone) c += ' ' + it.tone;
+                return c;
+            }
+
+            function render() {
+                // Sidebar: highlight the deepest place in the path that has a sidebar entry.
+                var active = null;
+                chain(current).forEach(function (p) {
+                    if (desk.querySelector('.desk-side [data-place="' + p + '"]')) active = p;
+                });
+                sideButtons.forEach(function (b) {
+                    var on = b.dataset.place === active;
+                    b.classList.toggle('on', on);
+                    if (on) b.setAttribute('aria-current', 'true');
+                    else b.removeAttribute('aria-current');
+                });
+
+                // Path
+                pathEl.textContent = '';
+                var c = chain(current);
+                c.forEach(function (p, i) {
+                    if (i) pathEl.appendChild(document.createTextNode(' › '));
+                    pathEl.appendChild(el(i === c.length - 1 ? 'b' : 'span', null, places[p].name));
+                });
+                back.hidden = !places[current].parent;
+
+                // Grid
+                grid.textContent = '';
+                if (current === 'vault' && vaultLocked) {
+                    renderLocked();
+                } else {
+                    var list = items.filter(function (it) { return it.place === current; });
+                    if (!list.length) {
+                        grid.appendChild(el('p', 'desk-empty', current === 'trash' ? 'Trash is empty' : 'This folder is empty'));
+                    }
+                    list.forEach(function (it) {
+                        var b = el('button', 'tile' + (it.id === selected ? ' sel' : '') + (firstRender ? '' : ' new'));
+                        b.type = 'button';
+                        b.dataset.id = it.id;
+                        if (it.kind === 'folder') {
+                            b.setAttribute('aria-label', 'Open folder ' + it.name);
+                        } else {
+                            b.setAttribute('aria-pressed', it.id === selected ? 'true' : 'false');
+                        }
+                        var t = el('span', thumbClass(it));
+                        if (it.ext) t.dataset.ext = it.ext;
+                        b.appendChild(t);
+                        b.appendChild(el('span', 'tile-name', it.name));
+                        grid.appendChild(b);
+                    });
+                }
+                firstRender = false;
+                renderActions();
+            }
+
+            function renderLocked() {
+                var box = el('div', 'desk-lock');
+                box.innerHTML = '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+                    '<path class="shackle" d="M38 56 V40 a22 22 0 0 1 44 0 V56" fill="none" stroke-width="9" stroke-linecap="round"/>' +
+                    '<rect class="body" x="24" y="52" width="72" height="56" rx="14"/></svg>';
+                box.appendChild(el('strong', null, 'Vault is locked'));
+                var dots = el('div', 'desk-pin');
+                for (var i = 0; i < 4; i++) dots.appendChild(el('i'));
+                box.appendChild(dots);
+                var btn = el('button', 'desk-btn primary', 'Unlock with PIN');
+                btn.type = 'button';
+                btn.addEventListener('click', unlock);
+                box.appendChild(btn);
+                grid.appendChild(box);
+            }
+
+            function unlock() {
+                if (unlocking) return;
+                unlocking = true;
+                used();
+                var dots = grid.querySelectorAll('.desk-pin i');
+                var i = 0;
+                var timer = setInterval(function () {
+                    if (i < dots.length) {
+                        dots[i].classList.add('on');
+                        i++;
+                        return;
+                    }
+                    clearInterval(timer);
+                    var lock = grid.querySelector('.desk-lock');
+                    if (lock) lock.classList.add('open');
+                    setTimeout(function () {
+                        unlocking = false;
+                        // Only unlock if the visitor is still looking at the vault.
+                        if (current === 'vault') {
+                            vaultLocked = false;
+                            render();
+                        }
+                    }, 450);
+                }, 160);
+            }
+
+            function action(label, fn, primary) {
+                var b = el('button', 'desk-btn' + (primary ? ' primary' : ''), label);
+                b.type = 'button';
+                b.addEventListener('click', function () { used(); fn(); });
+                actionsEl.appendChild(b);
+            }
+
+            function renderActions() {
+                actionsEl.textContent = '';
+                var it = find(selected);
+                if (it && it.place !== current) it = null;
+                if (current === 'vault' && !vaultLocked) {
+                    action('Lock vault', function () {
+                        vaultLocked = true;
+                        selected = null;
+                        render();
+                        showToast('Vault locked');
+                    });
+                }
+                if (it) {
+                    if (current === 'trash') {
+                        action('Restore', function () { restore(it); }, true);
+                    } else if (current === 'vault') {
+                        action('Move out', function () { moveOut(it); }, true);
+                    } else {
+                        if (rootOf(current) !== 'usb') action('Copy to USB', function () { copyToUsb(it); }, true);
+                        action('Hide in vault', function () { hide(it); });
+                        action('Delete', function () { del(it); });
+                    }
+                }
+                actionsEl.hidden = !actionsEl.childElementCount;
+            }
+
+            function flash(place) {
+                var b = desk.querySelector('.desk-side [data-place="' + place + '"]');
+                if (!b) return;
+                b.classList.remove('flash');
+                void b.offsetWidth;
+                b.classList.add('flash');
+            }
+
+            function copyToUsb(it) {
+                showToast('Copying ' + it.name + ' to USB drive', {
+                    progress: true,
+                    done: function () {
+                        add('usb', it.name, it.kind, { ext: it.ext, tone: it.tone });
+                        flash('usb');
+                        showToast('Copied ' + it.name + ' to USB drive');
+                        if (rootOf(current) === 'usb') render();
+                    }
+                });
+            }
+
+            function hide(it) {
+                it.from = it.place;
+                it.place = 'vault';
+                selected = null;
+                render();
+                flash('vault');
+                showToast(it.name + ' is now in your vault');
+            }
+
+            function del(it) {
+                it.from = it.place;
+                it.place = 'trash';
+                selected = null;
+                render();
+                flash('trash');
+                showToast('Moved ' + it.name + ' to Trash', {
+                    undo: function () {
+                        it.place = it.from;
+                        if (it.place === current) selected = it.id;
+                        render();
+                        showToast('Restored ' + it.name);
+                    }
+                });
+            }
+
+            function restore(it) {
+                it.place = it.from || 'home';
+                selected = null;
+                render();
+                showToast('Restored ' + it.name + ' to ' + places[it.place].name);
+            }
+
+            function moveOut(it) {
+                it.place = it.from || 'home';
+                selected = null;
+                render();
+                showToast('Moved ' + it.name + ' to ' + places[it.place].name);
+            }
+
+            var toastTimer = null;
+            var progressTimer = null;
+            function hideToast() { toast.classList.remove('show'); }
+            function showToast(text, opts) {
+                opts = opts || {};
+                clearTimeout(toastTimer);
+                clearTimeout(progressTimer);
+                toastText.textContent = text;
+                toastBtn.hidden = !opts.undo;
+                toastBtn.onclick = opts.undo ? function () { used(); hideToast(); opts.undo(); } : null;
+                toast.classList.toggle('has-progress', !!opts.progress);
+                bar.style.transition = 'none';
+                bar.style.transform = 'scaleX(0)';
+                toast.classList.add('show');
+                if (opts.progress) {
+                    void bar.offsetWidth;
+                    bar.style.transition = 'transform 1400ms linear';
+                    bar.style.transform = 'scaleX(1)';
+                    progressTimer = setTimeout(function () { if (opts.done) opts.done(); }, 1450);
+                } else {
+                    toastTimer = setTimeout(hideToast, opts.undo ? 5000 : 2600);
+                }
+            }
+
+            function go(place) {
+                if (!place) return;
+                // The vault locks itself again when you leave it.
+                if (current === 'vault' && place !== 'vault') vaultLocked = true;
+                current = place;
+                selected = null;
+                render();
+            }
+
+            grid.addEventListener('click', function (e) {
+                var b = e.target.closest('.tile');
+                if (!b || !b.dataset.id) return;
+                used();
+                var it = find(+b.dataset.id);
+                if (!it) return;
+                if (it.kind === 'folder') {
+                    go(it.opens);
+                    return;
+                }
+                selected = selected === it.id ? null : it.id;
+                grid.querySelectorAll('.tile').forEach(function (t) {
+                    var on = +t.dataset.id === selected;
+                    t.classList.toggle('sel', on);
+                    if (t.hasAttribute('aria-pressed')) t.setAttribute('aria-pressed', on ? 'true' : 'false');
+                });
+                renderActions();
+            });
+
+            back.addEventListener('click', function () { used(); go(places[current].parent); });
+            sideButtons.forEach(function (b) {
+                b.addEventListener('click', function () { used(); go(b.dataset.place); });
+            });
+
+            render();
+        })();
+
+        /* Motion. Content is fully visible without this script. */
+        (function () {
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var hasIO = 'IntersectionObserver' in window;
+
+            /* Scroll reveal with per-parent stagger */
+            var revealSelector = '.section-head, .feature, .tool, .principle, .card, .checks, ' +
+                '.platforms > *, .download-grid > div:first-child, .security > div:first-child';
+            var items = Array.prototype.slice.call(document.querySelectorAll(revealSelector));
+            var perParent = new Map();
+            items.forEach(function (el) {
+                var n = perParent.get(el.parentElement) || 0;
+                perParent.set(el.parentElement, n + 1);
+                el.dataset.i = n;
+            });
+
+            function reveal(el) {
+                var delay = Math.min(+el.dataset.i || 0, 8) * 80;
+                el.style.transitionDelay = delay + 'ms';
+                el.classList.add('is-in');
+                // Clear the stagger so later hover transitions respond instantly.
+                setTimeout(function () { el.style.transitionDelay = ''; }, delay + 950);
+            }
+
+            if (reduce || !hasIO) {
+                items.forEach(function (el) { el.classList.add('is-in'); });
+            } else {
+                var revealer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            reveal(entry.target);
+                            revealer.unobserve(entry.target);
+                        }
+                    });
+                }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+                items.forEach(function (el) { revealer.observe(el); });
+            }
+
+            /* Animated cards only run while on screen */
+            var cards = document.querySelectorAll('.card');
+            if (hasIO) {
+                var player = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        entry.target.classList.toggle('playing', entry.isIntersecting);
+                    });
+                }, { threshold: 0.2 });
+                cards.forEach(function (card) { player.observe(card); });
+            } else {
+                cards.forEach(function (card) { card.classList.add('playing'); });
+            }
+
+            /* Hero device: staged content and count-up numbers */
+            function countUp(el) {
+                var target = parseFloat(el.dataset.count);
+                var decimals = +(el.dataset.decimals || 0);
+                var duration = 1500;
+                var start = null;
+                function step(now) {
+                    if (start === null) start = now;
+                    var t = Math.min((now - start) / duration, 1);
+                    var eased = 1 - Math.pow(1 - t, 3);
+                    el.textContent = (target * eased).toFixed(decimals);
+                    if (t < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+
+            var deviceWrap = document.querySelector('.device-wrap');
+            if (deviceWrap) {
+                setTimeout(function () {
+                    deviceWrap.classList.add('is-in');
+                    if (!reduce) document.querySelectorAll('[data-count]').forEach(countUp);
+                }, reduce ? 0 : 450);
+            }
+
+            /* Reading progress and header shadow */
+            var progress = document.querySelector('.scroll-progress');
+            var header = document.querySelector('.site-header');
+            var ticking = false;
+            function onScroll() {
+                ticking = false;
+                var max = document.documentElement.scrollHeight - window.innerHeight;
+                var p = max > 0 ? window.scrollY / max : 0;
+                progress.style.setProperty('--progress', p.toFixed(4));
+                header.classList.toggle('scrolled', window.scrollY > 8);
+            }
+            window.addEventListener('scroll', function () {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(onScroll);
+                }
+            }, { passive: true });
+            onScroll();
+
+            if (reduce) return;
+            var finePointer = window.matchMedia('(pointer: fine)').matches;
+
+            /* Window and phone tilt toward the cursor (set on the stage, inherited by both) */
+            var hero = document.querySelector('.hero');
+            var device = document.querySelector('.device-wrap');
+            if (finePointer && hero && device) {
+                hero.addEventListener('pointermove', function (e) {
+                    // Hold still while the visitor is using the desktop demo.
+                    if (e.target.closest && e.target.closest('.desk, .device')) {
+                        device.style.setProperty('--ry', '0deg');
+                        device.style.setProperty('--rx', '0deg');
+                        return;
+                    }
+                    var r = device.getBoundingClientRect();
+                    var x = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / r.width));
+                    var y = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / r.height));
+                    device.style.setProperty('--ry', (x * 10).toFixed(2) + 'deg');
+                    device.style.setProperty('--rx', (-y * 8).toFixed(2) + 'deg');
+                });
+                hero.addEventListener('pointerleave', function () {
+                    device.style.setProperty('--ry', '0deg');
+                    device.style.setProperty('--rx', '0deg');
+                });
+            }
+
+            /* Cursor spotlight on cards and tools */
+            if (finePointer) {
+                document.querySelectorAll('.tool, .card').forEach(function (el) {
+                    el.addEventListener('pointermove', function (e) {
+                        var r = el.getBoundingClientRect();
+                        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+                        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+                    });
+                    el.addEventListener('pointerleave', function () {
+                        el.style.setProperty('--mx', '-999px');
+                        el.style.setProperty('--my', '-999px');
+                    });
+                });
+            }
         })();
     </script>
 </body>

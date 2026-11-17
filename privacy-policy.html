@@ -7,6 +7,7 @@
     <title>Privacy policy — Storax</title>
     <meta name="description" content="What Storax stores on your device, what it sends to Google Firebase, and which connections it makes.">
     <meta name="theme-color" content="#0e0f13">
+    <script>document.documentElement.classList.add('js');</script>
     <link rel="icon" href="favicon.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -464,6 +465,302 @@
             color: var(--ink-soft);
         }
 
+        /* =========================================================
+           Motion layer (matches index.html)
+           Anything hidden for animation is scoped to .js.
+           ========================================================= */
+        :root {
+            --ease-out: cubic-bezier(.2, .7, .2, 1);
+            --ok: #1f9d6b;
+        }
+
+        :root[data-theme="dark"] {
+            --ok: #4fd1a0;
+        }
+
+        .scroll-progress {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 40;
+            height: 2px;
+            transform-origin: 0 50%;
+            transform: scaleX(var(--progress, 0));
+            background: linear-gradient(90deg, var(--accent), var(--ok));
+            pointer-events: none;
+        }
+
+        .site-header {
+            transition: box-shadow 240ms ease;
+        }
+
+        .site-header.scrolled {
+            box-shadow: 0 12px 30px -24px rgba(0, 0, 0, 0.55);
+        }
+
+        /* Intro band */
+        .intro-band {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .glow {
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            z-index: -1;
+            width: min(700px, 95vw);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle, color-mix(in srgb, var(--accent) 24%, transparent), transparent 62%);
+            animation: drift 18s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .glow.two {
+            top: auto;
+            right: auto;
+            bottom: -60%;
+            left: -15%;
+            width: min(520px, 85vw);
+            background: radial-gradient(circle, color-mix(in srgb, var(--ok) 15%, transparent), transparent 60%);
+            animation-duration: 24s;
+            animation-direction: alternate-reverse;
+        }
+
+        .grid-lines {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                linear-gradient(var(--line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line) 1px, transparent 1px);
+            background-size: 56px 56px;
+            -webkit-mask-image: radial-gradient(ellipse 60% 70% at 78% 40%, #000 10%, transparent 70%);
+            mask-image: radial-gradient(ellipse 60% 70% at 78% 40%, #000 10%, transparent 70%);
+            opacity: 0.55;
+            pointer-events: none;
+        }
+
+        @keyframes drift {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(-7%, 9%, 0) scale(1.14); }
+        }
+
+        .shield {
+            position: absolute;
+            top: 50%;
+            right: max(24px, calc((100% - 1120px) / 2 + 24px));
+            width: 170px;
+            height: 200px;
+            margin-top: -100px;
+            color: var(--accent);
+            animation: float 7s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .shield path {
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .shield .outline {
+            stroke-width: 3;
+            stroke-dasharray: 560;
+            stroke-dashoffset: 560;
+            animation: trace 1800ms 400ms cubic-bezier(.6, 0, .2, 1) forwards;
+        }
+
+        .shield .tick {
+            stroke: var(--ok);
+            stroke-width: 6;
+            stroke-dasharray: 90;
+            stroke-dashoffset: 90;
+            animation: trace 700ms 1900ms var(--ease-out) forwards;
+        }
+
+        .shield .ring {
+            fill: color-mix(in srgb, var(--accent) 10%, transparent);
+            stroke: none;
+            opacity: 0;
+            animation: ringin 900ms 1500ms ease forwards;
+        }
+
+        @keyframes trace {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes ringin {
+            to { opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { translate: 0 0; }
+            50% { translate: 0 -10px; }
+        }
+
+        /* Entrance */
+        .js .enter {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: enter 900ms var(--ease-out) forwards;
+            animation-delay: calc(var(--d, 0) * 1ms);
+        }
+
+        @keyframes enter {
+            to { opacity: 1; transform: none; }
+        }
+
+        h1 em {
+            position: relative;
+            white-space: nowrap;
+        }
+
+        h1 em::after {
+            content: "";
+            position: absolute;
+            left: 0.04em;
+            right: 0.08em;
+            bottom: 0.02em;
+            height: 0.07em;
+            border-radius: 99px;
+            background: currentColor;
+            opacity: 0.35;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: draw 1000ms 900ms cubic-bezier(.6, 0, .2, 1) forwards;
+        }
+
+        @keyframes draw {
+            to { transform: scaleX(1); }
+        }
+
+        /* Scroll reveal */
+        .js :is(.policy-section, .summary li) {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity 800ms ease, transform 900ms var(--ease-out);
+        }
+
+        .js :is(.policy-section, .summary li).is-in {
+            opacity: 1;
+            transform: none;
+        }
+
+        .policy-section .section-no {
+            transition: color 300ms ease;
+        }
+
+        .policy-section.current .section-no {
+            color: var(--accent);
+        }
+
+        tbody tr {
+            transition: background-color 200ms ease;
+        }
+
+        tbody tr:hover {
+            background: var(--accent-soft);
+        }
+
+        /* Sidebar: keep it scrollable when it outgrows the viewport */
+        .summary {
+            max-height: calc(100vh - 110px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        /* On this page */
+        .toc {
+            margin-top: 34px;
+        }
+
+        .toc ol {
+            display: grid;
+            gap: 2px;
+            list-style: none;
+            border-left: 1px solid var(--line-strong);
+        }
+
+        .toc a {
+            position: relative;
+            display: flex;
+            gap: 10px;
+            padding: 6px 10px 6px 16px;
+            border-radius: 0 8px 8px 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.4;
+            text-decoration: none;
+            transition: color 200ms ease, background-color 200ms ease;
+        }
+
+        .toc a span {
+            font-variant-numeric: tabular-nums;
+            opacity: 0.7;
+        }
+
+        .toc a::before {
+            content: "";
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            left: -1px;
+            width: 2px;
+            border-radius: 2px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 300ms var(--ease-out);
+        }
+
+        .toc a:hover {
+            color: var(--ink);
+            background: var(--accent-soft);
+        }
+
+        .toc a.active {
+            color: var(--ink);
+        }
+
+        .toc a.active::before {
+            transform: scaleY(1);
+        }
+
+        /* Contact button shine */
+        .contact .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact .btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.35) 50%, transparent 65%);
+            transform: translateX(-120%);
+            transition: transform 700ms ease;
+            pointer-events: none;
+        }
+
+        .contact .btn:hover::after {
+            transform: translateX(120%);
+        }
+
+        @media (max-width: 1080px) {
+            .shield {
+                display: none;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .summary {
+                max-height: none;
+                overflow: visible;
+            }
+        }
+
         /* ---------- Responsive ---------- */
         @media (max-width: 900px) {
             .policy {
@@ -517,7 +814,11 @@
             *,
             *::before,
             *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                animation-delay: 0ms !important;
                 transition-duration: 0.01ms !important;
+                transition-delay: 0ms !important;
                 scroll-behavior: auto !important;
             }
         }
@@ -525,6 +826,7 @@
 </head>
 
 <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
     <header class="site-header">
         <div class="wrap nav">
             <a href="index.html" class="brand" aria-label="Storax home">
@@ -550,18 +852,28 @@
     </header>
 
     <main>
+        <div class="intro-band">
+        <div class="glow" aria-hidden="true"></div>
+        <div class="glow two" aria-hidden="true"></div>
+        <div class="grid-lines" aria-hidden="true"></div>
+        <svg class="shield" viewBox="0 0 170 200" aria-hidden="true">
+            <path class="ring" d="M85 22 L146 46 V98 C146 140 120 168 85 182 C50 168 24 140 24 98 V46 Z"/>
+            <path class="outline" d="M85 14 L154 41 V98 C154 146 124 177 85 192 C46 177 16 146 16 98 V41 Z"/>
+            <path class="tick" d="M55 102 L77 124 L118 80"/>
+        </svg>
         <div class="wrap intro">
-            <span class="eyebrow">Privacy and data protection</span>
-            <h1>Privacy policy<br><em>for Storax.</em></h1>
-            <p class="intro-copy">
+            <span class="eyebrow enter" style="--d:0">Privacy and data protection</span>
+            <h1 class="enter" style="--d:120">Privacy policy<br><em>for Storax.</em></h1>
+            <p class="intro-copy enter" style="--d:260">
                 Storax is a file manager. This page explains what it keeps on your device, what it sends to Google
                 Firebase, and which connections it makes when you use a feature.
             </p>
-            <ul class="meta">
+            <ul class="meta enter" style="--d:380">
                 <li>Last updated: November 17, 2026</li>
                 <li>Applies to Storax for Android, Windows, macOS and Linux</li>
                 <li><a href="index.html">Back to home</a></li>
             </ul>
+        </div>
         </div>
 
         <div class="wrap policy">
@@ -570,25 +882,41 @@
                 <ul>
                     <li>Your files stay on your device. Storax has no file upload service of its own.</li>
                     <li>Only files you put in a vault are encrypted. Other files are not encrypted by default.</li>
-                    <li>Release builds on Android, iOS and macOS send anonymous usage and crash reports to Google Firebase.</li>
-                    <li>There is no in-app switch to turn that reporting off yet.</li>
-                    <li>AI models are downloaded from Hugging Face only when you turn on a feature that needs them.</li>
+                    <li>The Android, iPhone and Mac apps send anonymous reports about app use and crashes to Google.</li>
+                    <li>There is no setting in the app to turn those reports off yet.</li>
+                    <li>Smart features download the files they need only when you turn them on.</li>
                     <li>We do not sell your information.</li>
                 </ul>
+
+                <nav class="toc" aria-label="On this page">
+                    <h2>On this page</h2>
+                    <ol>
+                        <li><a href="#who-we-are"><span>01</span>Who we are</a></li>
+                        <li><a href="#on-device"><span>02</span>What stays on your device</a></li>
+                        <li><a href="#what-we-receive"><span>03</span>What we and Google receive</a></li>
+                        <li><a href="#connections"><span>04</span>Connections you start</a></li>
+                        <li><a href="#permissions"><span>05</span>Permissions</a></li>
+                        <li><a href="#protection"><span>06</span>How we protect your data</a></li>
+                        <li><a href="#sharing"><span>07</span>Sharing</a></li>
+                        <li><a href="#choices"><span>08</span>Your choices</a></li>
+                        <li><a href="#changes"><span>09</span>Changes to this policy</a></li>
+                        <li><a href="#contact"><span>10</span>Contact us</a></li>
+                    </ol>
+                </nav>
             </aside>
 
             <div class="sections">
-                <section class="policy-section">
+                <section class="policy-section" id="who-we-are">
                     <span class="section-no">01</span>
                     <h2>Who we are</h2>
                     <p>
                         Storax is a product of Kumpali Private Limited. This policy covers the Storax app and this website.
                         It does not cover third-party apps, websites or services you connect to from Storax, such as
-                        an SFTP server, an FTP server or a cloud app.
+                        a file server or a cloud storage app.
                     </p>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="on-device">
                     <span class="section-no">02</span>
                     <h2>What stays on your device</h2>
                     <p>
@@ -597,62 +925,62 @@
                     </p>
                     <ul>
                         <li><strong>Your files and folders.</strong> Storax reads, moves, copies and deletes them when you ask it to.</li>
-                        <li><strong>Vault and hidden items.</strong> Items you hide are encrypted with keys derived from your PIN and a device secret. See section 06.</li>
+                        <li><strong>Vault and hidden items.</strong> Items you hide are locked with encryption that needs your PIN and this device. See section 06.</li>
                         <li><strong>Trash and history.</strong> Deleted items wait in Trash until you restore or remove them. Operation history is kept so you can undo some actions.</li>
-                        <li><strong>Remote connection profiles.</strong> If you save SSH, SFTP or FTP connections, their host names, usernames and passwords are stored on the device. The FTP password is stored with the profile.</li>
-                        <li><strong>SSH host keys.</strong> The fingerprints of servers you have trusted are stored so Storax can warn you if they change.</li>
-                        <li><strong>Search and media indexes.</strong> Storax keeps indexes of file names, text and thumbnails to make search and browsing faster. These are stored on the device.</li>
-                        <li><strong>AI models and downloads.</strong> Models you download are stored on the device.</li>
+                        <li><strong>Saved server logins.</strong> If you save a connection to a file server, its address, username and password are stored on your device.</li>
+                        <li><strong>Trusted servers.</strong> Storax remembers the servers you have trusted, so it can warn you if one of them changes.</li>
+                        <li><strong>Search data.</strong> Storax keeps lists of file names, text and small previews so search and browsing are faster. These stay on your device.</li>
+                        <li><strong>Smart-feature downloads.</strong> Files that smart features download are stored on your device.</li>
                     </ul>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="what-we-receive">
                     <span class="section-no">03</span>
                     <h2>What we and Google receive</h2>
                     <p>
-                        Release builds on Android, iOS and macOS use Google Firebase to receive anonymous usage data,
-                        crash reports and performance measurements. Firebase is operated by Google. Windows and Linux
-                        builds do not send this data.
+                        The Android, iPhone and Mac versions of Storax use Google Firebase, a Google service, to send
+                        anonymous reports about how the app is used, when it crashes, and how fast it runs. The Windows
+                        and Linux versions do not send these reports.
                     </p>
                     <h3>Usage events</h3>
                     <p>
-                        Storax records taps and actions so we can see which features are used. Each event includes the
-                        screen name, your language and country setting, the event time, and your time zone offset.
+                        Storax notes taps and actions so we can see which features people use. Each report includes
+                        which screen you were on, your language and country settings, the time, and your time zone.
                     </p>
                     <p>
-                        A tap event can include the text of the item you tapped, up to 60 characters. A file row can
-                        therefore send a file name.
+                        A tap can include the words on the item you tapped, up to 60 characters, so it may include a
+                        file name.
                     </p>
                     <h3>Crash reports</h3>
                     <p>
-                        When the app crashes or records an error, Firebase Crashlytics receives technical details such
-                        as the error message, a stack trace, the device model and operating system version, and the
-                        screen that was open.
+                        When the app crashes or hits an error, Google receives details about what went wrong and where
+                        in the app it happened, along with your phone model, its system version, and the screen that
+                        was open.
                     </p>
-                    <h3>Performance measurements</h3>
+                    <h3>Speed measurements</h3>
                     <p>
-                        Firebase Performance Monitoring measures timing data, such as how long screens and network
-                        requests take.
+                        Google also measures how long screens take to open and how long internet requests take.
                     </p>
                     <h3>What is not included</h3>
                     <p>
-                        The analytics code does not send your files, file contents, file paths, passwords, PINs or
-                        vault contents. It does not send your location. Firebase assigns the app an installation
-                        identifier. Storax does not set a user ID or create an account.
+                        These reports do not include your files, what is inside them, where they are stored, your
+                        passwords, your PIN or anything in your vault. They do not include your location. Google gives
+                        each installed copy of the app a random number to tell reports apart. Storax has no accounts
+                        and does not attach your name or email to these reports.
                     </p>
                     <h3>Your choice</h3>
                     <p>
-                        There is currently no option in the app to turn this reporting off. Reporting is turned off in
-                        debug builds. To stop it on a release build, uninstall the app.
+                        There is currently no setting in the app to turn these reports off. The only way to stop them
+                        is to uninstall the app.
                     </p>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="connections">
                     <span class="section-no">04</span>
                     <h2>Connections you start</h2>
                     <p>
-                        Storax connects to the internet or to other devices only when a feature needs it. The table
-                        lists the connections we are aware of.
+                        Storax connects to the internet or to other devices only when a feature needs it. Here is every
+                        connection we know of.
                     </p>
                     <div class="table-wrap">
                         <table>
@@ -660,44 +988,43 @@
                                 <tr><th>Connection</th><th>When it happens</th><th>What is sent</th></tr>
                             </thead>
                             <tbody>
-                                <tr><td>Hugging Face (model downloads)</td><td>When you turn on an AI or transcription feature</td><td>A request for the model file. Hugging Face sees your IP address.</td></tr>
-                                <tr><td>Google Firebase</td><td>Release builds on Android, iOS and macOS, automatically</td><td>The usage, crash and performance data in section 03.</td></tr>
+                                <tr><td>Hugging Face (downloads for smart features)</td><td>When you turn on a smart search or speech-to-text feature</td><td>A request for the file. Like any website, Hugging Face can see your internet address.</td></tr>
+                                <tr><td>Google Firebase</td><td>Automatically, in the Android, iPhone and Mac versions</td><td>The usage, crash and speed reports in section 03.</td></tr>
                                 <tr><td>Google Play</td><td>When Play checks for app updates</td><td>Handled by Google Play under its own policy.</td></tr>
-                                <tr><td>Shorebird</td><td>When Storax checks for code updates</td><td>Handled by Shorebird, which provides the update mechanism. Details are in the Shorebird documentation.</td></tr>
-                                <tr><td>Nearby sharing</td><td>When you send or receive files or text</td><td>Files and text go directly to the other device, over Wi-Fi, Wi-Fi Direct or a QR-code session you start.</td></tr>
-                                <tr><td>Offline Drop</td><td>When you start Offline Drop</td><td>Files travel over the local network. The transfer is encrypted at the application layer.</td></tr>
-                                <tr><td>Remote servers (SSH, SFTP, FTP, NFS)</td><td>When you connect to a server you set up</td><td>Your credentials and the files you choose, sent to that server. FTP sends credentials without encryption unless you choose a secure option.</td></tr>
-                                <tr><td>Relay server</td><td>Only if you enter a relay address for Nearby sharing</td><td>Transfer data passes through the relay you chose.</td></tr>
+                                <tr><td>Shorebird</td><td>When Storax checks for small app updates</td><td>Handled by Shorebird, the service that delivers these updates.</td></tr>
+                                <tr><td>Nearby sharing</td><td>When you send or receive files or text</td><td>Files and text go straight to the other device, over Wi-Fi, a direct phone-to-phone link, or a QR code you scan.</td></tr>
+                                <tr><td>Offline Drop</td><td>When you start Offline Drop</td><td>Files travel over your home or office network, and the transfer is encrypted.</td></tr>
+                                <tr><td>File servers you connect to</td><td>When you connect to a server you set up</td><td>Your login and the files you choose. Some older server types send your password without protection unless you pick the secure option.</td></tr>
+                                <tr><td>Relay server (optional)</td><td>Only if you add one for nearby sharing</td><td>Your files pass through the relay server you chose.</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="permissions">
                     <span class="section-no">05</span>
                     <h2>Permissions</h2>
                     <p>Storax asks for permissions only for the features that use them. Examples:</p>
                     <ul>
                         <li><strong>All-files access</strong> lets the file manager see and change files across storage.</li>
-                        <li><strong>Location</strong> is required by Android for Wi-Fi and Wi-Fi Direct discovery. It is used on the device to find nearby devices and is not sent in analytics.</li>
+                        <li><strong>Location</strong> is required by Android to find nearby devices over Wi-Fi. It is used only on your device and is never included in reports.</li>
                         <li><strong>Notifications</strong> show progress for transfers and background work.</li>
-                        <li><strong>Biometric</strong> is used for unlocking when you turn on fingerprint unlock.</li>
-                        <li><strong>Accessibility service (App Lock only).</strong> If you turn on App Lock, Storax uses Android's accessibility service to see which app and screen are in the foreground. It is used only to show your PIN or fingerprint prompt before a locked app opens. Storax does not read on-screen content, record keystrokes or act on your behalf, and it does not send accessibility information off the device.</li>
+                        <li><strong>Fingerprint</strong> is used only if you turn on fingerprint unlock.</li>
+                        <li><strong>Accessibility setting (App Lock only).</strong> If you turn on App Lock, Storax uses Android's Accessibility setting to notice which app you open. It uses this only to ask for your PIN or fingerprint before a locked app opens. Storax does not read what is on your screen, record what you type or act on your behalf, and this information never leaves your device.</li>
                     </ul>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="protection">
                     <span class="section-no">06</span>
                     <h2>How we protect your data</h2>
                     <p>
-                        Vault and hidden items are encrypted with AES-GCM. Keys are derived from your PIN with Argon2id
-                        and combined with a device secret. Wrong PIN attempts trigger a temporary lockout.
+                        Files in the vault are locked with strong, modern encryption that needs both your PIN and a
+                        secret key kept on this device. After too many wrong PINs, the vault locks for a while.
                     </p>
                     <p>
-                        The lockout is kept only while the app is running, so restarting the app clears it. The device
-                        secret is normally stored in the Android Keystore. If the Keystore is unavailable, Storax stores
-                        the secret in a file in app storage instead, which is less protected. Auto Backup is not yet
-                        turned off for this file.
+                        That wait resets if the app is restarted. The device key is normally kept in your phone's
+                        secure storage area. If that is not available, Storax keeps it in an ordinary app file
+                        instead, which is less protected and may be included in your phone's automatic backups.
                     </p>
                     <p>
                         Storax cannot recover a vault whose PIN you have forgotten, or hidden items on a device that is
@@ -705,28 +1032,28 @@
                     </p>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="sharing">
                     <span class="section-no">07</span>
                     <h2>Sharing</h2>
                     <p>
                         We do not sell your information. We share it only with the service providers named in section 04
                         (Google Firebase, and the model host Hugging Face) so they can run their part of the app, and when
-                        the law requires it. Google Firebase may process data in countries other than your own.
+                        the law requires it. Google may handle this data in countries other than your own.
                     </p>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="choices">
                     <span class="section-no">08</span>
                     <h2>Your choices</h2>
                     <ul>
                         <li>Uninstalling Storax removes the app's data from your device. Files you saved to your device storage remain.</li>
-                        <li>You can turn off App Lock, and turn off the accessibility service, in Android settings.</li>
-                        <li>You can ask us about data that reached us through Firebase. Because Storax has no accounts, we will ask you for enough information to find the relevant records.</li>
+                        <li>You can turn off App Lock, and its Accessibility setting, in Android settings.</li>
+                        <li>You can ask us about data that reached us through Google's reports. Because Storax has no accounts, we will ask you for enough detail to find the right records.</li>
                         <li>You can ask us to delete any data we hold about you.</li>
                     </ul>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="changes">
                     <span class="section-no">09</span>
                     <h2>Changes to this policy</h2>
                     <p>
@@ -735,7 +1062,7 @@
                     </p>
                 </section>
 
-                <section class="policy-section">
+                <section class="policy-section" id="contact">
                     <span class="section-no">10</span>
                     <h2>Contact us</h2>
                     <p>
@@ -784,6 +1111,88 @@
                 apply(next);
                 write(next);
             });
+        })();
+
+        /* Motion and section tracking. Content is fully visible without this script. */
+        (function () {
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var hasIO = 'IntersectionObserver' in window;
+
+            /* Scroll reveal, staggered within each parent */
+            var items = Array.prototype.slice.call(document.querySelectorAll('.policy-section, .summary li'));
+            var perParent = new Map();
+            items.forEach(function (el) {
+                var n = perParent.get(el.parentElement) || 0;
+                perParent.set(el.parentElement, n + 1);
+                el.dataset.i = n;
+            });
+
+            function reveal(el) {
+                var delay = el.classList.contains('policy-section') ? 0 : Math.min(+el.dataset.i || 0, 8) * 70;
+                el.style.transitionDelay = delay + 'ms';
+                el.classList.add('is-in');
+                setTimeout(function () { el.style.transitionDelay = ''; }, delay + 950);
+            }
+
+            if (reduce || !hasIO) {
+                items.forEach(function (el) { el.classList.add('is-in'); });
+            } else {
+                var revealer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            reveal(entry.target);
+                            revealer.unobserve(entry.target);
+                        }
+                    });
+                }, { rootMargin: '0px 0px -6% 0px', threshold: 0.08 });
+                items.forEach(function (el) { revealer.observe(el); });
+            }
+
+            /* Highlight the section being read, in the page and in "On this page" */
+            var sections = Array.prototype.slice.call(document.querySelectorAll('.policy-section[id]'));
+            var links = {};
+            document.querySelectorAll('.toc a').forEach(function (a) {
+                links[a.getAttribute('href').slice(1)] = a;
+            });
+
+            function setCurrent(id) {
+                sections.forEach(function (s) { s.classList.toggle('current', s.id === id); });
+                Object.keys(links).forEach(function (key) {
+                    var on = key === id;
+                    links[key].classList.toggle('active', on);
+                    if (on) links[key].setAttribute('aria-current', 'location');
+                    else links[key].removeAttribute('aria-current');
+                });
+            }
+
+            /* Reading progress, header shadow, current section */
+            var progress = document.querySelector('.scroll-progress');
+            var header = document.querySelector('.site-header');
+            var ticking = false;
+            function onScroll() {
+                ticking = false;
+                var max = document.documentElement.scrollHeight - window.innerHeight;
+                var p = max > 0 ? window.scrollY / max : 0;
+                progress.style.setProperty('--progress', p.toFixed(4));
+                header.classList.toggle('scrolled', window.scrollY > 8);
+
+                // The current section is the last one whose top has passed 35% of the viewport.
+                var line = window.innerHeight * 0.35;
+                var current = null;
+                sections.forEach(function (s) {
+                    if (s.getBoundingClientRect().top <= line) current = s.id;
+                });
+                if (max - window.scrollY < 4 && sections.length) current = sections[sections.length - 1].id;
+                setCurrent(current);
+            }
+            window.addEventListener('scroll', function () {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(onScroll);
+                }
+            }, { passive: true });
+            window.addEventListener('resize', onScroll);
+            onScroll();
         })();
     </script>
 </body>
