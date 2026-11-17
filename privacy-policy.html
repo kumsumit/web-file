@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Privacy policy — Storax</title>
-    <meta name="description" content="How Storax collects, uses and protects your information.">
+    <meta name="description" content="What Storax stores on your device, what it sends to Google Firebase, and which connections it makes.">
     <meta name="theme-color" content="#0e0f13">
     <link rel="icon" href="favicon.png" type="image/png">
 
@@ -314,16 +314,6 @@
             line-height: 1.5;
         }
 
-        .summary-note {
-            margin-top: 28px;
-            font-size: 14px;
-        }
-
-        .summary-note a {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
         /* ---------- Sections ---------- */
         .sections {
             min-width: 0;
@@ -359,6 +349,13 @@
             margin-bottom: 14px;
         }
 
+        h3 {
+            margin: 22px 0 6px;
+            color: var(--ink);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
         .policy-section p {
             max-width: 42em;
             margin-bottom: 14px;
@@ -384,6 +381,32 @@
         }
 
         .policy-section strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .table-wrap {
+            margin-top: 16px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            max-width: 42em;
+            border-collapse: collapse;
+            font-size: 14.5px;
+        }
+
+        th,
+        td {
+            padding: 10px 12px 10px 0;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+            color: var(--ink-soft);
+        }
+
+        th {
             color: var(--ink);
             font-weight: 600;
         }
@@ -531,12 +554,12 @@
             <span class="eyebrow">Privacy and data protection</span>
             <h1>Privacy policy<br><em>for Storax.</em></h1>
             <p class="intro-copy">
-                We designed Storax around local-first file control, secure storage, and clear choices about how your
-                information is handled.
+                Storax is a file manager. This page explains what it keeps on your device, what it sends to Google
+                Firebase, and which connections it makes when you use a feature.
             </p>
             <ul class="meta">
-                <li>Last updated: November 14, 2026</li>
-                <li>Applies to Storax for Android, Windows, macOS, and Linux</li>
+                <li>Last updated: November 17, 2026</li>
+                <li>Applies to Storax for Android, Windows, macOS and Linux</li>
                 <li><a href="index.html">Back to home</a></li>
             </ul>
         </div>
@@ -545,102 +568,178 @@
             <aside class="summary" aria-label="Privacy highlights">
                 <h2>At a glance</h2>
                 <ul>
-                    <li>Your files are encrypted and stored locally by default.</li>
-                    <li>We do not sell or trade your personal information.</li>
-                    <li>You can request access, deletion, and portability.</li>
-                    <li>Policy changes are posted here with an updated date.</li>
+                    <li>Your files stay on your device. Storax has no file upload service of its own.</li>
+                    <li>Only files you put in a vault are encrypted. Other files are not encrypted by default.</li>
+                    <li>Release builds on Android, iOS and macOS send anonymous usage and crash reports to Google Firebase.</li>
+                    <li>There is no in-app switch to turn that reporting off yet.</li>
+                    <li>AI models are downloaded from Hugging Face only when you turn on a feature that needs them.</li>
+                    <li>We do not sell your information.</li>
                 </ul>
             </aside>
 
             <div class="sections">
                 <section class="policy-section">
                     <span class="section-no">01</span>
-                    <h2>Our commitment</h2>
+                    <h2>Who we are</h2>
                     <p>
-                        At Storax, we are committed to protecting your privacy. This Privacy Policy explains how we
-                        collect, use, disclose, and safeguard your information when you use our file intelligence system.
+                        Storax is a product of Kumpali Private Limited. This policy covers the Storax app and this website.
+                        It does not cover third-party apps, websites or services you connect to from Storax, such as
+                        an SFTP server, an FTP server or a cloud app.
                     </p>
                 </section>
 
                 <section class="policy-section">
                     <span class="section-no">02</span>
-                    <h2>Information we collect</h2>
+                    <h2>What stays on your device</h2>
                     <p>
-                        We collect information that you provide directly to us, such as when you create an account or
-                        contact us for support. We also collect certain information automatically when you use our services.
+                        Storax works with the files on your device. Unless a feature says otherwise, these files stay on
+                        your device and are not uploaded to us. The app stores the following locally:
                     </p>
                     <ul>
-                        <li><strong>Personal Information:</strong> Phone number and any other information you provide.</li>
-                        <li><strong>Usage Data:</strong> Information about how you interact with our application, including file metadata for intelligence features.</li>
-                        <li><strong>Device Information:</strong> Information about your device and internet connection.</li>
+                        <li><strong>Your files and folders.</strong> Storax reads, moves, copies and deletes them when you ask it to.</li>
+                        <li><strong>Vault and hidden items.</strong> Items you hide are encrypted with keys derived from your PIN and a device secret. See section 06.</li>
+                        <li><strong>Trash and history.</strong> Deleted items wait in Trash until you restore or remove them. Operation history is kept so you can undo some actions.</li>
+                        <li><strong>Remote connection profiles.</strong> If you save SSH, SFTP or FTP connections, their host names, usernames and passwords are stored on the device. The FTP password is stored with the profile.</li>
+                        <li><strong>SSH host keys.</strong> The fingerprints of servers you have trusted are stored so Storax can warn you if they change.</li>
+                        <li><strong>Search and media indexes.</strong> Storax keeps indexes of file names, text and thumbnails to make search and browsing faster. These are stored on the device.</li>
+                        <li><strong>AI models and downloads.</strong> Models you download are stored on the device.</li>
                     </ul>
                 </section>
 
                 <section class="policy-section">
                     <span class="section-no">03</span>
-                    <h2>How we use your information</h2>
-                    <p>We use the information we collect to:</p>
-                    <ul>
-                        <li>Provide, maintain, and improve our services.</li>
-                        <li>Process transactions and manage your account.</li>
-                        <li>Analyze usage patterns to enhance our app features.</li>
-                        <li>Communicate with you about our services.</li>
-                        <li>Ensure security and prevent fraud.</li>
-                    </ul>
+                    <h2>What we and Google receive</h2>
+                    <p>
+                        Release builds on Android, iOS and macOS use Google Firebase to receive anonymous usage data,
+                        crash reports and performance measurements. Firebase is operated by Google. Windows and Linux
+                        builds do not send this data.
+                    </p>
+                    <h3>Usage events</h3>
+                    <p>
+                        Storax records taps and actions so we can see which features are used. Each event includes the
+                        screen name, your language and country setting, the event time, and your time zone offset.
+                    </p>
+                    <p>
+                        A tap event can include the text of the item you tapped, up to 60 characters. A file row can
+                        therefore send a file name.
+                    </p>
+                    <h3>Crash reports</h3>
+                    <p>
+                        When the app crashes or records an error, Firebase Crashlytics receives technical details such
+                        as the error message, a stack trace, the device model and operating system version, and the
+                        screen that was open.
+                    </p>
+                    <h3>Performance measurements</h3>
+                    <p>
+                        Firebase Performance Monitoring measures timing data, such as how long screens and network
+                        requests take.
+                    </p>
+                    <h3>What is not included</h3>
+                    <p>
+                        The analytics code does not send your files, file contents, file paths, passwords, PINs or
+                        vault contents. It does not send your location. Firebase assigns the app an installation
+                        identifier. Storax does not set a user ID or create an account.
+                    </p>
+                    <h3>Your choice</h3>
+                    <p>
+                        There is currently no option in the app to turn this reporting off. Reporting is turned off in
+                        debug builds. To stop it on a release build, uninstall the app.
+                    </p>
                 </section>
 
                 <section class="policy-section">
                     <span class="section-no">04</span>
-                    <h2>Data security</h2>
+                    <h2>Connections you start</h2>
                     <p>
-                        We implement appropriate technical and organizational measures to protect your personal
-                        information against unauthorized access, alteration, disclosure, or destruction. Your files are
-                        encrypted and stored locally by default, with optional secure syncing.
+                        Storax connects to the internet or to other devices only when a feature needs it. The table
+                        lists the connections we are aware of.
                     </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Connection</th><th>When it happens</th><th>What is sent</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Hugging Face (model downloads)</td><td>When you turn on an AI or transcription feature</td><td>A request for the model file. Hugging Face sees your IP address.</td></tr>
+                                <tr><td>Google Firebase</td><td>Release builds on Android, iOS and macOS, automatically</td><td>The usage, crash and performance data in section 03.</td></tr>
+                                <tr><td>Google Play</td><td>When Play checks for app updates</td><td>Handled by Google Play under its own policy.</td></tr>
+                                <tr><td>Shorebird</td><td>When Storax checks for code updates</td><td>Handled by Shorebird, which provides the update mechanism. Details are in the Shorebird documentation.</td></tr>
+                                <tr><td>Nearby sharing</td><td>When you send or receive files or text</td><td>Files and text go directly to the other device, over Wi-Fi, Wi-Fi Direct or a QR-code session you start.</td></tr>
+                                <tr><td>Offline Drop</td><td>When you start Offline Drop</td><td>Files travel over the local network. The transfer is encrypted at the application layer.</td></tr>
+                                <tr><td>Remote servers (SSH, SFTP, FTP, NFS)</td><td>When you connect to a server you set up</td><td>Your credentials and the files you choose, sent to that server. FTP sends credentials without encryption unless you choose a secure option.</td></tr>
+                                <tr><td>Relay server</td><td>Only if you enter a relay address for Nearby sharing</td><td>Transfer data passes through the relay you chose.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </section>
 
                 <section class="policy-section">
                     <span class="section-no">05</span>
-                    <h2>Data sharing and disclosure</h2>
-                    <p>
-                        We do not sell, trade, or otherwise transfer your personal information to third parties without
-                        your consent, except as described in this policy. We may share information in the following
-                        circumstances:
-                    </p>
+                    <h2>Permissions</h2>
+                    <p>Storax asks for permissions only for the features that use them. Examples:</p>
                     <ul>
-                        <li>With your explicit consent.</li>
-                        <li>To comply with legal obligations.</li>
-                        <li>To protect our rights and safety.</li>
-                        <li>In connection with a business transfer.</li>
+                        <li><strong>All-files access</strong> lets the file manager see and change files across storage.</li>
+                        <li><strong>Location</strong> is required by Android for Wi-Fi and Wi-Fi Direct discovery. It is used on the device to find nearby devices and is not sent in analytics.</li>
+                        <li><strong>Notifications</strong> show progress for transfers and background work.</li>
+                        <li><strong>Biometric</strong> is used for unlocking when you turn on fingerprint unlock.</li>
+                        <li><strong>Accessibility service (App Lock only).</strong> If you turn on App Lock, Storax uses Android's accessibility service to see which app and screen are in the foreground. It is used only to show your PIN or fingerprint prompt before a locked app opens. Storax does not read on-screen content, record keystrokes or act on your behalf, and it does not send accessibility information off the device.</li>
                     </ul>
                 </section>
 
                 <section class="policy-section">
                     <span class="section-no">06</span>
-                    <h2>Your rights</h2>
-                    <p>You have the right to:</p>
-                    <ul>
-                        <li>Access and update your personal information.</li>
-                        <li>Request deletion of your data.</li>
-                        <li>Opt out of certain data processing.</li>
-                        <li>Request data portability.</li>
-                    </ul>
+                    <h2>How we protect your data</h2>
+                    <p>
+                        Vault and hidden items are encrypted with AES-GCM. Keys are derived from your PIN with Argon2id
+                        and combined with a device secret. Wrong PIN attempts trigger a temporary lockout.
+                    </p>
+                    <p>
+                        The lockout is kept only while the app is running, so restarting the app clears it. The device
+                        secret is normally stored in the Android Keystore. If the Keystore is unavailable, Storax stores
+                        the secret in a file in app storage instead, which is less protected. Auto Backup is not yet
+                        turned off for this file.
+                    </p>
+                    <p>
+                        Storax cannot recover a vault whose PIN you have forgotten, or hidden items on a device that is
+                        lost or reset. Keep your PIN somewhere safe.
+                    </p>
                 </section>
 
                 <section class="policy-section">
                     <span class="section-no">07</span>
-                    <h2>Changes to this policy</h2>
+                    <h2>Sharing</h2>
                     <p>
-                        We may update this Privacy Policy from time to time. We will notify you of any changes by
-                        posting the new policy on this page and updating the Last updated date.
+                        We do not sell your information. We share it only with the service providers named in section 04
+                        (Google Firebase, and the model host Hugging Face) so they can run their part of the app, and when
+                        the law requires it. Google Firebase may process data in countries other than your own.
                     </p>
                 </section>
 
                 <section class="policy-section">
                     <span class="section-no">08</span>
+                    <h2>Your choices</h2>
+                    <ul>
+                        <li>Uninstalling Storax removes the app's data from your device. Files you saved to your device storage remain.</li>
+                        <li>You can turn off App Lock, and turn off the accessibility service, in Android settings.</li>
+                        <li>You can ask us about data that reached us through Firebase. Because Storax has no accounts, we will ask you for enough information to find the relevant records.</li>
+                        <li>You can ask us to delete any data we hold about you.</li>
+                    </ul>
+                </section>
+
+                <section class="policy-section">
+                    <span class="section-no">09</span>
+                    <h2>Changes to this policy</h2>
+                    <p>
+                        We will update this page when the app's data handling changes. The "Last updated" date at the top
+                        shows when the page was last changed.
+                    </p>
+                </section>
+
+                <section class="policy-section">
+                    <span class="section-no">10</span>
                     <h2>Contact us</h2>
                     <p>
-                        If you have any questions about this Privacy Policy, contact us at privacy@storax.com.
+                        For questions about this policy or requests about your data, contact the privacy team.
                     </p>
                     <div class="contact">
                         <div>
