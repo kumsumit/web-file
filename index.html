@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Storax - File Manager for Android, Windows &amp; Linux</title>
-    <meta name="description" content="Manage, organize, and protect your files with Storax for Android, Windows, and Linux. Download the app for your phone or desktop.">
+    <title>Storax - File Manager for Android, Windows, macOS &amp; Linux</title>
+    <meta name="description" content="Manage, organize, and protect your files with Storax for Android, Windows, macOS, and Linux. Download the app for your phone or desktop.">
     <link rel="icon" href="favicon.png" type="image/png">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
@@ -253,21 +253,21 @@
             flex: 0 0 auto;
         }
 
-        .linux-download {
+        .platform-dropdown {
             position: relative;
             min-width: 0;
         }
 
-        .linux-download summary {
+        .platform-dropdown summary {
             list-style: none;
             gap: 0;
         }
 
-        .linux-download summary::-webkit-details-marker {
+        .platform-dropdown summary::-webkit-details-marker {
             display: none;
         }
 
-        .linux-download summary::after {
+        .platform-dropdown summary::after {
             content: "";
             width: 7px;
             height: 7px;
@@ -277,7 +277,7 @@
             transform: translateY(-2px) rotate(45deg);
         }
 
-        .linux-download[open] summary::after {
+        .platform-dropdown[open] summary::after {
             transform: translateY(2px) rotate(225deg);
         }
 
@@ -312,24 +312,24 @@
             font-weight: 500;
         }
 
+        .linux-formats .menu-label {
+            padding: 8px 12px 4px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .linux-formats .menu-group + .menu-group {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid var(--border);
+        }
+
         .linux-formats a:hover,
         .linux-formats a:focus-visible {
             background: var(--card-hover);
-        }
-
-        .windows-download {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            min-width: 0;
-        }
-
-        .checksum-link {
-            color: var(--muted);
-            font-size: 13px;
-            text-align: center;
-            text-decoration: underline;
-            text-underline-offset: 3px;
         }
 
         .download-actions .btn:focus-visible {
@@ -728,7 +728,8 @@
 
         .download-actions {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            align-items: start;
             gap: 12px;
             padding-top: 28px;
             border-top: 1px solid var(--border);
@@ -736,8 +737,24 @@
 
         .download-actions .btn {
             width: 100%;
+            height: 56px;
             min-height: 56px;
             white-space: nowrap;
+        }
+
+        .download-actions .platform-icon {
+            box-sizing: border-box;
+            width: 34px;
+            height: 34px;
+            margin-right: 12px;
+            padding: 7px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card-hover);
+        }
+
+        .download-actions .btn:hover .platform-icon {
+            border-color: var(--accent);
         }
 
         .download-note {
@@ -931,7 +948,7 @@
                     </h1>
                     <p class="hero-copy">
                         Storax brings secure vaults, batch operations, smart media browsing, storage insights,
-                        and advanced file tools to Android, Windows, and Linux.
+                        and advanced file tools to Android, Windows, macOS, and Linux.
                     </p>
 
                     <div class="cta">
@@ -1027,7 +1044,7 @@
                         <div class="section-kicker">Core experience</div>
                         <h2>Everything you expect from a serious file manager.</h2>
                     </div>
-                    <p>Browse, protect, organize, search, and recover files on Android, Windows, and Linux.</p>
+                    <p>Browse, protect, organize, search, and recover files on Android, Windows, macOS, and Linux.</p>
                 </div>
 
                 <div class="grid">
@@ -1175,7 +1192,7 @@
                         <article class="card">
                             <span class="feature-icon">XD</span>
                             <h3>Mobile and Desktop</h3>
-                            <p>Manage your files with Storax on Android, Windows, and Linux.</p>
+                            <p>Manage your files with Storax on Android, Windows, macOS, and Linux.</p>
                         </article>
 
                         <article class="card">
@@ -1194,7 +1211,7 @@
                         <h2>Ready to master your files?</h2>
                         <p class="center-copy">
                             Your files, at home on your phone and desktop. Choose Storax for Android, Windows,
-                            or Linux and get started.
+                            macOS, or Linux and get started.
                         </p>
                         <div class="download-note">
                             <span>Free download</span>
@@ -1204,19 +1221,50 @@
                     </div>
 
                     <div class="download-actions">
-                        <a class="btn btn-primary" href="https://play.google.com/store/apps/details?id=com.kumpali.storax" aria-label="Download Storax for Android"><svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m6.3 5.2-1.6-2.8.9-.5 1.7 2.9a10.7 10.7 0 0 1 9.4 0l1.7-2.9.9.5-1.6 2.8A9.2 9.2 0 0 1 22 13H2a9.2 9.2 0 0 1 4.3-7.8ZM7 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM4 14h16v5H4z"/></svg>Download for Android</a>
-                        <div class="windows-download">
-                        <a class="btn btn-secondary" href="https://www.dropbox.com/scl/fi/g1l8sim061t95fycn1byt/Storax-Setup.exe?rlkey=e1q6a5e8nymf1cp26tcb7uu6d&amp;st=hci3i579&amp;dl=1" download="Storax-Setup.exe" aria-label="Download Storax for Windows"><svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 4.5 11 3v8H2zm10-1.7L22 1v10H12zM2 12h9v8l-9-1.5zm10 0h10v11l-10-1.8z"/></svg>Download for Windows</a>
-                            <a class="checksum-link" href="https://www.dropbox.com/scl/fi/tp7pgsgialjdsrs4m1wft/Storax-Setup.exe.sha256?rlkey=o0k3u2yzo7ryiuxullzuirvtk&amp;st=r6fzib8o&amp;dl=1" download>SHA256 checksum</a>
-                        </div>
-                        <details class="linux-download">
+                        <a class="btn btn-secondary" href="https://play.google.com/store/apps/details?id=com.kumpali.storax" aria-label="Download Storax for Android"><svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m6.3 5.2-1.6-2.8.9-.5 1.7 2.9a10.7 10.7 0 0 1 9.4 0l1.7-2.9.9.5-1.6 2.8A9.2 9.2 0 0 1 22 13H2a9.2 9.2 0 0 1 4.3-7.8ZM7 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM4 14h16v5H4z"/></svg>Download for Android</a>
+                        <details class="platform-dropdown">
+                            <summary class="btn btn-secondary"><svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 4.5 11 3v8H2zm10-1.7L22 1v10H12zM2 12h9v8l-9-1.5zm10 0h10v11l-10-1.8z"/></svg>Download for Windows</summary>
+                            <div class="linux-formats" aria-label="Windows download formats">
+                                <a href="https://www.dropbox.com/scl/fi/g1l8sim061t95fycn1byt/Storax-Setup.exe?rlkey=e1q6a5e8nymf1cp26tcb7uu6d&amp;st=hci3i579&amp;dl=1" download>EXE <span>Installer</span></a>
+                                <a href="https://www.dropbox.com/scl/fi/tp7pgsgialjdsrs4m1wft/Storax-Setup.exe.sha256?rlkey=o0k3u2yzo7ryiuxullzuirvtk&amp;st=r6fzib8o&amp;dl=1" download>SHA256 <span>Checksum</span></a>
+                            </div>
+                        </details>
+                        <details class="platform-dropdown">
+                            <summary class="btn btn-secondary"><svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Download for macOS</summary>
+                            <div class="linux-formats" aria-label="macOS download formats">
+                                <div class="menu-group">
+                                    <div class="menu-label">Apple Silicon · arm64</div>
+                                    <a href="https://www.dropbox.com/scl/fi/fpk7onwy6c17v46m8amr3/Storax-1.0.3-build50-macos-arm64.dmg?rlkey=0kyohgo3f34ibmvkevh6ffi97&amp;st=c2q76ekc&amp;dl=1" download>DMG <span>Disk image</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/eayj1bz6m5hrsm322ljq3/Storax-1.0.3-build50-macos-arm64.zip?rlkey=5obdqg4her5s49tslx73zakx9&amp;st=kd9r849x&amp;dl=1" download>ZIP <span>Archive</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/jehergairzhrrgyrhfce3/Storax-1.0.3-build50-macos-arm64.dmg.sha256?rlkey=gz6o18aoint6f66dn00k4cjar&amp;st=8n5mh7xs&amp;dl=1" download>DMG SHA256 <span>Checksum</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/auwwt7t4y5x39ur6sx018/Storax-1.0.3-build50-macos-arm64.zip.sha256?rlkey=ssxwqb3tfemrq7dhhn5sz312q&amp;st=pkzlcyd5&amp;dl=1" download>ZIP SHA256 <span>Checksum</span></a>
+                                </div>
+                                <div class="menu-group">
+                                    <div class="menu-label">Intel · x64</div>
+                                    <a href="https://www.dropbox.com/scl/fi/otxvqugxql63olnsrnurp/Storax-1.0.3-build50-macos-x64.dmg?rlkey=9oxnbqfqx4f9cdnowf4kvaqt5&amp;st=caiybok6&amp;dl=1" download>DMG <span>Disk image</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/0oebzc1xvwf1bdkr2q9vx/Storax-1.0.3-build50-macos-x64.zip?rlkey=dk6gao4m25tquao1qseilnr3b&amp;st=6hnbb99p&amp;dl=1" download>ZIP <span>Archive</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/fwlon8hollv00p069usvo/Storax-1.0.3-build50-macos-x64.dmg.sha256?rlkey=gbofsjosy167uqq64udk6c1wv&amp;st=3t25z12s&amp;dl=1" download>DMG SHA256 <span>Checksum</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/1quw0my37bc38u5h5gyat/Storax-1.0.3-build50-macos-x64.zip.sha256?rlkey=dugqc9q7pnlugmvjs4ue9vtme&amp;st=64b0r8rz&amp;dl=1" download>ZIP SHA256 <span>Checksum</span></a>
+                                </div>
+                            </div>
+                        </details>
+                        <details class="platform-dropdown">
                             <summary class="btn btn-secondary"><svg class="platform-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2c-3 0-4 2.4-4 5.3 0 2.1-1.1 3.7-2.1 5.6-1 1.9-1.4 4.4.3 5.8 1.5 1.3 3.4 1.5 5.8 1.5s4.3-.2 5.8-1.5c1.7-1.4 1.3-3.9.3-5.8C17.1 11 16 9.4 16 7.3 16 4.4 15 2 12 2Z"/><ellipse cx="12" cy="14.3" rx="3.5" ry="4.6" fill="#fff"/><ellipse cx="10.5" cy="6.8" rx="1" ry="1.5" fill="#fff"/><ellipse cx="13.5" cy="6.8" rx="1" ry="1.5" fill="#fff"/><circle cx="10.7" cy="7" r=".45" fill="#080a12"/><circle cx="13.3" cy="7" r=".45" fill="#080a12"/><path fill="#f5b642" d="m9 9 3-1 3 1-3 2zM4 18l4-1 2 4-7 1zm16 0-4-1-2 4 7 1z"/></svg>Download for Linux</summary>
                             <div class="linux-formats" aria-label="Linux x64 download formats">
-                                <a href="https://www.dropbox.com/scl/fi/bzvrnaz51ewwlklbnlxqe/storax_1.0.3-build50_amd64.deb?rlkey=1gj2ujvzwalhue4xtgu4wgr5r&amp;st=5mbjzrpf&amp;dl=1" download>DEB <span>Debian / Ubuntu</span></a>
-                                <a href="https://www.dropbox.com/scl/fi/zh96qq6m4my8m89wl8fnk/storax-1.0.3-build50.x86_64.rpm?rlkey=1c3i27uz3poelyt6h7aj4b7hv&amp;st=tqkyfol8&amp;dl=1" download>RPM <span>Fedora / openSUSE</span></a>
-                                <a href="https://www.dropbox.com/scl/fi/butlqsslthd235lo4fy23/Storax-1.0.3-build50-linux-x64.tar.gz?rlkey=74d0r8ro1fhxsuugn5n6ajcno&amp;st=d4ug99dk&amp;dl=1" download>tar.gz <span>Archive · x64</span></a>
-                                <a href="https://www.dropbox.com/scl/fi/nijpoel8g4krv92ndn69j/Storax-1.0.3-build50-linux-x64.AppImage?rlkey=jtdp34orws6ejyn5asekgoy7q&amp;st=kmc5jmjg&amp;dl=1" download>AppImage <span>Any distro · x64</span></a>
-                                <a href="https://www.dropbox.com/scl/fi/rnh86b2rya72fjivcwjvm/SHA256SUMS?rlkey=krp10740emivw3gqg2fvu96mx&amp;st=9evuhd36&amp;dl=1" download>SHA256SUMS <span>Checksums</span></a>
+                                <div class="menu-group">
+                                    <div class="menu-label">Packages</div>
+                                    <a href="https://www.dropbox.com/scl/fi/bzvrnaz51ewwlklbnlxqe/storax_1.0.3-build50_amd64.deb?rlkey=1gj2ujvzwalhue4xtgu4wgr5r&amp;st=5mbjzrpf&amp;dl=1" download>DEB <span>Debian / Ubuntu</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/zh96qq6m4my8m89wl8fnk/storax-1.0.3-build50.x86_64.rpm?rlkey=1c3i27uz3poelyt6h7aj4b7hv&amp;st=tqkyfol8&amp;dl=1" download>RPM <span>Fedora / openSUSE</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/butlqsslthd235lo4fy23/Storax-1.0.3-build50-linux-x64.tar.gz?rlkey=74d0r8ro1fhxsuugn5n6ajcno&amp;st=d4ug99dk&amp;dl=1" download>tar.gz <span>Archive · x64</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/nijpoel8g4krv92ndn69j/Storax-1.0.3-build50-linux-x64.AppImage?rlkey=jtdp34orws6ejyn5asekgoy7q&amp;st=kmc5jmjg&amp;dl=1" download>AppImage <span>Any distro · x64</span></a>
+                                </div>
+                                <div class="menu-group">
+                                    <div class="menu-label">Checksums</div>
+                                    <a href="https://www.dropbox.com/scl/fi/8ryuuggpbazleo5knbuja/storax_1.0.3-build50_amd64.deb.sha256?rlkey=46jra73kdvkf8pon4tq1ya7ek&amp;st=ry747qhn&amp;dl=1" download>DEB SHA256 <span>Checksum</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/665wieuofnct2t0if8ail/storax-1.0.3-build50.x86_64.rpm.sha256?rlkey=tth5r1qzc4kstub4zm0ixe69r&amp;st=ocksunuv&amp;dl=1" download>RPM SHA256 <span>Checksum</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/kne6nikr2k5d9w86lwprk/Storax-1.0.3-build50-linux-x64.tar.gz.sha256?rlkey=xfyo2t4413asl72gudr4v3eg6&amp;st=bvilbka6&amp;dl=1" download>tar.gz SHA256 <span>Checksum</span></a>
+                                    <a href="https://www.dropbox.com/scl/fi/5r3mso4wdun8amvuk362h/Storax-1.0.3-build50-linux-x64.AppImage.sha256?rlkey=evca99nzf2f698k66h4e5m0g7&amp;st=0etxr0bt&amp;dl=1" download>AppImage SHA256 <span>Checksum</span></a>
+                                </div>
                             </div>
                         </details>
                     </div>
