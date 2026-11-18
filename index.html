@@ -544,36 +544,273 @@
             font-size: 15.5px;
         }
 
-        /* Tools: compact grid with hairlines */
-        .tools {
+        /* Tools: workbench. A tool list on the left, one live demo on the right */
+        .bench {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            border-top: 1px solid var(--line-strong);
-            border-left: 1px solid var(--line);
+            grid-template-columns: 270px minmax(0, 1fr);
+            gap: 32px;
+            align-items: start;
         }
+        .tool-nav {
+            position: sticky; top: 92px;
+            display: flex; flex-direction: column; gap: 2px;
+            padding-left: 14px; border-left: 1px solid var(--line);
+        }
+        .tool-nav:empty { display: none; }
+        .tool-tab {
+            position: relative; display: flex; align-items: center; gap: 12px;
+            width: 100%; text-align: left; font: inherit; cursor: pointer;
+            padding: 9px 12px; border-radius: 12px; border: 0; background: transparent;
+            color: var(--muted);
+            transition: background-color 180ms ease, color 180ms ease;
+        }
+        .tool-tab::before {
+            content: ""; position: absolute; left: -15px; top: 20%; bottom: 20%; width: 2px;
+            border-radius: 2px; background: var(--accent);
+            transform: scaleY(0); transition: transform 260ms var(--ease-spring);
+        }
+        .tool-tab:hover { color: var(--ink); background: var(--paper-raised); }
+        .tool-tab[aria-selected="true"] { color: var(--ink); background: var(--paper-raised); }
+        .tool-tab[aria-selected="true"]::before { transform: scaleY(1); }
+        .tool-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .tool-tab .tool-ico { width: 32px; height: 32px; border-radius: 9px; }
+        .tool-tab[aria-selected="true"] .tool-ico { background: var(--accent); color: var(--accent-ink); }
+        .tool-tab span:last-child { display: grid; line-height: 1.25; min-width: 0; }
+        .tool-tab b { font-size: 14px; font-weight: 600; }
+        .tool-tab small { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .tools { min-width: 0; }
 
         .tool {
-            padding: 26px 24px 28px;
-            border-right: 1px solid var(--line);
-            border-bottom: 1px solid var(--line);
-            transition: background-color 200ms ease;
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+            grid-template-rows: auto auto auto 1fr;
+            column-gap: 40px;
+            padding: 36px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background-color: var(--paper);
         }
+        .tool[hidden] { display: none; }
+        .js .tool:not([hidden]) { animation: tool-in 420ms var(--ease-out); }
+        @keyframes tool-in { from { opacity: 0; transform: translateY(10px); } }
+        .tool > * { grid-column: 1; }
+        .tool > .stage { grid-column: 2; grid-row: 1 / 5; align-self: center; margin: 0; padding: 18px; border-radius: 18px; }
+        .tool-top { align-self: end; }
+        .tool h3 { font-size: 24px; font-weight: 600; letter-spacing: -.01em; line-height: 1.2; }
+        .tool p { color: var(--muted); font-size: 15.5px; line-height: 1.6; }
 
-        .tool:hover {
-            background: var(--paper-raised);
+        /* Tools: interactive demos inside each cell */
+        .tool-top { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+        .tool-top h3 { margin: 0; line-height: 1.25; }
+        .tool-tag { display: none; }
+        .tool-ico {
+            flex: none; width: 40px; height: 40px; border-radius: 10px;
+            display: grid; place-items: center;
+            background: var(--accent-soft); color: var(--accent);
+            transition: transform 300ms var(--ease-spring), background-color 200ms ease, color 200ms ease;
         }
+        .tool-ico svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .tool:hover .tool-ico, .tool:focus-within .tool-ico { transform: rotate(-6deg) scale(1.08); background: var(--accent); color: var(--accent-ink); }
 
-        .tool h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 6px;
+        .stage {
+            margin-top: 18px; padding: 12px; border-radius: 14px;
+            background: var(--paper-raised); border: 1px solid var(--line);
+            display: flex; flex-direction: column; gap: 10px;
+            font-size: 12.5px; color: var(--ink-soft); line-height: 1.45;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+            transition: border-color 200ms ease;
         }
+        .tool:hover .stage { border-color: var(--line-strong); }
+        .stage-cap { font-size: 12px; color: var(--muted); min-height: 2.8em; }
+        .stage-cap b { color: var(--ink); font-weight: 600; }
+        .stage-row { display: flex; align-items: center; gap: 10px; }
+        .stage-row.between { justify-content: space-between; }
+        .tool-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 
-        .tool p {
-            color: var(--muted);
-            font-size: 14.5px;
-            line-height: 1.55;
+        .tool-chip {
+            font: inherit; font-size: 12px; font-weight: 500; line-height: 1;
+            padding: 7px 11px; border-radius: 999px; cursor: pointer;
+            border: 1px solid var(--line-strong); background: transparent; color: var(--ink-soft);
+            transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
         }
+        .tool-chip:hover { border-color: var(--accent); color: var(--ink); }
+        .tool-chip:active { transform: scale(.96); }
+        .tool-chip[aria-pressed="true"], .tool-chip[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+        .tool-chip i { font-style: normal; opacity: .7; margin-left: 4px; }
+        .tool-chip:focus-visible, .tool-act:focus-visible, .tool-switch:focus-visible, .swatch:focus-visible, .tool input:focus-visible, .seek:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .tool-act {
+            font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap;
+            padding: 8px 13px; border-radius: 999px; border: 1px solid var(--accent);
+            background: var(--accent-soft); color: var(--accent);
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+        }
+        .tool-act:hover, .tool-act[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+        .tool-act:active { transform: scale(.97); }
+        .tool-act svg { width: 13px; height: 13px; fill: currentColor; }
+        .tool-hint { font-size: 11.5px; color: var(--muted); }
+
+        /* image editor */
+        .tphoto { position: relative; height: 92px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+        .photo-img {
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 76% 30%, #ffe3a0 0 8%, transparent 9%),
+                linear-gradient(to top, #14312a 0 18%, transparent 18%),
+                linear-gradient(170deg, #5b63f0 0%, #d98fb3 45%, #e0a526 78%);
+            filter: var(--f, none) brightness(var(--b, 1)); transition: filter 300ms ease;
+        }
+        .photo-badge { position: absolute; left: 8px; top: 8px; font-size: 10.5px; font-weight: 600; padding: 3px 7px; border-radius: 6px; background: rgba(0,0,0,.55); color: #fff; }
+        .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .swatch { cursor: pointer; border: 1px solid var(--line); border-radius: 8px; padding: 3px 3px 4px; background: transparent; font: inherit; font-size: 10.5px; color: var(--muted); display: grid; gap: 3px; justify-items: center; transition: border-color 160ms ease, color 160ms ease, transform 160ms ease; }
+        .swatch:hover { transform: translateY(-1px); color: var(--ink); }
+        .swatch[aria-pressed="true"] { border-color: var(--accent); color: var(--ink); }
+        .swatch span { display: block; width: 100%; height: 22px; border-radius: 5px; background: linear-gradient(170deg, #5b63f0, #d98fb3 50%, #e0a526); filter: var(--f, none); }
+        .tool input[type="range"] { accent-color: var(--accent); width: 100%; margin: 0; }
+
+        /* documents */
+        .sheetp { height: 108px; border-radius: 8px; background: #fbfaf7; color: #3d404b; border: 1px solid rgba(0,0,0,.1); padding: 10px 12px; font-size: 10.5px; overflow: hidden; position: relative; }
+        .sheetp[hidden] { display: none; }
+        .sheetp .ln { height: 5px; border-radius: 3px; background: #d9dae0; margin-bottom: 6px; }
+        .sheetp .ln.w1 { width: 94%; } .sheetp .ln.w2 { width: 78%; } .sheetp .ln.w3 { width: 88%; } .sheetp .ln.w4 { width: 52%; }
+        .sheetp .hl { background: #ffe58a; height: 7px; margin-bottom: 5px; border-radius: 2px; width: 0; animation: hl 3.2s ease-in-out infinite; }
+        @keyframes hl { 0%,15% { width: 0; } 55%,100% { width: 82%; } }
+        .sheetp h4 { font-size: 13px; margin: 0 0 6px; color: #14151a; }
+        .sheetp .caret { display: inline-block; width: 1.5px; height: 12px; background: #5b63f0; vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .grid3 { display: grid; grid-template-columns: 1.4fr 1fr 1fr; border: 1px solid #d9dae0; border-radius: 6px; overflow: hidden; }
+        .grid3 span { padding: 5px 7px; border-right: 1px solid #e6e7ec; border-bottom: 1px solid #e6e7ec; font-variant-numeric: tabular-nums; }
+        .grid3 .hd { background: #eeeef3; font-weight: 600; }
+        .grid3 .tot { background: rgba(91,99,240,.12); font-weight: 700; color: #3a40c0; }
+
+        /* notes */
+        .note { padding: 11px 12px; border-radius: 10px; background: #fbf3d6; color: #4a3f17; border: 1px solid rgba(0,0,0,.08); }
+        :root[data-theme="dark"] .note { background: #2a2615; color: #efe6bd; border-color: rgba(255,255,255,.08); }
+        .note .n-title { display: block; font-size: 13.5px; transition: all 160ms ease; }
+        .note.is-bold .n-title { font-weight: 700; }
+        .note.is-head .n-title { font-size: 18px; letter-spacing: -.01em; }
+        .note ul { margin: 6px 0 0; padding: 0; list-style: none; }
+        .note li { display: flex; align-items: center; gap: 8px; padding: 2px 0; cursor: pointer; }
+        .note li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .55; transition: all 160ms ease; }
+        .note.is-list li::before { width: 12px; height: 12px; border-radius: 4px; border: 1.5px solid currentColor; background: transparent; opacity: .8; }
+        .note.is-list li.done::before { background: var(--accent); border-color: var(--accent); opacity: 1; box-shadow: inset 0 0 0 2px #fbf3d6; }
+        .note li.done span { text-decoration: line-through; opacity: .6; }
+
+        /* zip */
+        .zfile { display: flex; align-items: center; gap: 9px; padding: 6px 9px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); transition: transform 500ms var(--ease-out), opacity 400ms ease, max-height 500ms ease, margin 500ms ease, padding 500ms ease; max-height: 36px; }
+        .zfile em { margin-left: auto; font-style: normal; color: var(--muted); font-variant-numeric: tabular-nums; }
+        .zfile .dot { width: 8px; height: 8px; border-radius: 2px; background: var(--c, var(--accent)); }
+        .zlist { display: grid; gap: 5px; }
+        .is-packed .zlist .zfile { opacity: 0; transform: translateY(14px) scale(.96); max-height: 0; padding-top: 0; padding-bottom: 0; border-width: 0; margin-top: -5px; }
+        .zout { display: none; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--ink); animation: pop 400ms var(--ease-spring); }
+        .is-packed .zout { display: flex; }
+        .zout b { font-size: 13px; } .zout .save { margin-left: auto; color: var(--ok); font-weight: 700; }
+        @keyframes pop { from { transform: scale(.9); opacity: 0; } }
+        .demo-bar { height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; flex: 1; }
+        .demo-bar > span { display: block; height: 100%; width: 100%; border-radius: inherit; background: var(--accent); transition: width 700ms var(--ease-out); }
+
+        /* app safety */
+        .arow { display: flex; align-items: center; gap: 10px; padding: 6px 4px; border-bottom: 1px solid var(--line); animation: pop 300ms var(--ease-out); }
+        .arow:last-child { border-bottom: 0; }
+        .arow[hidden] { display: none; }
+        .aico { flex: none; width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; font-weight: 700; font-size: 12px; color: #fff; background: var(--c); }
+        .arow b { color: var(--ink); font-weight: 600; display: block; line-height: 1.2; }
+        .arow small { color: var(--muted); font-size: 11px; }
+        .badge { margin-left: auto; font-size: 10.5px; font-weight: 600; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+        .badge.pre { background: rgba(224,165,38,.18); color: #b8820f; }
+        .badge.risk { background: rgba(224,72,72,.16); color: #d04545; }
+        .badge.acc { background: var(--accent-soft); color: var(--accent); }
+        :root[data-theme="dark"] .badge.pre { color: #f0c15a; } :root[data-theme="dark"] .badge.risk { color: #ff8b8b; }
+
+        /* app lock */
+        .tool-switch { position: relative; width: 46px; height: 26px; flex: none; cursor: pointer; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--line); padding: 0; transition: background-color 200ms ease, border-color 200ms ease; }
+        .tool-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink-soft); transition: transform 250ms var(--ease-spring), background-color 200ms ease; }
+        .tool-switch[aria-checked="true"] { background: var(--accent); border-color: var(--accent); }
+        .tool-switch[aria-checked="true"]::after { transform: translateX(20px); background: var(--accent-ink); }
+        .lockapp { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: var(--paper); border: 1px solid var(--line); overflow: hidden; min-height: 76px; }
+        .lockapp .ltile { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; background: linear-gradient(135deg, #1f9d6b, #4fd1a0); color: #fff; flex: none; transition: filter 300ms ease, transform 300ms ease; }
+        .lockapp .ltile svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .lockapp .lk { position: absolute; left: 36px; top: 34px; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; transform: scale(0); transition: transform 300ms var(--ease-spring); }
+        .lockapp .lk svg { width: 9px; height: 9px; fill: none; stroke: var(--accent-ink); stroke-width: 3; }
+        .is-locked .lockapp .ltile { filter: saturate(.3) brightness(.9); }
+        .is-locked .lockapp .lk { transform: scale(1); }
+        .pin-dots { display: inline-flex; gap: 6px; margin-top: 5px; }
+        .pin-dots i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--line-strong); transition: background-color 200ms ease, border-color 200ms ease; }
+        .is-locked .pin-dots i { border-color: var(--accent); animation: dot 1.8s ease-in-out infinite; }
+        .is-locked .pin-dots i:nth-child(2) { animation-delay: .2s } .is-locked .pin-dots i:nth-child(3) { animation-delay: .4s } .is-locked .pin-dots i:nth-child(4) { animation-delay: .6s }
+        @keyframes dot { 0%,100% { background: transparent; } 40%,80% { background: var(--accent); } }
+        .lockapp b { color: var(--ink); display: block; }
+
+        /* status saver */
+        .story { position: relative; height: 112px; border-radius: 12px; overflow: hidden; background: linear-gradient(160deg, #1f9d6b 0%, #5b63f0 100%); color: #fff; }
+        .story-bars { position: absolute; left: 10px; right: 10px; top: 8px; display: flex; gap: 3px; }
+        .story-bars i { flex: 1; height: 2.5px; border-radius: 2px; background: rgba(255,255,255,.35); overflow: hidden; }
+        .story-bars i.on { background: #fff; }
+        .story-bars i.run::after { content: ""; display: block; height: 100%; width: 0; background: #fff; animation: run 5s linear infinite; }
+        .is-saved .story-bars i.run::after { animation-play-state: paused; }
+        @keyframes run { to { width: 100%; } }
+        .story-who { position: absolute; left: 10px; top: 18px; display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 600; }
+        .story-who span { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.9); color: #1f9d6b; display: grid; place-items: center; font-size: 10px; }
+        .story-who small { font-weight: 400; opacity: .8; }
+        .story-cap { position: absolute; left: 12px; bottom: 10px; font-size: 14px; font-weight: 600; text-shadow: 0 1px 6px rgba(0,0,0,.3); }
+        .story .tool-act { position: absolute; right: 10px; bottom: 10px; background: rgba(255,255,255,.95); color: #14151a; border-color: transparent; }
+        .story .tool-act[aria-pressed="true"] { background: var(--ok); color: #04210f; }
+
+        /* qr */
+        .viewf { position: relative; height: 92px; border-radius: 12px; background: #0e0f13; display: grid; place-items: center; overflow: hidden; }
+        .viewf .qr { position: relative; width: 56px; height: 56px; border-radius: 4px; background: #fff; padding: 5px; }
+        .viewf .qr svg { width: 100%; height: 100%; display: block; }
+        .viewf .corner { position: absolute; width: 16px; height: 16px; border: 2.5px solid var(--accent); transition: all 300ms var(--ease-out); }
+        .viewf .c1 { left: 24%; top: 12px; border-right: 0; border-bottom: 0; border-radius: 5px 0 0 0; }
+        .viewf .c2 { right: 24%; top: 12px; border-left: 0; border-bottom: 0; border-radius: 0 5px 0 0; }
+        .viewf .c3 { left: 24%; bottom: 12px; border-right: 0; border-top: 0; border-radius: 0 0 0 5px; }
+        .viewf .c4 { right: 24%; bottom: 12px; border-left: 0; border-top: 0; border-radius: 0 0 5px 0; }
+        .viewf.is-done .corner { border-color: var(--ok); }
+        .viewf.is-scanning::after { content: ""; position: absolute; left: 22%; right: 22%; top: 12px; height: 2px; background: var(--accent); box-shadow: 0 0 12px 3px var(--accent); animation: sweep 1s ease-in-out; }
+        @keyframes sweep { from { transform: translateY(0); } to { transform: translateY(66px); } }
+        .qres { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); min-height: 50px; }
+        .qres[hidden] { display: none; }
+        .qres b { color: var(--ink); display: block; line-height: 1.2; } .qres small { color: var(--muted); }
+        .qres .tool-act { margin-left: auto; }
+
+        /* player */
+        .stage-tight { margin-top: 12px; padding: 10px; gap: 8px; }
+        .pscreen { position: relative; height: 58px; border-radius: 12px; overflow: hidden; background: var(--paper); border: 1px solid var(--line); transition: background .3s ease; }
+        .pscreen .wave { position: absolute; left: 12px; right: 12px; bottom: 8px; top: 24px; display: flex; align-items: center; gap: 2px; cursor: pointer; }
+        .pscreen .wave i { flex: 1; border-radius: 2px; background: var(--line-strong); min-height: 3px; transition: background-color 120ms ease; }
+        .pscreen .wave i.on { background: var(--accent); }
+        .is-playing .wave i.on:last-of-type, .is-playing .wave i.cur { transform: scaleY(1.25); }
+        .pscreen .ttl { position: absolute; left: 12px; top: 6px; font-size: 11.5px; font-weight: 600; color: var(--ink); }
+        .pscreen .tm { position: absolute; right: 12px; top: 6px; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+        .pscreen.is-video { background: linear-gradient(160deg, #3b3f8f, #1f9d6b 60%, #e0a526); }
+        .pscreen.is-video .ttl, .pscreen.is-video .tm { color: #fff; }
+        .pscreen.is-video .wave { top: auto; height: 3px; bottom: 10px; gap: 0; }
+        .pscreen.is-video .wave i { min-height: 0; height: 100% !important; background: rgba(255,255,255,.35); border-radius: 0; }
+        .pscreen.is-video .wave i.on { background: #fff; }
+        .pscreen .vplay { display: none; position: absolute; inset: 0; margin: auto; width: 0; height: 0; border-left: 14px solid #fff; border-top: 9px solid transparent; border-bottom: 9px solid transparent; transform: translateX(3px); opacity: .9; transition: opacity .2s; }
+        .pscreen.is-video .vplay { display: block; }
+        .is-playing .pscreen .vplay { opacity: 0; }
+
+        .tool > p:not(.tool-note), .tool > .tool-facts { margin-bottom: 18px; }
+        .tool-facts { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+        .tool-facts[hidden], .tool-facts li[hidden] { display: none; }
+        .tool-facts li { display: flex; gap: 10px; align-items: baseline; padding: 9px 11px; border-radius: 10px; background: var(--paper-raised); border: 1px solid var(--line); font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+        .fact-tag { flex: none; min-width: 74px; white-space: nowrap; text-align: center; padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; background: var(--accent); color: var(--accent-ink); }
+
+        /* code, remote, assistant */
+        .codep { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; min-height: 76px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--ink); overflow-x: auto; }
+        .codep[hidden] { display: none; }
+        .codep span { white-space: nowrap; }
+        .codep i { font-style: normal; }
+        .codep .k { color: var(--accent); font-weight: 600; } .codep .f { color: var(--ok); } .codep .s { color: #c2761a; } .codep .p { color: var(--ok); } .codep .c, .codep .c { color: var(--muted); }
+        .codep.term { background: #0e0f13; color: #e6e6e1; }
+        .codep.term .caret { display: inline-block; width: 7px; height: 13px; vertical-align: -2px; background: #e6e6e1; animation: blink 1s steps(1) infinite; }
+        .rconn { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); min-height: 50px; }
+        .rconn b { color: var(--ink); display: block; line-height: 1.2; } .rconn small { color: var(--muted); }
+        .rdot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); flex: none; }
+        .rconn.is-warn .rdot { background: #e0a526; }
+        .quote { padding: 10px 12px; min-height: 52px; border-radius: 10px; background: var(--paper); border-left: 3px solid var(--accent); color: var(--ink); font-size: 13px; line-height: 1.45; }
 
         /* Security: split layout */
         .security {
@@ -2461,7 +2698,7 @@
         }
 
         /* Scroll reveal */
-        .js :is(.section-head, .feature, .tool, .principle, .card, .checks, .platforms > *, .download-grid > div:first-child, .security > div:first-child) {
+        .js :is(.section-head, .feature, .principle, .card, .checks, .platforms > *, .download-grid > div:first-child, .security > div:first-child) {
             opacity: 0;
             transform: translateY(26px);
             transition:
@@ -2473,7 +2710,7 @@
                 box-shadow 300ms ease;
         }
 
-        .js :is(.section-head, .feature, .tool, .principle, .card, .checks, .platforms > *, .download-grid > div:first-child, .security > div:first-child).is-in {
+        .js :is(.section-head, .feature, .principle, .card, .checks, .platforms > *, .download-grid > div:first-child, .security > div:first-child).is-in {
             opacity: 1;
             transform: none;
         }
@@ -2514,7 +2751,6 @@
         }
 
         /* Cursor spotlight */
-        .tool,
         .card {
             background-image: radial-gradient(380px circle at var(--mx, -999px) var(--my, -999px), var(--accent-soft), transparent 45%);
         }
@@ -2905,9 +3141,20 @@
                 transform: rotate(0);
             }
 
-            .tools {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .bench { grid-template-columns: 1fr; gap: 18px; }
+            .tool-nav {
+                position: static; flex-direction: row; gap: 8px; padding: 0; border: 0;
+                overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 2px 16px 6px;
+                scroll-snap-type: x proximity;
             }
+            .tool-nav::-webkit-scrollbar { display: none; }
+            .tool-tab { width: auto; flex: none; white-space: nowrap; padding: 7px 14px 7px 8px; border: 1px solid var(--line-strong); border-radius: 999px; scroll-snap-align: start; }
+            .tool-tab::before { display: none; }
+            .tool-tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+            .tool-tab[aria-selected="true"] .tool-ico { background: var(--accent-ink); color: var(--accent); }
+            .tool-tab small { display: none; }
+            .tool { grid-template-columns: 1fr; grid-template-rows: none; padding: 26px; }
+            .tool > .stage { grid-column: 1; grid-row: auto; margin-top: 8px; }
 
             .feature {
                 grid-template-columns: 44px 1fr;
@@ -2944,9 +3191,8 @@
                 bottom: 20px;
             }
 
-            .tools {
-                grid-template-columns: 1fr;
-            }
+            .tool { padding: 20px 18px; border-radius: 18px; }
+            .tool h3 { font-size: 20px; }
 
             .file-links {
                 grid-template-columns: 1fr 1fr;
@@ -3310,46 +3556,251 @@
                         <span class="eyebrow">Built-in tools</span>
                         <h2>A full toolkit, one tap away.</h2>
                     </div>
-                    <p>Editors, viewers and utilities are close at hand when you need them, and out of sight when you do not. The main screen stays simple.</p>
+                    <p>Editors, viewers and utilities are close at hand when you need them, and out of sight when you do not. The main screen stays simple. Every tool below has a small demo you can play with.</p>
                 </div>
 
+                <div class="bench">
+                <div class="tool-nav" role="tablist" aria-label="Built-in tools" aria-orientation="vertical"></div>
                 <div class="tools">
-                    <article class="tool">
-                        <h3>Image and video editors</h3>
+                    <article class="tool" data-tool="image">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-9 9"/></svg></span><h3>Image and video editors</h3></div>
                         <p>Touch up photos, edit videos, turn a favourite clip into a GIF or arrange a collage, all without leaving Storax.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Photos</span><span>Filters and adjustments, right where the photo lives. No import, no export, no extra app.</span></li>
+                            <li><span class="fact-tag">Video</span><span>Trim a clip to the good part and export it.</span></li>
+                            <li><span class="fact-tag">GIF</span><span>Turn any moment of a video into a GIF.</span></li>
+                            <li><span class="fact-tag">Create</span><span>Sketch on a freehand canvas, or drop photos into ready-made collage templates.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="tphoto"><div class="photo-img" data-photo></div><span class="photo-badge" data-photo-badge>Original</span></div>
+                            <div class="swatches" role="group" aria-label="Photo filter">
+                                <button type="button" class="swatch" aria-pressed="true" data-name="Original" style="--f:none"><span></span>Original</button>
+                                <button type="button" class="swatch" aria-pressed="false" data-name="Mono" style="--f:grayscale(1) contrast(1.1)"><span></span>Mono</button>
+                                <button type="button" class="swatch" aria-pressed="false" data-name="Warm" style="--f:sepia(.7) saturate(1.3)"><span></span>Warm</button>
+                                <button type="button" class="swatch" aria-pressed="false" data-name="Cool" style="--f:hue-rotate(160deg) saturate(1.2)"><span></span>Cool</button>
+                            </div>
+                            <label class="stage-row"><span class="tool-hint">Brightness</span><input type="range" min="60" max="140" value="100" data-bright aria-label="Brightness"></label>
+                        </div>
                     </article>
-                    <article class="tool">
-                        <h3>PDF and Office documents</h3>
-                        <p>Read PDFs and work with them using built-in PDF tools, open and edit Word files, and view spreadsheets on the go.</p>
+                    <article class="tool" data-tool="docs">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span><h3>PDF and Office documents</h3></div>
+                        <p>Read PDFs, fill in forms, sign with a certificate and reorder pages. Open and edit Word, Excel and PowerPoint files, all offline.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">PDF</span><span>Highlight and annotate, fill in form fields, reorder or delete pages, merge and split, and sign with your own certificate.</span></li>
+                            <li><span class="fact-tag">Office</span><span>Word, Excel and PowerPoint, plus older DOC, XLS, PPT and ODF files, edited in a built-in offline engine.</span></li>
+                            <li><span class="fact-tag">Offline</span><span>Nothing is uploaded to open or edit a file. It all happens on your device.</span></li>
+                            <li><span class="fact-tag">Side by side</span><span>On Android, each file opened from another app gets its own window, so two documents can share the screen.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="tool-row" role="tablist" aria-label="Document type">
+                                <button type="button" role="tab" class="tool-chip" aria-selected="true" data-doc="pdf">PDF</button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-doc="word">Word</button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-doc="sheet">Sheet</button>
+                            </div>
+                            <div class="sheetp" data-panel="pdf"><div class="ln w1"></div><div class="hl"></div><div class="ln w3"></div><div class="ln w2"></div><div class="ln w1"></div><div class="ln w4"></div><div class="ln w3"></div></div>
+                            <div class="sheetp" data-panel="word" hidden><h4>Meeting notes</h4><div class="ln w1"></div><div class="ln w2"></div><div class="ln w3"></div><span>Next step: send the draft<span class="caret"></span></span></div>
+                            <div class="sheetp" data-panel="sheet" hidden><div class="grid3"><span class="hd">Item</span><span class="hd">Qty</span><span class="hd">Cost</span><span>Tickets</span><span>2</span><span>40</span><span>Hotel</span><span>1</span><span>120</span><span class="tot">Total</span><span class="tot">3</span><span class="tot">160</span></div></div>
+                            <div class="stage-cap" role="status" aria-live="polite" data-cap><b>PDF:</b> read it, then highlight, sign, merge or split with the built-in PDF tools.</div>
+                        </div>
                     </article>
-                    <article class="tool">
-                        <h3>Notes and text</h3>
+                    <article class="tool" data-tool="notes">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg></span><h3>Notes and text</h3></div>
                         <p>Write notes with headings, bold text and lists, and open plain text files, right inside the file manager.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Write</span><span>Headings, bold text, bulleted lists and checklists in a clean rich-text note.</span></li>
+                            <li><span class="fact-tag">Read</span><span>Open plain text files straight from any folder, no extra app.</span></li>
+                            <li><span class="fact-tag">Anywhere</span><span>Notes work on Android, Windows, macOS and Linux.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="tool-row" role="group" aria-label="Note formatting">
+                                <button type="button" class="tool-chip" aria-pressed="false" data-fmt="is-head">Heading</button>
+                                <button type="button" class="tool-chip" aria-pressed="false" data-fmt="is-bold"><b>Bold</b></button>
+                                <button type="button" class="tool-chip" aria-pressed="false" data-fmt="is-list">Checklist</button>
+                            </div>
+                            <div class="note" data-note><span class="n-title">Trip packing</span><ul><li><span>Passport</span></li><li><span>Charger</span></li><li><span>Headphones</span></li></ul></div>
+                            <div class="tool-hint">Turn on Checklist, then tap items to tick them off.</div>
+                        </div>
                     </article>
-                    <article class="tool">
-                        <h3>Zip and unzip</h3>
-                        <p>Pack files and folders into one smaller file to save space or send it on, and open zipped files right where they are.</p>
+                    <article class="tool" data-tool="zip">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 11v4"/></svg></span><h3>Zip and unzip</h3></div>
+                        <p>Pack files and folders into one smaller ZIP or TAR file to save space or send it on, and open them right where they are.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Formats</span><span>Create and open ZIP, TAR, TAR.GZ and TAR.BZ2.</span></li>
+                            <li><span class="fact-tag">In place</span><span>Open an archive like a folder and pull out only what you need.</span></li>
+                            <li><span class="fact-tag">Protect</span><span>Lock a single file with a password before you send it on.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="zlist">
+                                <div class="zfile" style="--c:#5b63f0"><span class="dot"></span>photos<em>12 MB</em></div>
+                                <div class="zfile" style="--c:#e0a526"><span class="dot"></span>report.pdf<em>8 MB</em></div>
+                                <div class="zfile" style="--c:#1f9d6b"><span class="dot"></span>notes.txt<em>4 MB</em></div>
+                            </div>
+                            <div class="zout"><b>Trip.zip</b><span>9 MB</span><span class="save">&minus;62%</span></div>
+                            <div class="stage-row"><div class="demo-bar"><span data-zip-bar></span></div><span data-zip-size aria-live="polite" style="min-width:3.2em;text-align:right">24 MB</span></div>
+                            <div><button type="button" class="tool-act" data-zip-btn aria-pressed="false">Pack into zip</button></div>
+                        </div>
                     </article>
-                    <article class="tool">
-                        <h3>App safety</h3>
+                    <article class="tool" data-tool="safety">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>App safety</h3></div>
                         <p>See which of your apps came pre-installed and may not be needed, which are known to be risky, and which can reach things like your camera, contacts or location. It helps you spot problems, but it is not an antivirus.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Bloat</span><span>Spot apps that shipped with your phone and that you may never use.</span></li>
+                            <li><span class="fact-tag">Risky</span><span>Known risky packages are flagged so you can review them.</span></li>
+                            <li><span class="fact-tag">Access</span><span>See which apps can reach your camera, contacts, location and more.</span></li>
+                            <li><span class="fact-tag">Android</span><span>Android only. A guide to what to review, never a verdict.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="tool-row" role="tablist" aria-label="App check">
+                                <button type="button" role="tab" class="tool-chip" aria-selected="true" data-kind="pre">Pre-installed<i>2</i></button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-kind="risk">Risky<i>2</i></button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-kind="acc">Access<i>2</i></button>
+                            </div>
+                            <div data-apps><div class="arow" data-kind="pre" ><span class="aico" style="--c:#e0a526">G</span><div><b>Game Hub</b><small>Came with the phone</small></div><span class="badge pre">Pre-installed</span></div><div class="arow" data-kind="pre" ><span class="aico" style="--c:#6b6f7c">C</span><div><b>Carrier Services</b><small>Came with the phone</small></div><span class="badge pre">Pre-installed</span></div><div class="arow" data-kind="risk" hidden><span class="aico" style="--c:#d04545">F</span><div><b>Free VPN X</b><small>Known to be risky</small></div><span class="badge risk">Risky</span></div><div class="arow" data-kind="risk" hidden><span class="aico" style="--c:#c2662d">B</span><div><b>Battery Boost</b><small>Known to be risky</small></div><span class="badge risk">Risky</span></div><div class="arow" data-kind="acc" hidden><span class="aico" style="--c:#1f9d6b">M</span><div><b>Maps</b><small>Location</small></div><span class="badge acc">Location</span></div><div class="arow" data-kind="acc" hidden><span class="aico" style="--c:#5b63f0">C</span><div><b>Camera Plus</b><small>Camera, contacts</small></div><span class="badge acc">Camera</span></div></div>
+                            <div class="tool-hint">Sample apps. A guide to what to review, not an antivirus.</div>
+                        </div>
                     </article>
-                    <article class="tool">
-                        <h3>App Lock</h3>
+                    <article class="tool" data-tool="lock">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h3>App Lock</h3></div>
                         <p>Put the apps you choose behind your PIN or fingerprint. It is optional, and only runs once you switch it on in Android settings.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Choose</span><span>Lock only the apps that matter: messages, photos, banking.</span></li>
+                            <li><span class="fact-tag">Your way</span><span>Unlock with your PIN or your fingerprint.</span></li>
+                            <li><span class="fact-tag">Light touch</span><span>It only checks which app is in front. It does not read what is on your screen.</span></li>
+                            <li><span class="fact-tag">Hide Storax</span><span>Android can also hide the Storax icon from the launcher, and Linux hides the desktop entry.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="lockapp">
+                                <span class="ltile"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/></svg></span>
+                                <span class="lk"><svg viewBox="0 0 24 24"><path d="M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+                                <div><b data-lock-title>Messages</b><span data-lock-text aria-live="polite">Open to anyone</span><br><span class="pin-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+                                <button type="button" class="tool-switch" role="switch" aria-checked="false" aria-label="Lock the sample app" data-lock style="margin-left:auto"></button>
+                            </div>
+                            <div class="tool-hint">Android only. Flip the switch to lock the sample app.</div>
+                        </div>
                     </article>
-                    <article class="tool">
-                        <h3>WhatsApp status saver</h3>
-                        <p>Keep copies of the WhatsApp statuses you like before they disappear.</p>
+                    <article class="tool" data-tool="status">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg></span><h3>WhatsApp status saver</h3></div>
+                        <p>Keep copies of the WhatsApp statuses you like before they disappear. No more screenshots, and no need to ask anyone to send you the photo or video again.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Browse</span><span>Photos, videos and audio in one grid. Filter by type, search, and sort by newest, oldest, name or size.</span></li>
+                            <li><span class="fact-tag">View</span><span>Swipe through full screen, play videos, and share a status straight from the viewer.</span></li>
+                            <li><span class="fact-tag">Save</span><span>Save one, pick several, save everything on screen, or download all in one go.</span></li>
+                            <li><span class="fact-tag">Devices</span><span>Best on Android. On Windows, macOS and Linux, Storax looks for statuses WhatsApp has already stored, and you can pick files by hand if none turn up.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="story">
+                                <div class="story-bars"><i class="on"></i><i class="run"></i><i></i></div>
+                                <div class="story-who"><span>A</span>Aisha <small>2h ago</small></div>
+                                <div class="story-cap">Sunday hike</div>
+                                <button type="button" class="tool-act" data-save aria-pressed="false">Save</button>
+                            </div>
+                            <div class="tool-row" role="group" aria-label="Status type">
+                                <button type="button" class="tool-chip" aria-pressed="true" data-st="all">All<i>6</i></button>
+                                <button type="button" class="tool-chip" aria-pressed="false" data-st="photo">Photos<i>4</i></button>
+                                <button type="button" class="tool-chip" aria-pressed="false" data-st="video">Videos<i>2</i></button>
+                            </div>
+                            <div class="stage-cap" data-save-text aria-live="polite" style="min-height:0">Disappears in 22 hours</div>
+                        </div>
                     </article>
-                    <article class="tool">
-                        <h3>QR code scanner</h3>
+                    <article class="tool" data-tool="qr">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M4 12h16"/></svg></span><h3>QR code scanner</h3></div>
                         <p>Scan QR codes and barcodes from your photos and act on them straight away.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Create</span><span>Make your own QR codes, including styled ones, and look back through your history.</span></li>
+                            <li><span class="fact-tag">Wi-Fi</span><span>Scan a network code to join Wi-Fi without typing the password.</span></li>
+                            <li><span class="fact-tag">Shopping</span><span>Scan a product barcode to look it up.</span></li>
+                            <li data-in-only hidden><span class="fact-tag">UPI</span><span>Reads the UPI ID, payee and amount from a payment QR, so you can copy the ID and pay it from your UPI app, handy for sending more than &#8377;2,000.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="tool-row" role="group" aria-label="Sample code">
+                                <button type="button" class="tool-chip" aria-pressed="true" data-q="wifi">Wi-Fi</button>
+                                <button type="button" class="tool-chip" aria-pressed="false" data-q="link">Link</button>
+                                <button type="button" class="tool-chip" aria-pressed="false" data-q="contact">Contact</button>
+                            </div>
+                            <div class="viewf" data-vf><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="qr"><svg viewBox="0 0 7 7" shape-rendering="crispEdges"><path fill="#14151a" d="M0 0h3v3H0zM4 0h3v3H4zM0 4h3v3H0zM1 1h1v1H1zM5 1h1v1H5zM1 5h1v1H1zM4 4h1v1H4zM6 4h1v1H6zM5 5h1v1H5zM4 6h1v1H4zM6 6h1v1H6z" fill-rule="evenodd"/></svg></div></div>
+                            <div class="qres" data-qres hidden><div><b data-q-title></b><small data-q-sub></small></div><button type="button" class="tool-act" data-q-act></button></div>
+                            <div><button type="button" class="tool-act" data-scan>Scan sample</button></div>
+                        </div>
                     </article>
-                    <article class="tool">
-                        <h3>Audio player</h3>
-                        <p>Play music and recordings straight from your folders, with familiar playback controls.</p>
+                    <article class="tool" data-tool="audio">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg></span><h3>Audio and video player</h3></div>
+                        <p>Play music, recordings and videos straight from your folders, with familiar playback controls.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Video</span><span>Screenshot any frame. See resolution, frame rate, title, author, date and location.</span></li>
+                            <li><span class="fact-tag">Audio</span><span>See artist, author, album, composer, genre, year and bitrate.</span></li>
+                        
+                            <li><span class="fact-tag">Library</span><span>Images, video, audio, GIFs, documents and downloads each get their own screen.</span></li>
+                            <li><span class="fact-tag">Yours</span><span>Plays straight from your folders. No account, no streaming service.</span></li>
+                        </ul>
+                        <div class="stage stage-tight">
+                            <div class="stage-row between">
+                                <div class="tool-row" role="group" aria-label="Media type">
+                                    <button type="button" class="tool-chip" aria-pressed="true" data-media="audio">Audio</button>
+                                    <button type="button" class="tool-chip" aria-pressed="false" data-media="video">Video</button>
+                                </div>
+                                <button type="button" class="tool-act" data-play aria-pressed="false" aria-label="Play sample"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span>Play</span></button>
+                            </div>
+                            <div class="pscreen" data-screen title="Tap the wave to jump around"><span class="ttl" data-media-title>Voice memo.m4a</span><span class="tm" data-time>0:00 / 3:10</span><div class="wave" data-wave aria-label="Seek" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div><span class="vplay"></span></div>
+                        </div>
                     </article>
+                    <article class="tool" data-tool="code">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></svg></span><h3>Code editor and terminal</h3></div>
+                        <p>Edit scripts and config files with colour-coded syntax for more than twenty languages, then run commands in a terminal, all beside your files.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Languages</span><span>Syntax colours for 22 languages.</span></li>
+                            <li><span class="fact-tag">Editing</span><span>Tabs, find and replace, a formatter, line numbers, word wrap and keyboard shortcuts.</span></li>
+                            <li><span class="fact-tag">Terminal</span><span>A local shell on Windows, macOS and Linux, and an SSH terminal on Android.</span></li>
+                            <li><span class="fact-tag">One app</span><span>Edit a config, run the command and check the result without switching apps.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="tool-row" role="tablist" aria-label="Editor or terminal">
+                                <button type="button" role="tab" class="tool-chip" aria-selected="true" data-code="editor">Editor</button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-code="term">Terminal</button>
+                            </div>
+                            <div class="codep" data-panel="editor"><span><i class="k">def</i> <i class="f">backup</i>(folder):</span><span>&nbsp;&nbsp;<i class="k">return</i> <i class="s">"saved "</i> + folder</span><span class="c"># tap to edit</span></div>
+                            <div class="codep term" data-panel="term" hidden><span><i class="p">$</i> ls Documents</span><span>notes.txt&nbsp;&nbsp;report.pdf</span><span><i class="p">$</i> <span class="caret"></span></span></div>
+                            <div class="tool-hint">Terminal: a local shell on computers, an SSH terminal on Android.</div>
+                        </div>
+                    </article>
+                    <article class="tool" data-tool="remote">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg></span><h3>Remote files</h3></div>
+                        <p>Browse a server or a home network drive like a normal folder, and copy files across. Works over SFTP, FTP and NFS.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Protocols</span><span>SFTP, FTP and FTPS, and NFS shares, all in one place.</span></li>
+                            <li><span class="fact-tag">Sign in</span><span>Use a password or a private key.</span></li>
+                            <li><span class="fact-tag">Trust</span><span>Storax remembers a server the first time and warns you if its key ever changes.</span></li>
+                            <li><span class="fact-tag">Android</span><span>Android only. Plain FTP is not encrypted, so prefer SFTP when you can.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="tool-row" role="tablist" aria-label="Connection type">
+                                <button type="button" role="tab" class="tool-chip" aria-selected="true" data-conn="sftp">SFTP</button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-conn="ftp">FTP</button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-conn="nfs">NFS</button>
+                            </div>
+                            <div class="rconn"><span class="rdot"></span><div><b data-conn-host>nas.home</b><small data-conn-state>Connected, host key checked</small></div></div>
+                            <div class="stage-cap" role="status" aria-live="polite" data-conn-cap><b>SFTP:</b> encrypted. Storax asks you to confirm the server the first time and warns if it ever changes.</div>
+                        </div>
+                    </article>
+                    <article class="tool" data-tool="assist">
+                        <div class="tool-top"><span class="tool-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><circle cx="11" cy="14" r="2.6"/><path d="m13 16 2.5 2.5"/></svg></span><h3>Document assistant and text recognition</h3></div>
+                        <p>Get the key points, dates and to-dos from a document, quoted straight from the text. On Android, Storax can also read text inside photos and scans.</p>
+                        <ul class="tool-facts">
+                            <li><span class="fact-tag">Quoted</span><span>Every result is a passage from your own document. Nothing is made up.</span></li>
+                            <li><span class="fact-tag">Pulls out</span><span>A summary, key points, dates and action items.</span></li>
+                            <li><span class="fact-tag">Photos</span><span>On Android, search and copy text inside images and scanned PDFs.</span></li>
+                            <li><span class="fact-tag">On device</span><span>Extra models are downloaded only if you turn the feature on.</span></li>
+                        </ul>
+                        <div class="stage">
+                            <div class="tool-row" role="tablist" aria-label="What to pull out">
+                                <button type="button" role="tab" class="tool-chip" aria-selected="true" data-as="points">Key points</button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-as="dates">Dates</button>
+                                <button type="button" role="tab" class="tool-chip" aria-selected="false" data-as="todo">To-dos</button>
+                            </div>
+                            <div class="quote" data-quote aria-live="polite">&ldquo;The venue is booked for the whole weekend.&rdquo;</div>
+                            <div class="tool-hint">Sample text. Every result is a passage from your own document, nothing is invented. Text in photos is Android only.</div>
+                        </div>
+                    </article>
+                </div>
                 </div>
             </div>
         </section>
@@ -4130,7 +4581,7 @@
             var hasIO = 'IntersectionObserver' in window;
 
             /* Scroll reveal with per-parent stagger */
-            var revealSelector = '.section-head, .feature, .tool, .principle, .card, .checks, ' +
+            var revealSelector = '.section-head, .feature, .principle, .card, .checks, ' +
                 '.platforms > *, .download-grid > div:first-child, .security > div:first-child';
             var items = Array.prototype.slice.call(document.querySelectorAll(revealSelector));
             var perParent = new Map();
@@ -4246,7 +4697,7 @@
 
             /* Cursor spotlight on cards and tools */
             if (finePointer) {
-                document.querySelectorAll('.tool, .card').forEach(function (el) {
+                document.querySelectorAll('.card').forEach(function (el) {
                     el.addEventListener('pointermove', function (e) {
                         var r = el.getBoundingClientRect();
                         el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
@@ -4258,6 +4709,238 @@
                     });
                 });
             }
+
+            /* Built-in tools: interactive demos */
+            (function () {
+                var tools = document.querySelector('.tools');
+                if (!tools) return;
+                var $ = function (el, sel) { return el.querySelector(sel); };
+                var $$ = function (el, sel) { return Array.prototype.slice.call(el.querySelectorAll(sel)); };
+                /* Workbench: a tool list on the left, one demo at a time on the right */
+                (function () {
+                    var nav = document.querySelector('.tool-nav');
+                    var panels = $$(tools, '.tool');
+                    if (!nav || !panels.length) return;
+                    var SHORT = {
+                        image: 'Edit photos and video', docs: 'PDF, Word, Excel', notes: 'Quick notes and text',
+                        zip: 'Pack and open archives', safety: 'Review your apps', lock: 'PIN or fingerprint',
+                        status: 'Keep statuses', qr: 'Scan and act', audio: 'Music and video',
+                        code: 'Edit and run', remote: 'SFTP, FTP, NFS', assist: 'Key points and OCR'
+                    };
+                    var tabs = panels.map(function (p, i) {
+                        var key = p.getAttribute('data-tool');
+                        var tab = document.createElement('button');
+                        tab.type = 'button'; tab.className = 'tool-tab'; tab.id = 'tooltab-' + key;
+                        tab.setAttribute('role', 'tab'); tab.setAttribute('aria-controls', 'tool-' + key);
+                        var ico = p.querySelector('.tool-ico').cloneNode(true);
+                        var label = document.createElement('span');
+                        label.innerHTML = '<b></b><small></small>';
+                        label.firstChild.textContent = p.querySelector('h3').textContent;
+                        label.lastChild.textContent = SHORT[key] || '';
+                        tab.appendChild(ico); tab.appendChild(label);
+                        p.id = 'tool-' + key; p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', tab.id);
+                        tab.addEventListener('click', function () { show(i, false); });
+                        nav.appendChild(tab);
+                        return tab;
+                    });
+                    function show(i, focus) {
+                        panels.forEach(function (p, j) { p.hidden = j !== i; });
+                        tabs.forEach(function (t, j) { t.setAttribute('aria-selected', j === i ? 'true' : 'false'); t.tabIndex = j === i ? 0 : -1; });
+                        if (focus) tabs[i].focus();
+                        if (window.matchMedia('(max-width: 1060px)').matches) {
+                            var t = tabs[i], r = t.getBoundingClientRect(), n = nav.getBoundingClientRect();
+                            if (r.left < n.left || r.right > n.right) nav.scrollTo({ left: nav.scrollLeft + r.left - n.left - 16, behavior: 'smooth' });
+                        }
+                    }
+                    nav.addEventListener('keydown', function (e) {
+                        var cur = tabs.indexOf(document.activeElement);
+                        if (cur < 0) return;
+                        var k = e.key, n = tabs.length, to = -1;
+                        if (k === 'ArrowDown' || k === 'ArrowRight') to = (cur + 1) % n;
+                        else if (k === 'ArrowUp' || k === 'ArrowLeft') to = (cur + n - 1) % n;
+                        else if (k === 'Home') to = 0;
+                        else if (k === 'End') to = n - 1;
+                        if (to < 0) return;
+                        e.preventDefault(); show(to, true);
+                    });
+                    show(0, false);
+                })();
+                function pick(group, btn, attr) { $$(group, '[' + attr + ']').forEach(function (b) { b.setAttribute(attr, b === btn ? 'true' : 'false'); }); }
+
+                var DOCS = {
+                    pdf: '<b>PDF:</b> read it, then highlight, sign, merge or split with the built-in PDF tools.',
+                    word: '<b>Word:</b> open the file and edit the text right on your phone.',
+                    sheet: '<b>Sheet:</b> view rows, columns and totals on the go.'
+                };
+                var QR = {
+                    wifi: ['Home Wi-Fi', 'Network found', 'Connect', 'Connected ✓'],
+                    link: ['storax.app', 'Web link', 'Open', 'Opening…'],
+                    contact: ['Priya Nair', 'Contact card', 'Add', 'Added ✓']
+                };
+                var qrKind = 'wifi';
+
+                /* India-only note. Uses the browser's time zone and language only; nothing is sent anywhere. */
+                (function () {
+                    var inIndia = false;
+                    try {
+                        var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+                        inIndia = /^Asia\/(Kolkata|Calcutta)$/.test(tz);
+                    } catch (e) {}
+                    if (!inIndia) {
+                        var langs = navigator.languages || [navigator.language || ''];
+                        inIndia = langs.some(function (l) { return /-IN$/i.test(l); });
+                    }
+                    if (inIndia) $$(tools, '[data-in-only]').forEach(function (el) { el.hidden = false; });
+                })();
+                var REMOTE = {
+                    sftp: ['nas.home', 'Connected, host key checked', '<b>SFTP:</b> encrypted. Storax asks you to confirm the server the first time and warns if it ever changes.'],
+                    ftp: ['files.example.com', 'Connected, not encrypted', '<b>FTP:</b> sends your login as plain text unless the server uses FTPS. Prefer SFTP when you can.'],
+                    nfs: ['media-server', 'Mounted on your network', '<b>NFS:</b> reach shared folders on a home or office server without leaving the file manager.']
+                };
+                var ASSIST = {
+                    points: '“The venue is booked for the whole weekend.”',
+                    dates: '“Final numbers are due by 14 March.”',
+                    todo: '“Please send the guest list before Friday.”'
+                };
+
+                /* player state */
+                var TOTAL = 190, N = 36, heights = [];
+                for (var h = 0; h < N; h++) heights.push(28 + Math.round(Math.abs(Math.sin(h * 1.7) * Math.cos(h * .45)) * 72));
+                function fmt(sec) { sec = Math.round(sec); return Math.floor(sec / 60) + ':' + ('0' + (sec % 60)).slice(-2); }
+                function setProgress(tool, pct) {
+                    tool._p = pct;
+                    var bars = $$(tool, '[data-wave] i'), on = Math.round(pct / 100 * N);
+                    bars.forEach(function (b, i) { b.classList.toggle('on', i < on); });
+                    $(tool, '[data-time]').textContent = fmt(pct / 100 * TOTAL) + ' / ' + fmt(TOTAL);
+                    $(tool, '[data-wave]').setAttribute('aria-valuenow', Math.round(pct));
+                }
+                var audioTool = $(tools, '[data-tool="audio"]');
+                var wave = $(audioTool, '[data-wave]');
+                heights.forEach(function (v) { var i = document.createElement('i'); i.style.height = v + '%'; wave.appendChild(i); });
+                setProgress(audioTool, 0);
+                function seek(e) {
+                    var r = wave.getBoundingClientRect();
+                    setProgress(audioTool, Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100)));
+                }
+                wave.addEventListener('click', seek);
+                wave.addEventListener('keydown', function (e) {
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        setProgress(audioTool, Math.max(0, Math.min(100, audioTool._p + (e.key === 'ArrowRight' ? 5 : -5))));
+                    }
+                });
+
+                /* brightness slider */
+                var bright = $(tools, '[data-bright]');
+                bright.addEventListener('input', function () {
+                    $(tools, '[data-photo]').style.setProperty('--b', bright.value / 100);
+                });
+
+                /* notes: tick items */
+                $$(tools, '[data-note] li').forEach(function (li) {
+                    li.addEventListener('click', function () {
+                        if (li.parentNode.parentNode.classList.contains('is-list')) li.classList.toggle('done');
+                    });
+                });
+
+                tools.addEventListener('click', function (e) {
+                    var btn = e.target.closest('button');
+                    if (!btn || !tools.contains(btn)) return;
+                    var tool = btn.closest('.tool');
+                    var type = tool.getAttribute('data-tool');
+
+                    if (type === 'image' && btn.classList.contains('swatch')) {
+                        pick(btn.parentNode, btn, 'aria-pressed');
+                        var ph = $(tool, '[data-photo]');
+                        ph.style.setProperty('--f', btn.style.getPropertyValue('--f'));
+                        $(tool, '[data-photo-badge]').textContent = btn.getAttribute('data-name');
+                    } else if (type === 'docs' && btn.hasAttribute('data-doc')) {
+                        pick(btn.parentNode, btn, 'aria-selected');
+                        var d = btn.getAttribute('data-doc');
+                        $$(tool, '[data-panel]').forEach(function (pn) { pn.hidden = pn.getAttribute('data-panel') !== d; });
+                        $(tool, '[data-cap]').innerHTML = DOCS[d];
+                    } else if (type === 'notes' && btn.hasAttribute('data-fmt')) {
+                        var on = btn.getAttribute('aria-pressed') !== 'true';
+                        btn.setAttribute('aria-pressed', on);
+                        $(tool, '[data-note]').classList.toggle(btn.getAttribute('data-fmt'), on);
+                    } else if (type === 'zip' && btn.hasAttribute('data-zip-btn')) {
+                        var packed = btn.getAttribute('aria-pressed') !== 'true';
+                        btn.setAttribute('aria-pressed', packed);
+                        btn.textContent = packed ? 'Unzip it' : 'Pack into zip';
+                        tool.classList.toggle('is-packed', packed);
+                        $(tool, '[data-zip-bar]').style.width = packed ? '38%' : '100%';
+                        $(tool, '[data-zip-size]').textContent = packed ? '9 MB' : '24 MB';
+                    } else if (type === 'safety' && btn.hasAttribute('data-kind')) {
+                        pick(btn.parentNode, btn, 'aria-selected');
+                        $$(tool, '[data-apps] .arow').forEach(function (r) { r.hidden = r.getAttribute('data-kind') !== btn.getAttribute('data-kind'); });
+                    } else if (type === 'lock' && btn.hasAttribute('data-lock')) {
+                        var locked = btn.getAttribute('aria-checked') !== 'true';
+                        btn.setAttribute('aria-checked', locked);
+                        tool.classList.toggle('is-locked', locked);
+                        $(tool, '[data-lock-text]').textContent = locked ? 'Asks for PIN or fingerprint' : 'Open to anyone';
+                    } else if (type === 'status' && btn.hasAttribute('data-save')) {
+                        var saved = btn.getAttribute('aria-pressed') !== 'true';
+                        btn.setAttribute('aria-pressed', saved);
+                        btn.textContent = saved ? 'Saved ✓' : 'Save';
+                        tool.classList.toggle('is-saved', saved);
+                        $(tool, '[data-save-text]').textContent = saved ? 'Kept in your folder, even after it expires' : 'Disappears in 22 hours';
+                    } else if (type === 'status' && btn.hasAttribute('data-st')) {
+                        pick(btn.parentNode, btn, 'aria-pressed');
+                        var k = btn.getAttribute('data-st');
+                        $(tool, '.story-who small').textContent = k === 'video' ? '0:24 video' : '2h ago';
+                        $(tool, '.story-cap').textContent = k === 'video' ? 'Beach sunset' : 'Sunday hike';
+                    } else if (type === 'qr') {
+                        var vf = $(tool, '[data-vf]'), res = $(tool, '[data-qres]');
+                        if (btn.hasAttribute('data-q')) {
+                            pick(btn.parentNode, btn, 'aria-pressed');
+                            qrKind = btn.getAttribute('data-q');
+                            res.hidden = true; vf.classList.remove('is-done');
+                        } else if (btn.hasAttribute('data-scan')) {
+                            res.hidden = true; vf.classList.remove('is-done', 'is-scanning');
+                            void vf.offsetWidth;
+                            vf.classList.add('is-scanning');
+                            clearTimeout(tool._t);
+                            tool._t = setTimeout(function () {
+                                var q = QR[qrKind];
+                                vf.classList.remove('is-scanning'); vf.classList.add('is-done');
+                                $(tool, '[data-q-title]').textContent = q[0];
+                                $(tool, '[data-q-sub]').textContent = q[1];
+                                var act = $(tool, '[data-q-act]'); act.textContent = q[2];
+                                res.hidden = false;
+                            }, 1000);
+                        } else if (btn.hasAttribute('data-q-act')) {
+                            btn.textContent = QR[qrKind][3];
+                        }
+                    } else if (type === 'code' && btn.hasAttribute('data-code')) {
+                        pick(btn.parentNode, btn, 'aria-selected');
+                        $$(tool, '[data-panel]').forEach(function (pn) { pn.hidden = pn.getAttribute('data-panel') !== btn.getAttribute('data-code'); });
+                    } else if (type === 'remote' && btn.hasAttribute('data-conn')) {
+                        pick(btn.parentNode, btn, 'aria-selected');
+                        var c = REMOTE[btn.getAttribute('data-conn')];
+                        $(tool, '[data-conn-host]').textContent = c[0];
+                        $(tool, '[data-conn-state]').textContent = c[1];
+                        $(tool, '[data-conn-cap]').innerHTML = c[2];
+                        $(tool, '.rconn').classList.toggle('is-warn', btn.getAttribute('data-conn') === 'ftp');
+                    } else if (type === 'assist' && btn.hasAttribute('data-as')) {
+                        pick(btn.parentNode, btn, 'aria-selected');
+                        $(tool, '[data-quote]').textContent = ASSIST[btn.getAttribute('data-as')];
+                    } else if (type === 'audio') {
+                        if (btn.hasAttribute('data-media')) {
+                            pick(btn.parentNode, btn, 'aria-pressed');
+                            var vid = btn.getAttribute('data-media') === 'video';
+                            $(tool, '[data-screen]').classList.toggle('is-video', vid);
+                            $(tool, '[data-media-title]').textContent = vid ? 'Holiday clip.mp4' : 'Voice memo.m4a';
+                        } else if (btn.hasAttribute('data-play')) {
+                            var playing = btn.getAttribute('aria-pressed') !== 'true';
+                            btn.setAttribute('aria-pressed', playing);
+                            $(btn, 'span').textContent = playing ? 'Pause' : 'Play';
+                            tool.classList.toggle('is-playing', playing);
+                            clearInterval(tool._i);
+                            if (playing) tool._i = setInterval(function () { setProgress(tool, tool._p >= 100 ? 0 : tool._p + 1.2); }, 250);
+                        }
+                    }
+                });
+            })();
         })();
     </script>
 </body>
